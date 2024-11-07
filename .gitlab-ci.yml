@@ -1,14 +1,27 @@
+# .gitlab-ci.yml
+
 stages:
   - install
   - lint
   - test
+  - build
+  - quality_analysis
+  - deploy
 
+variables:
+  NODE_ENV: test
+  DOCKER_IMAGE: registry.gitlab.com/$CI_PROJECT_PATH/app-image
+  DOCKER_TAG: $CI_COMMIT_REF_SLUG
+
+# Caching node_modules to speed up builds
 cache:
   paths:
     - node_modules/
 
+# Step 1: Install dependencies
 install_dependencies:
   stage: install
+  image: node:18
   script:
     - echo "Installing dependencies..."
     - npm install
@@ -18,35 +31,61 @@ install_dependencies:
     - merge_requests
     - branches
 
+# Step 2: Linting
 lint:
   stage: lint
+  image: node:18
   script:
-    - echo "Running linting..."
-    - npm run lint
+    - echo "Running linter..."
+    - npm run lint  # Ensure `lint` script is defined in package.json
   only:
     - merge_requests
     - branches
-  allow_failure: false
 
+# Step 3: Run tests
 test:
   stage: test
+  image: node:18
   script:
     - echo "Running tests..."
-    - npm test
+    - npm test  # Ensure `test` script is defined in package.json
   only:
     - merge_requests
     - branches
-  allow_failure: false
 
-protected_push:
-  stage: test
+# Step 4: Code Quality Analysis
+quality_analysis:
+  stage: quality_analysis
+  image: node:18
   script:
-    - echo "Pushing to main branch is protected and requires passing tests"
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME == "main"'
-      when: manual
-    - if: '$CI_COMMIT_REF_NAME == "main"'
-      when: never
-  dependencies:
-    - test
-  needs: []
+    - echo "Analyzing code quality..."
+    - npm run lint  # You could also add other quality checks here, such as security analysis tools
+  only:
+    - merge_requests
+    - branches
+
+# Step 5: Build Docker Image
+docker_build:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "Building Docker image..."
+    - docker build -t $DOCKER_IMAGE:$DOCKER_TAG .
+  only:
+    - merge_requests
+    - branches
+
+# Step 6: Deploy Docker Image to GitLab Container Registry
+docker_push:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "Pushing Docker image to GitLab registry..."
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $DOCKER_IMAGE:$DOCKER_TAG
+  only:
+    - main  # Only push on main branch for production
