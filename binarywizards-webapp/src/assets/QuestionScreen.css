@@ -1,0 +1,14 @@
+h3 {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  font-size: 2em;
+  color: #A14aaa;
+}
+
+
+.HUD {
+  display: flex;
+  width: 40%;
+  flex-direction:column;
+  border: 2px solid red;
+}
