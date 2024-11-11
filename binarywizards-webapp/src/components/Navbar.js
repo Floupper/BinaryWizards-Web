@@ -1,17 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import '../assets/Navbar.css';
 
 export default function Navbar() {
   return (
     <nav className="Navbar">
       <div className="Navbar-logo">
-        <Link to="/">MyQuizApp</Link>
+        <NavLink to="/" activeClassName="active-link">MyQuizApp</NavLink>
       </div>
       <ul className="Navbar-links">
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/join-quiz">Join Quiz</Link></li>
-        <li><Link to="/create-quiz">Create Quiz</Link></li>
+        <li><NavLink to="/" activeClassName="active-link">Home</NavLink></li>
+        <li><NavLink to="/join-quiz" activeClassName="active-link">Join Quiz</NavLink></li>
+        <li><NavLink to="/create-quiz" activeClassName="active-link">Create Quiz</NavLink></li>
       </ul>
     </nav>
   );
