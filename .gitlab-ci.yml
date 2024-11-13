@@ -1,5 +1,8 @@
 image: node:18
 
+services:
+  - docker:dind
+
 stages:
   - lint
   - test
@@ -18,7 +21,6 @@ lint:
     when: always
     paths:
       - lint.json
-  allow_failure: true
 
 test:
   script:
@@ -31,7 +33,6 @@ test:
         - test-results.xml 
     paths:
       - test-results.xml
-  allow_failure: true
 
 coverage:
   script:
@@ -44,14 +45,8 @@ coverage:
     when: always
     paths:
       - coverage.xml
-  allow_failure: true
 
 build:
-  image: docker:latest
-  services:
-    - docker:dind 
-  variables:
-    DOCKER_HOST: "tcp://docker:2375" 
   script:
     - docker build -t $DOCKER_USERNAME/web-test:latest . 
   needs:
