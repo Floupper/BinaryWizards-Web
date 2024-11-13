@@ -3,16 +3,27 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import HomeScreen from './pages/HomeScreen';
 import JoinQuiz from './pages/JoinQuiz';
 import CreateQuiz from './pages/CreateQuiz';
+
 import QuestionScreen from './pages/QuestionScreen.js';
+
+import EndScreen from './pages/EndScreen';
+import Navbar from './components/Navbar';
+
+
 function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<HomeScreen />} />
         <Route path="/join-quiz" element={<JoinQuiz />} />
         <Route path="/create-quiz" element={<CreateQuiz />} />
+
         <Route path="/question" element={<Navigate to="/" replace />}/>
         <Route path="/question/:id" element={<QuestionScreen />}/>
+
+        <Route path="/end" element={<EndScreen />} />
+
       </Routes>
     </Router>
   );
