@@ -1,8 +1,5 @@
 image: node:18
 
-services:
-  - docker:dind
-
 stages:
   - lint
   - test
