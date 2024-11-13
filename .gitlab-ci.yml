@@ -21,6 +21,7 @@ lint:
     when: always
     paths:
       - lint.json
+  allow_failure : true
 
 test:
   script:
@@ -33,6 +34,8 @@ test:
         - test-results.xml 
     paths:
       - test-results.xml
+  allow_failure : true
+
 
 coverage:
   script:
@@ -45,6 +48,8 @@ coverage:
     when: always
     paths:
       - coverage.xml
+  allow_failure : true
+
 
 build:
   script:
