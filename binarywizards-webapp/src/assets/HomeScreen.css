@@ -39,4 +39,25 @@
     outline: none;
     box-shadow: 0 0 0 0.3rem rgba(132, 21, 132, 0.5);
   }
+  .CreateQuiz-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .CreateQuiz-box {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  
   
