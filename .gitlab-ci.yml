@@ -51,6 +51,7 @@ build:
     - docker:dind 
   script:
     - apt-get update && apt-get install -y docker.io
+    - docker start
     - docker build -t $DOCKER_USERNAME/web-test:latest . 
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
     - docker tag $DOCKER_USERNAME/web-test:latest $DOCKER_USERNAME/web-test:latest
