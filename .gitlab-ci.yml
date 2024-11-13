@@ -1,25 +1,33 @@
-image: node:18
+image: docker:latest
 
+services:
+  - docker:dind
+
+stages:
+  - lint
+  - test
+  - coverage
+  - build
+  - deploy
+
+# Étape lint
 lint:
   script:
     - npm install
-    - if [ -z "$(find src -type f)" ]; then echo "No files in src, skipping lint"; else
-      npx eslint "src/**/*.js" -f json -o lint-es.json &&
-      npx htmlhint "src/**/*.html" --format json > lint-html.json &&
-      npx stylelint "src/**/*.{css,scss}" -f json > lint-style.json &&
-      jq -s add lint-es.json lint-html.json lint-style.json > lint.json;
-      fi
+    - npx eslint "src/**/*.js" -f json -o lint-es.json
+    - npx htmlhint "src/**/*.html" --format json > lint-html.json
+    - npx stylelint "src/**/*.{css,scss}" -f json > lint-style.json
+    - jq -s add lint-es.json lint-html.json lint-style.json > lint.json
   artifacts:
     when: always
     paths:
       - lint.json
 
+# Étape tests
 test:
   script:
     - npm install
-    - if [ -z "$(find src -type f)" ]; then echo "No files in src, skipping tests"; else
-      npm test -- --reporter mocha-junit-reporter --reporter-options mochaFile=test-results.xml;
-      fi
+    - npm test -- --reporter mocha-junit-reporter --reporter-options mochaFile=test-results.xml
   artifacts:
     when: always
     reports:
@@ -28,6 +36,7 @@ test:
     paths:
       - test-results.xml
 
+# Étape couverture
 coverage:
   script:
     - pip install coverage pytest
@@ -41,13 +50,31 @@ coverage:
     paths:
       - coverage.html
 
-
+# Étape build (construction de l'image Docker)
 build:
-  image: docker:latest
-  services:
-    - docker:dind
-  needs:
-    - test
-    - coverage
   script:
     - docker build -t web-test .
+  needs:
+    - lint
+    - test
+    - coverage
+
+# Étape push vers Docker Hub
+push_to_dockerhub:
+  script:
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    - docker tag web-test $DOCKER_USERNAME/web-test:latest
+    - docker push $DOCKER_USERNAME/web-test:latest
+  needs:
+    - build
+  only:
+    - master
+
+# Étape déploiement sur le serveur
+deploy:
+  script:
+    - docker run --rm -v $(pwd)/deploy.sh:/deploy.sh $DOCKER_USERNAME/web-test /bin/sh /deploy.sh
+  needs:
+    - push_to_dockerhub
+  only:
+    - master
