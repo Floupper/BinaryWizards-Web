@@ -1,0 +1,27 @@
+{
+    "name": "project",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "test": "jest --reporters=jest-junit",
+        "lint": "eslint app.js"
+    },
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "eslint": "^9.14.0",
+        "jest": "*",
+        "jest-environment-jsdom": "*",
+        "jest-junit": "*",
+        "stylelint": "*",
+        "stylelint-config-standard": "*",
+        "htmlhint": "*"
+    },
+    "jest": {
+        "testEnvironment": "jest-environment-jsdom",
+        "testMatch": [
+            "**/*.test.js" 
+        ]
+    }
+}
