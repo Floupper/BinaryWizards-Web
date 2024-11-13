@@ -49,8 +49,6 @@ coverage:
 build:
   services:
     - docker:dind 
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
   script:
     - apt-get update && apt-get install -y docker.io
     - docker build -t $DOCKER_USERNAME/web-test:latest . 
