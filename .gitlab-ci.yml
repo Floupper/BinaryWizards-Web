@@ -52,7 +52,9 @@ build:
   variables:
     DOCKER_HOST: "tcp://docker:2375"  # Add this variable to connect to Docker daemon
   script:
-    - docker build -t $DOCKER_USERNAME/web-test:latest .  # Build Docker image
+    - docker info 
+    - docker ps
+    - docker build -t $DOCKER_USERNAME/web-test:latest . 
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin  # Docker login
     - docker tag $DOCKER_USERNAME/web-test:latest $DOCKER_USERNAME/web-test:latest  # Tag image
     - docker push $DOCKER_USERNAME/web-test:latest  # Push image to Docker Hub
