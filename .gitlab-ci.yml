@@ -18,7 +18,7 @@ lint:
     when: always
     paths:
       - lint.json
-  allow_failure : true
+  allow_failure: true
 
 test:
   script:
@@ -31,7 +31,7 @@ test:
         - test-results.xml 
     paths:
       - test-results.xml
-  allow_failure : true
+  allow_failure: true
 
 coverage:
   script:
@@ -44,18 +44,18 @@ coverage:
     when: always
     paths:
       - coverage.xml
-  allow_failure : true
+  allow_failure: true
 
 build:
   services:
-    - docker:dind 
+    - docker:dind  # Docker-in-Docker service
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"  # Add this variable to connect to Docker daemon
   script:
-    - apt-get update && apt-get install -y docker.io
-    - docker start
-    - docker build -t $DOCKER_USERNAME/web-test:latest . 
-    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-    - docker tag $DOCKER_USERNAME/web-test:latest $DOCKER_USERNAME/web-test:latest
-    - docker push $DOCKER_USERNAME/web-test:latest
+    - docker build -t $DOCKER_USERNAME/web-test:latest .  # Build Docker image
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin  # Docker login
+    - docker tag $DOCKER_USERNAME/web-test:latest $DOCKER_USERNAME/web-test:latest  # Tag image
+    - docker push $DOCKER_USERNAME/web-test:latest  # Push image to Docker Hub
   needs:
     - lint
     - test
