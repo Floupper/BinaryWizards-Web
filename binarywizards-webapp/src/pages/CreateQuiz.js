@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/CreateQuiz.css';
-
-const API_BASE_URL = 'http://klebert-host.com:33012/';
-
+import CreateQuizService from '../services/CreateQuizService ';
 export default function CreateQuiz() {
   const [categories, setCategories] = useState([]);
   const [difficulties, setDifficulties] = useState([]);
@@ -14,22 +12,18 @@ export default function CreateQuiz() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}categories`)
-      .then(response => response.json())
+    CreateQuizService.fetchCategories()
       .then(data => setCategories(data))
       .catch(error => console.error('Error fetching categories:', error));
 
-    fetch(`${API_BASE_URL}difficulties`)
-      .then(response => response.json())
+      CreateQuizService.fetchDifficulties()
       .then(data => setDifficulties(data))
       .catch(error => console.error('Error fetching difficulties:', error));
   }, []);
 
   const handleSubmit = () => {
-    // Reset error message
     setErrorMessage('');
 
-    // Validate the number of questions
     if (!amount || isNaN(amount) || amount <= 0) {
       setErrorMessage('Please enter a valid number of questions (greater than 0).');
       return;
@@ -47,19 +41,7 @@ export default function CreateQuiz() {
       difficulty,
     };
     console.log('Quiz data:', quizData);
-    fetch(`${API_BASE_URL}quiz`, { 
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(quizData),
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
+    CreateQuizService.createQuiz(quizData)
       .then(data => {
         const quizId = data.quiz_id; 
         navigate(`/question/${quizId}`);
