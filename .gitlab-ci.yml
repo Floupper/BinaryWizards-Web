@@ -36,7 +36,9 @@ test:
       - test-results.xml
 
 build:
-  image: docker
+  image: docker:latest
+  services:
+    - docker:dind
   stage: build
   needs:
     - test
