@@ -46,18 +46,21 @@ coverage:
       - coverage.xml
   allow_failure: true
 
+before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+
 build:
   services:
-    - docker:dind  # Docker-in-Docker service
+    - docker:dind
   variables:
-    DOCKER_HOST: "tcp://docker:2375"  # Add this variable to connect to Docker daemon
+    DOCKER_HOST: "tcp://docker:2375"
   script:
-    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin  # Docker login
-    - docker info 
+    - echo "Waiting for Docker Daemon..."
+    - sleep 10
+    - docker info
     - docker ps
-    - docker build -t $DOCKER_USERNAME/web-test:latest . 
-    - docker tag $DOCKER_USERNAME/web-test:latest $DOCKER_USERNAME/web-test:latest  # Tag image
-    - docker push $DOCKER_USERNAME/web-test:latest  # Push image to Docker Hub
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH/web-test:latest .
+    - docker push $CI_REGISTRY/$CI_PROJECT_PATH/web-test:latest
   needs:
     - lint
     - test
