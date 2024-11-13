@@ -1,0 +1,69 @@
+
+/* Classe pour la bonne réponse */
+.correct-answer {
+  background-color: #28a745; /* Vert */
+  color: white !important ;
+}
+
+/* Bouton sélectionné */
+.selected-button {
+  background-color: #3498db !important; /* Bleu clair */
+  color: white;
+}
+
+/* Désactivation du curseur pour les boutons après réponse */
+.QuestionChoiceMultiple button:disabled {
+  cursor: not-allowed; /* Applique le curseur not-allowed aux boutons désactivés */
+  background-color: #cccccc; /* Change la couleur de fond pour indiquer que l'option est désactivée */
+}
+
+
+/* Hover effect for buttons */
+.QuestionChoiceMultiple button:hover {
+  background-color: #732d91; /* Couleur mauve plus foncée */
+}
+
+/* Désactivation du curseur pour les boutons après réponse */
+.QuestionChoiceMultiple button:disabled {
+  cursor: not-allowed; /* Applique le curseur not-allowed aux boutons désactivés */
+  background-color: #cccccc; /* Change la couleur de fond pour indiquer que l'option est désactivée */
+}
+
+
+/* Conteneur pour les options de choix multiple */
+.QuestionChoiceMultiple {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+  width: 80%;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style des cases de choix (colonnes) */
+.QuestionChoiceMultiple .choice {
+  flex: 1 1 45%; /* 2 éléments par ligne */
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Boutons des choix */
+.QuestionChoiceMultiple button {
+  background-color: #8e44ad; /* Couleur mauve */
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
