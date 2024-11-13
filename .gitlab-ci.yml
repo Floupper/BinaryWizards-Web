@@ -10,7 +10,6 @@ stages:
   - build
   - deploy
 
-# Étape lint
 lint:
   script:
     - npm install
@@ -23,7 +22,6 @@ lint:
     paths:
       - lint.json
 
-# Étape tests
 test:
   script:
     - npm install
@@ -36,7 +34,6 @@ test:
     paths:
       - test-results.xml
 
-# Étape couverture
 coverage:
   script:
     - pip install coverage pytest
@@ -50,7 +47,6 @@ coverage:
     paths:
       - coverage.html
 
-# Étape build (construction de l'image Docker)
 build:
   script:
     - docker build -t web-test .
@@ -59,22 +55,12 @@ build:
     - test
     - coverage
 
-# Étape push vers Docker Hub
 push_to_dockerhub:
   script:
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
     - docker tag web-test $DOCKER_USERNAME/web-test:latest
-    - docker push $DOCKER_USERNAME/web-test:latest
+    - docker push louisschlegel/s5-01:web-test:latest
   needs:
     - build
   only:
-    - master
-
-# Étape déploiement sur le serveur
-deploy:
-  script:
-    - docker run --rm -v $(pwd)/deploy.sh:/deploy.sh $DOCKER_USERNAME/web-test /bin/sh /deploy.sh
-  needs:
-    - push_to_dockerhub
-  only:
-    - master
+    - main
