@@ -3,45 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import QuestionHUD from '../components/QuestionHUD';
 import QuestionChoiceMultiple from '../components/QuestionChoiceMultiple';
 import '../assets/QuestionScreen.css';
-
+import { GetQuestion, PostAnswers } from '../services/QuestionService';
 // Fonction pour récupérer les données de l'API
-async function GetQuestion(id_quizz) {
-  return fetch(`http://localhost:3000/quiz/${id_quizz}/question`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des données');
-      }
-      return response.json();
-    })
-    .catch(error => {
-      throw error;
-    });
-}
 
-async function PostAnswers(id_quizz, index_question, index_reponse) {
-  const quizQuestionPost = {
-    question_index: index_question,
-    option_index: index_reponse,
-  };
 
-  return fetch(`http://localhost:3000/quiz/${id_quizz}/question`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(quizQuestionPost),
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Erreur lors de l\'envoi des réponses');
-      }
-      return response.json();
-    })
-    .catch(error => {
-      console.error('Error sending response:', error);
-      throw error;
-    });
-}
 
 export default function QuestionScreen() {
   const { id } = useParams();
@@ -53,6 +18,7 @@ export default function QuestionScreen() {
   const [questionIndex, setQuestionIndex] = useState(); //Index de la question en cours
   const [nbQuestionsTotal, setNbQuestionsTotal] = useState();   //Nombre total de questions
   const [score, setScore] = useState();                 //Score du joueur actuel
+  const [totalScore, setTotalScore] = useState();       //Score total que le joueur peut obtenir
   const [questionType, setQuestionType] = useState(''); //Type de question (inutile)
   const [questionDifficulty, setQuestionDifficulty] = useState(''); //Difficulté de la question
   const [questionCategory, setQuestionCategory] = useState('');    //Catégorie de la question
@@ -67,7 +33,7 @@ export default function QuestionScreen() {
       const data = await GetQuestion(id);
 
       // Vérifie si le quiz est terminé
-      if (data.quizz_finished) {
+      if (data.quiz_finished) {
         navigate('/end-quizz'); // Redirige vers la page de fin du quiz
         return;
       }
@@ -84,6 +50,7 @@ export default function QuestionScreen() {
       setSelectedQuestionId(null); // Réinitialiser la sélection
       setIsAnswered(false); // Réinitialise l'état d'envoi pour la nouvelle question
       setIdCorrectAnswers(null); // Réinitialise l'état de la bonne réponse
+      setTotalScore(data.total_score);
     } catch (error) {
       setError(error.message); 
     } finally {
@@ -153,7 +120,7 @@ export default function QuestionScreen() {
           onClick={handleReload}
           disabled={!isAnswered}  // Désactive le bouton si aucune réponse n'est sélectionnée
         >
-          Passer à la question suivante
+          Next
         </button>
       </div>
         

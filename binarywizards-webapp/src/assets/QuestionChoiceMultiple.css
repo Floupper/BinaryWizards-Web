@@ -53,16 +53,16 @@
   font-size: 16px;
   border: none;
   border-radius: 8px;
-  padding: 10px 15px;
+  padding: 10px 15px; 
   cursor: pointer;
   width: 100%;
   transition: all 0.3s ease;
 }
 
-.selected-button {
+.incorrect-answer {
   background-color: #d92121 !important; /* Bleu clair */
   color: white;
-}
+} 
 
 
 /* Classe pour la bonne réponse */

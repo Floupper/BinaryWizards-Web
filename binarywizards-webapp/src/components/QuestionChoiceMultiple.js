@@ -14,6 +14,11 @@ export default function QuestionChoiceMultiple({ question_choice, correctOptionI
           buttonClass = 'correct-answer'; // Appliquer la classe à la bonne réponse
         }
 
+        // Si la réponse est incorrecte, applique la classe 'incorrect-answer'
+        if (selectedQuestionId !== null && correctOptionIndex !== null && selectedQuestionId === index && selectedQuestionId !== correctOptionIndex) {
+          buttonClass = 'incorrect-answer'; // Appliquer la classe 'incorrect-answer' pour une mauvaise réponse
+        }
+
         return (
           <div key={index} className="choice">
             <button
