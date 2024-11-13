@@ -3,6 +3,9 @@ image: docker:latest
 services:
   - docker:dind
 
+variables:
+  DOCKER_HOST: "tcp://docker:2375" 
+
 lint:
   script:
     - npm install
@@ -40,7 +43,7 @@ coverage:
 
 build:
   script:
-    - docker build -t web-test .
+    - docker build -t $DOCKER_USERNAME/web-test:latest .
   needs:
     - lint
     - test
@@ -49,7 +52,7 @@ build:
 push_to_dockerhub:
   script:
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-    - docker tag web-test $DOCKER_USERNAME/web-test:latest
-    - docker push louisschlegel/s5-01:web-test:latest
+    - docker tag $DOCKER_USERNAME/web-test:latest $DOCKER_USERNAME/web-test:latest
+    - docker push $DOCKER_USERNAME/web-test:latest
   needs:
     - build
