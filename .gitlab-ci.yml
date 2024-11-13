@@ -36,7 +36,6 @@ test:
       - test-results.xml
   allow_failure : true
 
-
 coverage:
   script:
     - apt-get update && apt-get install -y python3-pip  
@@ -50,19 +49,14 @@ coverage:
       - coverage.xml
   allow_failure : true
 
-
 build:
   script:
+    - apt-get update && apt-get install -y docker.io
     - docker build -t $DOCKER_USERNAME/web-test:latest . 
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    - docker tag $DOCKER_USERNAME/web-test:latest $DOCKER_USERNAME/web-test:latest
+    - docker push $DOCKER_USERNAME/web-test:latest
   needs:
     - lint
     - test
     - coverage
-
-push_to_dockerhub:
-  stage: deploy
-  script:
-    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin  
-    - docker push $DOCKER_USERNAME/web-test:latest 
-  needs:
-    - build
