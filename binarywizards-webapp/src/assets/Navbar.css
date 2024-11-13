@@ -1,4 +1,6 @@
 .Navbar {
+  position: fixed;
+  width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -31,6 +33,7 @@
     text-decoration: none;
     font-size: 18px;
     transition: color 0.3s;
+    margin-right: 2.5rem;
   }
   
   .Navbar-links a:hover {
