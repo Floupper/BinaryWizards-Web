@@ -1,12 +1,6 @@
 image: node:18
 
-stages:
-  - lint
-  - test
-  - build
-
 lint:
-  stage: lint
   script:
     - npm install
     - if [ -z "$(find src -type f)" ]; then echo "No files in src, skipping lint"; else
@@ -21,7 +15,6 @@ lint:
       - lint.json
 
 test:
-  stage: test
   script:
     - npm install
     - if [ -z "$(find src -type f)" ]; then echo "No files in src, skipping tests"; else
@@ -35,12 +28,26 @@ test:
     paths:
       - test-results.xml
 
+coverage:
+  script:
+    - pip install coverage pytest
+    - coverage run -m pytest
+    - coverage report
+    - coverage html
+    - coverage xml
+    - mv htmlcov/index.html coverage.html
+  artifacts:
+    when: always
+    paths:
+      - coverage.html
+
+
 build:
   image: docker:latest
   services:
     - docker:dind
-  stage: build
   needs:
     - test
+    - coverage
   script:
     - docker build -t web-test .
