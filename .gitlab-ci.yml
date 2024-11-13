@@ -1,17 +1,17 @@
-image: docker:latest
+image: node:18  
 
 services:
-  - docker:dind
+  - docker:dind 
 
 variables:
   DOCKER_HOST: "tcp://docker:2375" 
 
 lint:
   script:
-    - npm install
-    - npx eslint "src/**/*.js" -f json -o lint-es.json
-    - npx htmlhint "src/**/*.html" --format json > lint-html.json
-    - npx stylelint "src/**/*.{css,scss}" -f json > lint-style.json
+    - npm install 
+    - npx eslint "src/**/*.js" -f json -o lint-es.json 
+    - npx htmlhint "src/**/*.html" --format json > lint-html.json 
+    - npx stylelint "src/**/*.{css,scss}" -f json > lint-style.json  
     - jq -s add lint-es.json lint-html.json lint-style.json > lint.json
   artifacts:
     when: always
@@ -20,30 +20,32 @@ lint:
 
 test:
   script:
-    - npm install
+    - npm install 
     - npm test -- --reporter mocha-junit-reporter --reporter-options mochaFile=test-results.xml
   artifacts:
     when: always
     reports:
       junit:
-        - test-results.xml
+        - test-results.xml 
     paths:
       - test-results.xml
 
 coverage:
   script:
-    - pip install coverage pytest
+    - apt-get update && apt-get install -y python3-pip  
+    - pip3 install coverage pytest 
     - coverage run -m pytest
-    - coverage report
-    - coverage xml
+    - coverage report 
+    - coverage xml  
   artifacts:
     when: always
     paths:
       - coverage.xml
 
 build:
+  image: docker:latest
   script:
-    - docker build -t $DOCKER_USERNAME/web-test:latest .
+    - docker build -t $DOCKER_USERNAME/web-test:latest . 
   needs:
     - lint
     - test
@@ -51,8 +53,8 @@ build:
 
 push_to_dockerhub:
   script:
-    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-    - docker tag $DOCKER_USERNAME/web-test:latest $DOCKER_USERNAME/web-test:latest
-    - docker push $DOCKER_USERNAME/web-test:latest
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin  
+    - docker tag $DOCKER_USERNAME/web-test:latest $DOCKER_USERNAME/web-test:latest 
+    - docker push $DOCKER_USERNAME/web-test:latest 
   needs:
     - build
