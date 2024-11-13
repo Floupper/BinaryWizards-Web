@@ -1,16 +1,19 @@
 
-/* Classe pour la bonne réponse */
-.correct-answer {
-  background-color: #28a745; /* Vert */
-  color: white !important ;
-}
-
 /* Bouton sélectionné */
-.selected-button {
-  background-color: #3498db !important; /* Bleu clair */
-  color: white;
+/* Conteneur pour les options de choix multiple */
+.QuestionChoiceMultiple {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+  width: 80%;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 /* Désactivation du curseur pour les boutons après réponse */
 .QuestionChoiceMultiple button:disabled {
   cursor: not-allowed; /* Applique le curseur not-allowed aux boutons désactivés */
@@ -30,20 +33,9 @@
 }
 
 
-/* Conteneur pour les options de choix multiple */
-.QuestionChoiceMultiple {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  padding: 15px;
-  width: 80%;
-  max-width: 600px;
-  margin: 0 auto;
-  background-color: #f8f8f8;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+
+
+
 
 /* Style des cases de choix (colonnes) */
 .QuestionChoiceMultiple .choice {
@@ -67,3 +59,14 @@
   transition: all 0.3s ease;
 }
 
+.selected-button {
+  background-color: #d92121 !important; /* Bleu clair */
+  color: white;
+}
+
+
+/* Classe pour la bonne réponse */
+.correct-answer {
+  background-color: #28a745 !important; /* Vert */
+  color: white !important ;
+}
