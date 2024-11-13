@@ -1,72 +1,65 @@
-
-/* Bouton sélectionné */
-/* Conteneur pour les options de choix multiple */
+/* Selected button */
+/* Container for multiple choice options */
 .QuestionChoiceMultiple {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  padding: 15px;
+  gap: 0.625rem; /* 10px */
+  padding: 0.9375rem; /* 15px */
   width: 80%;
-  max-width: 600px;
+  max-width: 37.5rem; /* 600px */
   margin: 0 auto;
   background-color: #f8f8f8;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-/* Désactivation du curseur pour les boutons après réponse */
-.QuestionChoiceMultiple button:disabled {
-  cursor: not-allowed; /* Applique le curseur not-allowed aux boutons désactivés */
-  background-color: #cccccc; /* Change la couleur de fond pour indiquer que l'option est désactivée */
+  border-radius: 0.625rem; /* 10px */
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px */
 }
 
+/* Disable cursor for buttons after response */
+.QuestionChoiceMultiple button:disabled {
+  cursor: not-allowed; /* Applies not-allowed cursor to disabled buttons */
+  background-color: #cccccc; /* Changes background to indicate option is disabled */
+}
 
 /* Hover effect for buttons */
 .QuestionChoiceMultiple button:hover {
-  background-color: #732d91; /* Couleur mauve plus foncée */
+  background-color: #732d91; /* Darker purple color */
 }
 
-/* Désactivation du curseur pour les boutons après réponse */
+/* Disable cursor for buttons after response */
 .QuestionChoiceMultiple button:disabled {
-  cursor: not-allowed; /* Applique le curseur not-allowed aux boutons désactivés */
-  background-color: #cccccc; /* Change la couleur de fond pour indiquer que l'option est désactivée */
+  cursor: not-allowed; /* Applies not-allowed cursor to disabled buttons */
+  background-color: #cccccc; /* Changes background to indicate option is disabled */
 }
 
-
-
-
-
-
-/* Style des cases de choix (colonnes) */
+/* Style for choice boxes (columns) */
 .QuestionChoiceMultiple .choice {
-  flex: 1 1 45%; /* 2 éléments par ligne */
+  flex: 1 1 45%; /* 2 elements per row */
   display: flex;
   justify-content: center;
-  padding: 10px;
+  padding: 0.625rem; /* 10px */
   box-sizing: border-box;
 }
 
-/* Boutons des choix */
+/* Choice buttons */
 .QuestionChoiceMultiple button {
-  background-color: #8e44ad; /* Couleur mauve */
+  background-color: #8e44ad; /* Purple color */
   color: white;
-  font-size: 16px;
+  font-size: 1rem; /* 16px */
   border: none;
-  border-radius: 8px;
-  padding: 10px 15px; 
+  border-radius: 0.5rem; /* 8px */
+  padding: 0.625rem 0.9375rem; /* 10px 15px */
   cursor: pointer;
   width: 100%;
   transition: all 0.3s ease;
 }
 
 .incorrect-answer {
-  background-color: #d92121 !important; /* Bleu clair */
+  background-color: #d92121 !important; /* Light blue */
   color: white;
-} 
+}
 
-
-/* Classe pour la bonne réponse */
+/* Class for correct answer */
 .correct-answer {
-  background-color: #28a745 !important; /* Vert */
-  color: white !important ;
+  background-color: #28a745 !important; /* Green */
+  color: white !important;
 }

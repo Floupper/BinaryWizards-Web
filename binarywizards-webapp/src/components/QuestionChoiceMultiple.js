@@ -4,19 +4,17 @@ export default function QuestionChoiceMultiple({ question_choice, correctOptionI
   return (
     <div className="QuestionChoiceMultiple">
       {question_choice.map((choice, index) => {
-        // Initialiser une variable pour la classe du bouton
+        // Initialize a variable for the button's class
         let buttonClass = '';
 
-        // Appliquer la classe 'correct-answer' à la bonne réponse
-        console.log('correctOptionIndex', correctOptionIndex);
-        console.log('index', index);
+        // Apply the 'correct-answer' class to the correct answer
         if (index === correctOptionIndex) {
-          buttonClass = 'correct-answer'; // Appliquer la classe à la bonne réponse
+          buttonClass = 'correct-answer'; // Apply the class to the correct answer
         }
 
-        // Si la réponse est incorrecte, applique la classe 'incorrect-answer'
+        // If the answer is incorrect, apply the 'incorrect-answer' class
         if (selectedQuestionId !== null && correctOptionIndex !== null && selectedQuestionId === index && selectedQuestionId !== correctOptionIndex) {
-          buttonClass = 'incorrect-answer'; // Appliquer la classe 'incorrect-answer' pour une mauvaise réponse
+          buttonClass = 'incorrect-answer'; // Apply the 'incorrect-answer' class for an incorrect answer
         }
 
         return (
@@ -25,9 +23,9 @@ export default function QuestionChoiceMultiple({ question_choice, correctOptionI
               onClick={() => onQuestionSelect(index)}
               className={`${selectedQuestionId === index ? 'selected-button' : ''} ${buttonClass}`}
               style={{
-                cursor: isAnswered ? 'not-allowed' : 'pointer', // Appliquer cursor: not-allowed si la réponse est envoyée
+                cursor: isAnswered ? 'not-allowed' : 'pointer', // Apply 'cursor: not-allowed' if the answer has been submitted
               }}
-              disabled={isAnswered} // Désactiver le bouton une fois la réponse envoyée
+              disabled={isAnswered} // Disable the button once the answer is submitted
             >
               {choice}
             </button>

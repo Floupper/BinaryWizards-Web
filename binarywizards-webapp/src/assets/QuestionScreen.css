@@ -1,50 +1,51 @@
 /* QuestionScreen.css */
-/* Bouton de validation désactivé */
+/* Disabled validation button */
 .validate-button.disabled {
-  background-color: #cccccc; /* Gris pour le bouton désactivé */
+  background-color: #cccccc; /* Gray for disabled button */
   color: #666666;
   cursor: not-allowed;
 }
 
-/* Bouton désactivé */
+/* Disabled button */
 .validate-button:disabled {
-  background-color: #cccccc; /* Gris clair quand désactivé */
+  background-color: #cccccc; /* Light gray when disabled */
   cursor: not-allowed;
 }
-/* Style de base pour la page */
+
+/* Basic page styling */
 body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4; /* Fond gris clair */
+  background-color: #f4f4f4; /* Light gray background */
 }
 
-/* Conteneur principal */
+/* Main container */
 .QuestionScreen {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 20px;
+  padding: 1.25rem; /* 20px */
   color: #333;
 }
 
 /* HUD styling */
 .HUD {
   background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 15px 25px;
-  margin-bottom: 20px;
+  border-radius: 0.625rem; /* 10px */
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px */
+  padding: 0.9375rem 1.5625rem; /* 15px 25px */
+  margin-bottom: 1.25rem; /* 20px */
   width: 80%;
-  max-width: 600px;
+  max-width: 37.5rem; /* 600px */
   text-align: center;
 }
 
 .HUD h1 {
   color: #4a4a4a;
-  font-size: 24px;
+  font-size: 1.5rem; /* 24px */
   font-weight: bold;
   margin: 0;
 }
@@ -52,156 +53,155 @@ body {
 /* Question styling */
 .Question {
   color: #4a4a4a;
-  font-size: 20px;
+  font-size: 1.25rem; /* 20px */
   font-weight: bold;
-  margin: 20px 0;
+  margin: 1.25rem 0; /* 20px */
   text-align: center;
 }
 
-/* Conteneur pour les choix de réponses */
+/* Answer choices container */
 .Answers {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 80%;
-  max-width: 600px;
+  max-width: 37.5rem; /* 600px */
 }
 
-/* Style des boutons de réponse */
+/* Answer buttons styling */
 .Answers button {
-  background-color: #8e44ad; /* Couleur mauve */
+  background-color: #8e44ad; /* Purple color */
   color: white;
-  font-size: 16px;
+  font-size: 1rem; /* 16px */
   border: none;
-  border-radius: 8px;
-  padding: 12px 20px;
-  margin: 10px 0;
+  border-radius: 0.5rem; /* 8px */
+  padding: 0.75rem 1.25rem; /* 12px 20px */
+  margin: 0.625rem 0; /* 10px */
   width: 100%;
-  max-width: 250px;
+  max-width: 15.625rem; /* 250px */
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-/* Hover effect for buttons */
+/* Hover effect for answer buttons */
 .Answers button:hover {
-  background-color: #732d91; /* Teinte légèrement plus foncée de violet */
+  background-color: #732d91; /* Slightly darker purple shade */
 }
 
-/* Bouton de validation */
+/* Validate button */
 button {
   background-color: #8e44ad;
   color: white;
-  font-size: 16px;
+  font-size: 1rem; /* 16px */
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
+  border-radius: 0.5rem; /* 8px */
+  padding: 0.625rem 1.25rem; /* 10px 20px */
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 20px;
+  margin-top: 1.25rem; /* 20px */
 }
 
 button:hover {
   background-color: #732d91;
 }
 
-/* Texte de feedback pour l'ID de la question sélectionnée */
+/* Feedback text for selected question ID */
 .selectedQuestionId {
-  font-size: 16px;
+  font-size: 1rem; /* 16px */
   color: #555;
-  margin-top: 15px;
+  margin-top: 0.9375rem; /* 15px */
 }
 
-
-/* Conteneur principal de QuestionScreen */
+/* Main container for QuestionScreen */
 .QuestionScreen {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f4f4f4; /* Fond gris clair */
-  padding: 20px;
+  background-color: #f4f4f4; /* Light gray background */
+  padding: 1.25rem; /* 20px */
   text-align: center;
 }
 
-/* HUD et Question styling */
+/* HUD and Question styling */
 .HUD {
   background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 15px 25px;
-  margin-bottom: 20px;
+  border-radius: 0.625rem; /* 10px */
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px */
+  padding: 0.9375rem 1.5625rem; /* 15px 25px */
+  margin-bottom: 1.25rem; /* 20px */
   width: 80%;
-  max-width: 600px;
+  max-width: 37.5rem; /* 600px */
 }
 
 .Question {
   color: #4a4a4a;
-  font-size: 20px;
+  font-size: 1.25rem; /* 20px */
   font-weight: bold;
-  margin: 20px 0;
+  margin: 1.25rem 0; /* 20px */
 }
 
-/* Conteneur pour les choix de réponses */
+/* Answer choices container */
 .Answers {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 600px;
+  max-width: 37.5rem; /* 600px */
 }
 
-/* Conteneur pour les options de choix multiple (centé horizontalement) */
+/* Centered multiple choice options container */
 .QuestionChoiceMultiple {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  padding: 15px;
+  gap: 0.625rem; /* 10px */
+  padding: 0.9375rem; /* 15px */
   width: 100%;
-  max-width: 600px;
+  max-width: 37.5rem; /* 600px */
   background-color: #f8f8f8;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  border-radius: 0.625rem; /* 10px */
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px */
+  margin-bottom: 1.25rem; /* 20px */
 }
 
-/* Style des cases de choix */
+/* Choice box styling */
 .QuestionChoiceMultiple .choice {
-  flex: 1 1 45%; /* 2 éléments par ligne */
+  flex: 1 1 45%; /* 2 items per row */
   display: flex;
   justify-content: center;
-  padding: 10px;
+  padding: 0.625rem; /* 10px */
 }
 
-/* Boutons des choix */
+/* Choice buttons styling */
 .QuestionChoiceMultiple button {
   background-color: #8e44ad;
   color: white;
-  font-size: 16px;
+  font-size: 1rem; /* 16px */
   border: none;
-  border-radius: 8px;
-  padding: 10px 15px;
+  border-radius: 0.5rem; /* 8px */
+  padding: 0.625rem 0.9375rem; /* 10px 15px */
   cursor: pointer;
   width: 100%;
   transition: all 0.3s ease;
 }
 
-/* Hover effect for buttons */
+/* Hover effect for choice buttons */
 .QuestionChoiceMultiple button:hover {
   background-color: #732d91;
 }
 
-/* Bouton Valider, centré et stylisé */
+/* Centered and styled validate button */
 .validate-button {
   background-color: #8e44ad;
   color: white;
-  font-size: 16px;
+  font-size: 1rem; /* 16px */
   border: none;
-  border-radius: 8px;
-  padding: 12px 20px;
+  border-radius: 0.5rem; /* 8px */
+  padding: 0.75rem 1.25rem; /* 12px 20px */
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 1.25rem; /* 20px */
   transition: all 0.3s ease;
 }
 
@@ -209,16 +209,15 @@ button:hover {
   background-color: #732d91;
 }
 
-/* Style pour le bouton désactivé */
+/* Styling for the disabled button */
 .validate-button.disabled {
-  background-color: #cccccc; /* Gris pour le bouton désactivé */
+  background-color: #cccccc; /* Gray for disabled button */
   color: #666666;
   cursor: not-allowed;
 }
 
-
-/* Style du bouton sélectionné en bleu */
+/* Style for selected button in blue */
 .selected-button {
-  background-color: #3498db; /* Couleur bleu clair */
+  background-color: #3498db; /* Light blue color */
   color: white;
 }

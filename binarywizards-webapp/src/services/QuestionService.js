@@ -1,8 +1,10 @@
+import config from '../config';
+
 export async function GetQuestion(id_quizz) {
-    return fetch(`http://klebert-host.com:33012/quiz/${id_quizz}/question`)
+    return fetch(`${config.API_BASE_URL}quiz/${id_quizz}/question`)
       .then(response => {
         if (!response.ok) {
-          throw new Error('Erreur lors de la récupération des données');
+          throw new Error('Data recovery error');
         }
         return response.json();
       })
@@ -18,7 +20,7 @@ export async function GetQuestion(id_quizz) {
       option_index: index_reponse,
     };
   
-    return fetch(`http://klebert-host.com:33012/quiz/${id_quizz}/question`, {
+    return fetch(`${config.API_BASE_URL}quiz/${id_quizz}/question`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -27,7 +29,7 @@ export async function GetQuestion(id_quizz) {
     })
       .then(response => {
         if (!response.ok) {
-          throw new Error('Erreur lors de l\'envoi des réponses');
+          throw new Error('Error sending responses');
         }
         return response.json();
       })

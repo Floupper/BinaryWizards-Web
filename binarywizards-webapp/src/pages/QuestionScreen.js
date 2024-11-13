@@ -4,41 +4,48 @@ import QuestionHUD from '../components/QuestionHUD';
 import QuestionChoiceMultiple from '../components/QuestionChoiceMultiple';
 import '../assets/QuestionScreen.css';
 import { GetQuestion, PostAnswers } from '../services/QuestionService';
-// Fonction pour récupérer les données de l'API
-
-
+// Function for retrieving API data
 
 export default function QuestionScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // États pour stocker les données du quiz
-  const [questionText, setQuestionText] = useState(''); //Texte de la question
-  const [options, setOptions] = useState([]);           //Tableau contenant les réponses dispo 
-  const [questionIndex, setQuestionIndex] = useState(); //Index de la question en cours
-  const [nbQuestionsTotal, setNbQuestionsTotal] = useState();   //Nombre total de questions
-  const [score, setScore] = useState();                 //Score du joueur actuel
-  const [totalScore, setTotalScore] = useState();       //Score total que le joueur peut obtenir
-  const [questionType, setQuestionType] = useState(''); //Type de question (inutile)
-  const [questionDifficulty, setQuestionDifficulty] = useState(''); //Difficulté de la question
-  const [questionCategory, setQuestionCategory] = useState('');    //Catégorie de la question
-  const [loading, setLoading] = useState(true); // État pour afficher le chargement
-  const [error, setError] = useState(null); // État pour afficher les erreurs
-  const [selectedQuestionId, setSelectedQuestionId] = useState(null); // État pour stocker la réponse sélectionnée
-  const [isAnswered, setIsAnswered] = useState(false); // État pour bloquer la soumission multiple de réponses
-  const [idCorrectAnswers, setIdCorrectAnswers] = useState(); // État pour stocker les réponses correctes
-  // Fonction pour récupérer et mettre à jour les données du quiz
+  // States to store quiz data
+  const [questionText, setQuestionText] = useState(''); // Question text
+  const [options, setOptions] = useState([]);           // Array containing available answers
+  const [questionIndex, setQuestionIndex] = useState(); // Index of the current question
+  const [nbQuestionsTotal, setNbQuestionsTotal] = useState();   // Total number of questions
+  const [score, setScore] = useState();                 // Current player's score
+  const [totalScore, setTotalScore] = useState();       // Total score the player can achieve
+  const [questionType, setQuestionType] = useState(''); // Question type (unused)
+  const [questionDifficulty, setQuestionDifficulty] = useState(''); // Question difficulty
+  const [questionCategory, setQuestionCategory] = useState('');    // Question category
+  const [loading, setLoading] = useState(true); // State to show loading status
+  const [error, setError] = useState(null); // State to display errors
+  const [selectedQuestionId, setSelectedQuestionId] = useState(null); // State to store the selected answer
+  const [isAnswered, setIsAnswered] = useState(false); // State to block multiple answer submissions
+  const [idCorrectAnswers, setIdCorrectAnswers] = useState(); // State to store the correct answer(s)
+
+  // Function to retrieve and update quiz data
   const handleFetchQuiz = async () => {
     try {
+      // Retrieves the question & answer
       const data = await GetQuestion(id);
 
-      // Vérifie si le quiz est terminé
+      // Checks if the quiz is finished
       if (data.quiz_finished) {
-        navigate('/end-quizz'); // Redirige vers la page de fin du quiz
-        return;
+        setTotalScore(data.max_score);
+        setScore(data.score);
+
+        if (data.quiz_finished) {
+          navigate('/end', {
+              state: { score: data.score, totalScore: data.max_score, quizId: id },
+          });
+          return;
+        }
       }
 
-      // Mise à jour des états avec les données reçues si le quiz n'est pas terminé
+      // Updates states with received data if the quiz is not finished
       setQuestionText(data.question_text);
       setOptions(data.options);
       setQuestionIndex(data.question_index);
@@ -47,40 +54,40 @@ export default function QuestionScreen() {
       setQuestionType(data.question_type);
       setQuestionDifficulty(data.question_difficulty);
       setQuestionCategory(data.question_category);
-      setSelectedQuestionId(null); // Réinitialiser la sélection
-      setIsAnswered(false); // Réinitialise l'état d'envoi pour la nouvelle question
-      setIdCorrectAnswers(null); // Réinitialise l'état de la bonne réponse
-      setTotalScore(data.total_score);
+      setSelectedQuestionId(null); // Resets the selection
+      setIsAnswered(false); // Resets the submission status for the new question
+      setIdCorrectAnswers(null); // Resets the correct answer state
+      // setTotalScore(data.total_score);
     } catch (error) {
-      setError(error.message); 
+      setError(error.message);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     handleFetchQuiz();
-  }, []); 
+  }, []);
 
-  // Soumettre la réponse lors de la sélection d'une option
+  // Submit the answer when selecting an option
   const handleQuestionSelect = async (selectedId) => {
-    if (!isAnswered) { // Vérifie si une réponse n'a pas déjà été envoyée
-      setSelectedQuestionId(selectedId); // Met à jour la réponse sélectionnée
-      setIsAnswered(true); // Marque que la réponse a été envoyée
-  
+    if (!isAnswered) { // Checks if an answer has not already been submitted
+      setSelectedQuestionId(selectedId); // Updates the selected answer
+      setIsAnswered(true); // Marks that the answer has been submitted
+
       try {
-        const result = await PostAnswers(id, questionIndex, selectedId); // Envoie la réponse via POST et récupère la réponse du serveur
-        setIdCorrectAnswers(result.correct_option_index); // Sauvegarde l'index de la bonne réponse
+        const result = await PostAnswers(id, questionIndex, selectedId); // Sends the answer via POST and retrieves the server's response
+        setIdCorrectAnswers(result.correct_option_index); // Saves the index of the correct answer
       } catch (error) {
-        setError('Erreur lors de l\'envoi des réponses');
+        setError('Error sending answers');
       }
     }
   };
 
-  // Charger la question suivante lors de l'appui sur "Passer à la question suivante"
+  // Load the next question when clicking "Next Question"
   const handleReload = () => {
     setLoading(true);
-    handleFetchQuiz(); // Charger la prochaine question
+    handleFetchQuiz(); // Load the next question
   };
 
   const paramHUD = {
@@ -91,11 +98,11 @@ export default function QuestionScreen() {
   };
 
   if (loading) {
-    return <div>Chargement...</div>;
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Erreur: {error}</div>;
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -103,27 +110,26 @@ export default function QuestionScreen() {
       <div className="HUD">
         <QuestionHUD party_parameters={paramHUD} />
       </div>
-      
+
       <h1 className="Question">{questionText}</h1>
-      
-      <div className="Answers">    
-        <QuestionChoiceMultiple 
-          question_choice={options} 
+
+      <div className="Answers">
+        <QuestionChoiceMultiple
+          question_choice={options}
           correctOptionIndex={idCorrectAnswers}
-          onQuestionSelect={handleQuestionSelect} 
+          onQuestionSelect={handleQuestionSelect}
           selectedQuestionId={selectedQuestionId}
-          isAnswered={isAnswered}  // Passer l'état de la réponse envoyée
+          isAnswered={isAnswered}  // Pass the state of the answer submission
         />
-        
-        <button 
+
+        <button
           className={`validate-button ${!isAnswered ? 'disabled' : ''}`}
           onClick={handleReload}
-          disabled={!isAnswered}  // Désactive le bouton si aucune réponse n'est sélectionnée
+          disabled={!isAnswered}  // Disables the button if no answer is selected
         >
           Next
         </button>
       </div>
-        
     </div>
   );
 }

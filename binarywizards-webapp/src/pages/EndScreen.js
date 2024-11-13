@@ -5,10 +5,11 @@ import "../assets/EndScreen.css";
 export default function EndScreen() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { score, totalScore, quizId } = location.state || { score: null, totalScore: null, quizId: null };
+
+    const { score, totalScore, quizId } = location.state || {};  
 
     useEffect(() => {
-        if (score === null || totalScore === null || quizId === null) {
+        if (score === undefined || totalScore === undefined || quizId === undefined) {
             navigate('/');
         }
     }, [score, totalScore, quizId, navigate]);
@@ -16,7 +17,7 @@ export default function EndScreen() {
     return (
         <div className="EndScreen">
             <div className="EndScreenContainer">
-                {score !== null && totalScore !== null ? (
+                {score !== undefined && totalScore !== undefined ? (
                     <>
                         <h1>Quiz Completed!</h1>
                         <h2>Your Score: {score}/{totalScore}</h2>
