@@ -1,90 +1,44 @@
+image: node:18
+
 stages:
-  - install
   - lint
   - test
   - build
-  - quality_analysis
-  - deploy
 
-variables:
-  NODE_ENV: test
-  DOCKER_IMAGE: registry.git.unistra/s5-binarywizards-web
-  DOCKER_TAG: $CI_COMMIT_REF_SLUG
-
-# Caching node_modules to speed up builds
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
-
-# Step 1: Install dependencies
-install_dependencies:
-  stage: install
-  image: node:18
-  script:
-    - echo "Installing dependencies..."
-    - npm install
-  cache:
-    key: "node-modules"
-  only:
-    - merge_requests
-    - branches
-
-# Step 2: Linting
 lint:
   stage: lint
-  image: node:18
   script:
-    - echo "Running linter..."
-    - npm run lint  # Ensure `lint` script is defined in package.json
-  only:
-    - merge_requests
-    - branches
+    - npm install
+    - if [ -z "$(find src -type f)" ]; then echo "No files in src, skipping lint"; else
+      npx eslint "src/**/*.js" -f json -o lint-es.json &&
+      npx htmlhint "src/**/*.html" --format json > lint-html.json &&
+      npx stylelint "src/**/*.{css,scss}" -f json > lint-style.json &&
+      jq -s add lint-es.json lint-html.json lint-style.json > lint.json;
+      fi
+  artifacts:
+    when: always
+    paths:
+      - lint.json
 
-# Step 3: Run tests
 test:
   stage: test
-  image: node:18
   script:
-    - echo "Running tests..."
-    - npm test  # Ensure `test` script is defined in package.json
-  only:
-    - merge_requests
-    - branches
+    - npm install
+    - if [ -z "$(find src -type f)" ]; then echo "No files in src, skipping tests"; else
+      npm test -- --reporter mocha-junit-reporter --reporter-options mochaFile=test-results.xml;
+      fi
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - test-results.xml
+    paths:
+      - test-results.xml
 
-# Step 4: Code Quality Analysis
-quality_analysis:
-  stage: quality_analysis
-  image: node:18
-  script:
-    - echo "Analyzing code quality..."
-    - npm run lint  # Add other quality checks as needed
-  only:
-    - merge_requests
-    - branches
-
-# Step 5: Build Docker Image
-docker_build:
+build:
+  image: docker
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind
+  needs:
+    - test
   script:
-    - echo "Building Docker image..."
-    - docker build -t $DOCKER_IMAGE:$DOCKER_TAG .
-  only:
-    - merge_requests
-    - branches
-
-# Step 6: Deploy Docker Image to GitLab Container Registry
-docker_push:
-  stage: deploy
-  image: docker:latest
-  services:
-    - docker:dind
-  script:
-    - echo "Pushing Docker image to GitLab registry..."
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker push $DOCKER_IMAGE:$DOCKER_TAG
-  only:
-    - main  # Only push on main branch for production
+    - docker build -t web-test .
