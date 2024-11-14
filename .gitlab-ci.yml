@@ -21,13 +21,16 @@ lint:
 
 test:
   script:
-    - npm install 
-    - npm test -- --reporter mocha-junit-reporter --reporter-options mochaFile=test-results.xml
+    - npm install
+    - npm install --save-dev jest-junit
+    - jest --ci --reporters=default --reporters=jest-junit
+  variables:
+    JEST_JUNIT_OUTPUT: "test-results.xml"
   artifacts:
     when: always
     reports:
       junit:
-        - test-results.xml 
+        - test-results.xml
     paths:
       - test-results.xml
   allow_failure: true
