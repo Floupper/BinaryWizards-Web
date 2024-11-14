@@ -67,9 +67,9 @@ coverage:
 build:
   stage: build
   before_script:
-    - apk add --no-cache docker-cli
+    - apk add --no-cache docker
   script:
-    - docker buildx build --tag $IMAGE_NAME .
+    - docker build -t $IMAGE_NAME .
 
 deploy:
   stage: deploy
