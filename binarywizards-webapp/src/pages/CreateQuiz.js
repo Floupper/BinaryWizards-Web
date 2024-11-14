@@ -44,7 +44,7 @@ export default function CreateQuiz() {
     console.log('Quiz data:', quizData);
     CreateQuizService.createQuiz(quizData)
       .then(data => {
-        const quizId = data.quiz_id; 
+        const quizId = data.quiz_id;
         navigate(`/question/${quizId}`);
       })
       .catch(error => console.error('Error creating quiz:', error));
@@ -96,10 +96,13 @@ export default function CreateQuiz() {
             value={difficulty}
             onChange={(e) => setDifficulty(e.target.value)}
           >
-            <option value={""}>any</option>
+            <option value={""}>Any</option>
             {difficulties.map((level) => (
-              <option key={level} value={level}>{level}</option>
+              <option key={level} value={level}>
+                {level.charAt(0).toUpperCase() + level.slice(1)}
+              </option>
             ))}
+
           </select>
         </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
