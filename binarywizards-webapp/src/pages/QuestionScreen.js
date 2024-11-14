@@ -41,7 +41,7 @@ export default function QuestionScreen() {
 
         if (data.quiz_finished) {
           navigate('/end', {
-              state: { score: data.score, totalScore: data.max_score, quizId: id },
+              state: { score: data.score, correct_answers_nb: data.correct_answers_nb,nb_questions_total:data.nb_questions_total, quizId: id },
           });
           return;
         }
