@@ -10,8 +10,8 @@ stages:
 lint:
   script:
     - npm install 
-    - npx eslint "src/**/*.js" -f json -o lint-es.json 
-    - npx stylelint "src/**/*.css" -f json > lint-style.json 
+    - npx eslint "binarywizards-webapp/src/**/*.js" -f json -o lint-es.json 
+    - npx stylelint "binarywizards-webapp/src/**/*.css" -f json > lint-style.json 
     - jq -s add lint-es.json lint-style.json > lint.json
   artifacts:
     when: always
@@ -46,6 +46,7 @@ coverage:
   allow_failure: true
 
 build:
+  image: docker:20.10
   services:
     - name: docker:20.10-dind
       command: ["--privileged"]
