@@ -96,6 +96,7 @@ export default function CreateQuiz() {
             value={difficulty}
             onChange={(e) => setDifficulty(e.target.value)}
           >
+            <option value={""}>any</option>
             {difficulties.map((level) => (
               <option key={level} value={level}>{level}</option>
             ))}
