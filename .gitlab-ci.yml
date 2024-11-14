@@ -2,6 +2,7 @@ image: alpine:3.20
 
 variables:
   IMAGE_NAME: louisschlegel/s5-01
+
 lint:
   before_script:
     - apk add --no-cache nodejs npm
@@ -31,7 +32,8 @@ test:
   allow_failure: true
 
 build:
-  needs: test
+  needs: 
+    - test
   image: docker:20.10.16
   services:
     - name: docker:20.10.16-dind
@@ -40,7 +42,8 @@ build:
     - docker build -t $IMAGE_NAME .
 
 deploy:
-  needs: build
+  needs: 
+    - build
   image: docker:20.10.16
   services:
     - name: docker:20.10.16-dind
