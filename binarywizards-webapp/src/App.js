@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import HomeScreen from './pages/HomeScreen';
+import JoinQuiz from './pages/JoinQuiz';
+import CreateQuiz from './pages/CreateQuiz';
+
+import QuestionScreen from './pages/QuestionScreen.js';
+
+import EndScreen from './pages/EndScreen';
+import Navbar from './components/Navbar';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="/join-quiz" element={<JoinQuiz />} />
+        <Route path="/create-quiz" element={<CreateQuiz />} />
+
+        <Route path="/question" element={<Navigate to="/" replace />}/>
+        <Route path="/question/:id" element={<QuestionScreen />}/>
+
+        <Route path="/end" element={<EndScreen />} />
+
+      </Routes>
+    </Router>
   );
 }
 
