@@ -45,7 +45,6 @@ export default function CreateQuiz() {
       difficulty,
     };
     CreateQuizService.createQuiz(quizData)
-<<<<<<< 7c257ad89bf3a970fa97360184da22e74c9e83b6
     .then(data => {
       const quizId = data.quiz_id;
       navigate(`/question/${quizId}`);
@@ -55,13 +54,6 @@ export default function CreateQuiz() {
       toast.info(error.message);
       console.log(error);
     });
-=======
-      .then(data => {
-        const quizId = data.quiz_id;
-        navigate(`/question/${quizId}`);
-      })
-      .catch(error => console.error('Error creating quiz:', error));
->>>>>>> 4c29c609db0e2066e7e5f7e1b1775290becb6a9e
   };
 
   const handleAmountInput = (e) => {
