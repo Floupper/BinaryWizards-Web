@@ -7,12 +7,6 @@ stages:
   - build
   - deploy
 
-variables:
-  DOCKER_TLS_CERTDIR: ""  
-
-before_script:
-  - echo $DOCKER_PASSWORD | docker login -u "$DOCKER_USERNAME" --password-stdin "$CI_REGISTRY"
-
 lint:
   script:
     - npm install 
@@ -53,14 +47,15 @@ coverage:
 
 build:
   services:
-    - docker:dind 
+    - docker:dind
   variables:
     DOCKER_HOST: "tcp://docker:2375"
   script:
-    - docker info
-    - docker ps  
-    - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH/web-test:latest .
-    - docker push $CI_REGISTRY/$CI_PROJECT_PATH/web-test:latest
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin 
+    - docker info  # Display Docker info to check the connection
+    - docker ps  # List running containers to verify Docker is working
+    - docker build -t $DOCKER_USERNAME/s5-01 .
+    - docker push DOCKER_USERNAME/s5-01 
   needs:
     - lint
     - test
