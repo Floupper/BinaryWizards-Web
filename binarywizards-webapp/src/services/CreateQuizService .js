@@ -23,7 +23,7 @@ const CreateQuizService = {
     })
     .then(async response => {
       if (!response.ok) {
-        // Récupère les données de la réponse même en cas d'erreur
+        // Recovers response data even in the event of an error
         const errorData = await response.json();
         
         throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);

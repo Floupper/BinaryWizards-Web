@@ -50,7 +50,7 @@ export default function CreateQuiz() {
       navigate(`/question/${quizId}`);
     })
     .catch(error => {
-      // Afficher error.message dans le toast
+      
       toast.info(error.message);
       console.log(error);
     });
