@@ -1,5 +1,8 @@
 image: alpine:3.20
 
+services:
+  - docker:dind
+
 stages:
   - lint
   - test
@@ -15,11 +18,11 @@ variables:
 lint:
   stage: lint
   before_script:
-    - apt-get update && apt-get install -y nodejs npm
+    - apk add --no-cache nodejs npm
   script:
-    - npm install 
-    - npx eslint "binarywizards-webapp/src/**/*.js" -f json -o lint-es.json    
-    - npx stylelint "binarywizards-webapp/src/**/*.js" -f json > lint-style.json 
+    - npm install
+    - npx eslint "binarywizards-webapp/src/**/*.js" -f json -o lint-es.json
+    - npx stylelint "binarywizards-webapp/src/**/*.js" -f json > lint-style.json
     - jq -s add lint-es.json lint-style.json > lint.json
   artifacts:
     when: always
@@ -29,6 +32,8 @@ lint:
 
 test:
   stage: test
+  before_script:
+    - apk add --no-cache nodejs npm
   script:
     - npm install
     - npm install --save-dev jest-junit
@@ -46,12 +51,13 @@ test:
 
 coverage:
   stage: coverage
+  before_script:
+    - apk add --no-cache python3 py3-pip
   script:
-    - apt-get update && apt-get install -y python3-pip  
-    - pip3 install coverage pytest 
+    - pip3 install coverage pytest
     - coverage run -m pytest
-    - coverage report 
-    - coverage xml  
+    - coverage report
+    - coverage xml
   artifacts:
     when: always
     paths:
@@ -61,15 +67,14 @@ coverage:
 build:
   stage: build
   before_script:
-    - apt-get update && apt-get install -y docker.io
+    - apk add --no-cache docker-cli
     - docker buildx create --use
     - docker buildx inspect --bootstrap
   script:
-    - docker build -t $IMAGE_NAME .
-    - docker buildx duild --platform linux/amd64, linux/arm64 -t $IMAGE_NAME .
+    - docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE_NAME:$CI_COMMIT_REF_NAME --push .
 
 deploy:
   stage: deploy
   script:
-    - echo dckr_pat_cgHw5bMXCea_7-nzz7ykmol57eM | docker login -u louisschlegel \         --password-stdin  
-    - docker push $IMAGE_NAME
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    - docker push $IMAGE_NAME:$CI_COMMIT_REF_NAME
