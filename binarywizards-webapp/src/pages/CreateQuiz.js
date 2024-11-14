@@ -2,30 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/CreateQuiz.css';
 import CreateQuizService from '../services/CreateQuizService ';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function CreateQuiz() {
   const [categories, setCategories] = useState([]);
   const [difficulties, setDifficulties] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [amount, setAmount] = useState('');
   const [difficulty, setDifficulty] = useState('easy');
-  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     CreateQuizService.fetchCategories()
       .then(data => setCategories(data))
-      .catch(error => console.error('Error fetching categories:', error));
+      .catch(error => toast.info('Error fetching categories:', error));
 
       CreateQuizService.fetchDifficulties()
       .then(data => setDifficulties(data))
-      .catch(error => console.error('Error fetching difficulties:', error));
+      .catch(error => toast.info('Error fetching difficulties:', error));
   }, []);
 
   const handleSubmit = () => {
-    setErrorMessage('');
+
 
     if (!amount || isNaN(amount) || amount <= 0) {
-      setErrorMessage('Please enter a valid number of questions (greater than 0).');
+      toast.info('Please enter a valid number of questions (greater than 0).');
       return;
     }
 
@@ -40,17 +42,17 @@ export default function CreateQuiz() {
       amount: Number(amount),
       difficulty,
     };
-    console.log('Quiz data:', quizData);
     CreateQuizService.createQuiz(quizData)
       .then(data => {
         const quizId = data.quiz_id; 
         navigate(`/question/${quizId}`);
       })
-      .catch(error => console.error('Error creating quiz:', error));
+      .catch(error => toast.info('Error creating quiz: error'));
   };
 
   return (
     <div className="CreateQuiz-container">
+      <ToastContainer />
       <div className="CreateQuiz-box">
         <h1>Create a Quiz</h1>
         <div className="form-group">
@@ -88,7 +90,6 @@ export default function CreateQuiz() {
             ))}
           </select>
         </div>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <button onClick={handleSubmit}>Start</button>
       </div>
     </div>

@@ -4,6 +4,8 @@ import QuestionHUD from '../components/QuestionHUD';
 import QuestionChoiceMultiple from '../components/QuestionChoiceMultiple';
 import '../assets/QuestionScreen.css';
 import { GetQuestion, PostAnswers } from '../services/QuestionService';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // Function for retrieving API data
 
 export default function QuestionScreen() {
@@ -25,7 +27,7 @@ export default function QuestionScreen() {
   const [selectedQuestionId, setSelectedQuestionId] = useState(null); // State to store the selected answer
   const [isAnswered, setIsAnswered] = useState(false); // State to block multiple answer submissions
   const [idCorrectAnswers, setIdCorrectAnswers] = useState(); // State to store the correct answer(s)
-
+ 
   // Function to retrieve and update quiz data
   const handleFetchQuiz = async () => {
     try {
@@ -59,7 +61,7 @@ export default function QuestionScreen() {
       setIdCorrectAnswers(null); // Resets the correct answer state
       // setTotalScore(data.total_score);
     } catch (error) {
-      setError(error.message);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -79,7 +81,7 @@ export default function QuestionScreen() {
         const result = await PostAnswers(id, questionIndex, selectedId); // Sends the answer via POST and retrieves the server's response
         setIdCorrectAnswers(result.correct_option_index); // Saves the index of the correct answer
       } catch (error) {
-        setError('Error sending answers');
+        toast.error('Error sending answers');
       }
     }
   };
@@ -107,6 +109,7 @@ export default function QuestionScreen() {
 
   return (
     <div className="QuestionScreen">
+            <ToastContainer />
       <div className="HUD">
         <QuestionHUD party_parameters={paramHUD} />
       </div>

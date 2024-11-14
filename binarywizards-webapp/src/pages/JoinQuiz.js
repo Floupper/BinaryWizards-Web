@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/JoinQuiz.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function JoinQuiz() {
   const [gameCode, setGameCode] = useState('');
@@ -8,7 +10,7 @@ export default function JoinQuiz() {
 
   const handleJoin = () => {
     if (gameCode.trim() === '') {
-      alert('Please enter a valid game code.');
+      toast.info('Please enter a valid game code.');
       return;
     }
     navigate(`/question/${gameCode}`);
@@ -16,6 +18,7 @@ export default function JoinQuiz() {
 
   return (
     <div className="JoinQuizContainer">
+      <ToastContainer />
       <div className="JoinQuizForm">
         <h1>Join a Game</h1>
         <div className="form-group">
