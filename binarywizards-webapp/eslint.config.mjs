@@ -13,15 +13,6 @@ const compat = new FlatCompat({
 });
 
 export default [...compat.extends("eslint:recommended"), {
-    languageOptions: {
-        globals: {
-            ...globals.browser,
-        },
-
-        ecmaVersion: 12,
-        sourceType: "module",
-    },
-
     rules: {
         semi: ["error", "always"],
         quotes: ["error", "double"],

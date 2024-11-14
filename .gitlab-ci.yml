@@ -1,73 +1,48 @@
 image: alpine:3.20
 
-stages:
-  - lint
-  - test
-  - coverage
-  - build
-  - deploy
-
-variables:
-  IMAGE_NAME: louisschlegel/s5-01
-
 lint:
-  stage: lint
   before_script:
     - apk add --no-cache nodejs npm
   script:
-    - npm install
-    - npx eslint "binarywizards-webapp/src/**/*.js" -f json -o lint-es.json
-    - npx stylelint "binarywizards-webapp/src/**/*.js" -f json > lint-style.json
-    - jq -s add lint-es.json lint-style.json > lint.json
+    - cd binarywizards-webapp/
+    - npm install --verbose
+    - npx eslint "src/**/*.js" -f json -o lint.json
   artifacts:
     when: always
     paths:
-      - lint.json
+      - binarywizards-webapp/lint.json
   allow_failure: true
 
 test:
-  stage: test
   before_script:
     - apk add --no-cache nodejs npm
   script:
+    - cd binarywizards-webapp/
     - npm install
-    - npm install --save-dev jest-junit
-    - jest --ci --reporters=default --reporters=jest-junit
-  variables:
-    JEST_JUNIT_OUTPUT: "test-results.xml"
+    - npx jest src/tests/App.test.js --coverage --coverageDirectory=coverage --coverageProvider=babel --outputFile=test-results.xml
   artifacts:
     when: always
     reports:
-      junit:
-        - test-results.xml
+      junit: binarywizards-webapp/test-results.xml
     paths:
-      - test-results.xml
+      - binarywizards-webapp/coverage/
   allow_failure: true
 
-coverage:
-  stage: coverage
-  before_script:
-    - apk add --no-cache python3 py3-pip
-  script:
-    - pip3 install coverage pytest
-    - coverage run -m pytest
-    - coverage report
-    - coverage xml
-  artifacts:
-    when: always
-    paths:
-      - coverage.xml
-  allow_failure: true
-
-build:
+  build:
   stage: build
-  before_script:
-    - apk add --no-cache docker
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
   script:
     - docker build -t $IMAGE_NAME .
 
 deploy:
   stage: deploy
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
   script:
-    - echo dckr_pat_cgHw5bMXCea_7-nzz7ykmol57eM | docker login -u louisschlegel --password-stdin
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
     - docker push $IMAGE_NAME
