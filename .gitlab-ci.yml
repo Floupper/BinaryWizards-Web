@@ -10,8 +10,8 @@ stages:
 lint:
   script:
     - npm install 
-    - npx eslint "binarywizards-webapp/src/**/*.js" -f json -o lint-es.json 
-    - npx stylelint "binarywizards-webapp/src/**/*.css" -f json > lint-style.json 
+    - npx eslint "binarywizards-webapp/**/*.js" -f json -o lint-es.json    
+    - npx stylelint "binarywizards-webapp/**/*.js" -f json > lint-style.json 
     - jq -s add lint-es.json lint-style.json > lint.json
   artifacts:
     when: always
