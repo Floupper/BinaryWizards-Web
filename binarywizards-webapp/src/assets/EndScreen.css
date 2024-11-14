@@ -30,7 +30,7 @@ p {
 
 h2 {
     font-size: 2rem;
-    color: #841584;
+    color: #3552b0;
     margin-bottom: 2rem;
 }
 
@@ -38,7 +38,7 @@ button {
     padding: 1.2rem 2.4rem;
     border: none;
     border-radius: 0.8rem;
-    background-color: #841584;
+    background-color: #3552b0;
     color: #ffffff;
     font-size: 1rem;
     cursor: pointer;
@@ -47,10 +47,10 @@ button {
 }
 
 button:hover {
-    background-color: #6a125b;
+    background-color: #283e88;
 }
 
 button:focus {
     outline: none;
-    box-shadow: 0 0 0 0.3rem rgba(132, 21, 132, 0.5);
+    box-shadow: 0 0 0 0.3rem rgba(18, 27, 109, 0.5);
 }
