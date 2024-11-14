@@ -9,8 +9,8 @@ export default function HomeScreen() {
         <div className="App">
             <h1>Quiz</h1>
             <div className="button-group">
-                <button onClick={() => navigate('/join-quiz')}>Rejoindre un quiz</button>
-                <button onClick={() => navigate('/create-quiz')}>Créer un quiz</button>
+                <button onClick={() => navigate('/join-quiz')}>Join quiz</button>
+                <button onClick={() => navigate('/create-quiz')}>Create quiz</button>
             </div>
         </div>
     );
