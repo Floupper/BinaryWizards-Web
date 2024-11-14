@@ -12,7 +12,7 @@ lint:
     - npm install 
     - npx eslint "src/**/*.js" -f json -o lint-es.json 
     - npx stylelint "src/**/*.css" -f json > lint-style.json 
-    - jq -s add lint-es.json lint-html.json lint-style.json > lint.json
+    - jq -s add lint-es.json lint-style.json > lint.json
   artifacts:
     when: always
     paths:
@@ -48,6 +48,7 @@ coverage:
 build:
   services:
     - name: docker:20.10-dind
+      command: ["--privileged"]
   variables:
     DOCKER_HOST: "tcp://docker:2375"
   script:
