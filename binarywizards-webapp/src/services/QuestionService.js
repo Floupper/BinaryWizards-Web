@@ -12,7 +12,7 @@ export async function GetQuestion(id_quizz) {
         return response.json();
       })
       .catch(error => {
-        throw error;
+        toast.error(error);
       });
   }
   
@@ -37,7 +37,7 @@ export async function GetQuestion(id_quizz) {
         return response.json();
       })
       .catch(error => {
-        console.error('Error sending response:', error);
-        throw error;
+        toast.error('Error sending response:'+error);
+        //throw error;
       });
   }

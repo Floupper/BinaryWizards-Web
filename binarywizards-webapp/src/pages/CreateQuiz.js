@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/CreateQuiz.css';
 import CreateQuizService from '../services/CreateQuizService ';
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 
 export default function CreateQuiz() {
   const [categories, setCategories] = useState([]);
@@ -18,7 +20,7 @@ export default function CreateQuiz() {
       .then(data => setCategories(data))
       .catch(error => toast.info('Error fetching categories:', error));
 
-      CreateQuizService.fetchDifficulties()
+    CreateQuizService.fetchDifficulties()
       .then(data => setDifficulties(data))
       .catch(error => toast.info('Error fetching difficulties:', error));
   }, []);
@@ -43,11 +45,26 @@ export default function CreateQuiz() {
       difficulty,
     };
     CreateQuizService.createQuiz(quizData)
-      .then(data => {
-        const quizId = data.quiz_id; 
-        navigate(`/question/${quizId}`);
-      })
-      .catch(error => toast.info('Error creating quiz: error'));
+    .then(data => {
+      const quizId = data.quiz_id;
+      navigate(`/question/${quizId}`);
+    })
+    .catch(error => {
+      // Afficher error.message dans le toast
+      toast.info(error.message);
+      console.log(error);
+    });
+  };
+
+  const handleAmountInput = (e) => {
+    const value = e.target.value.replace(/[^\d]/g, '');
+    setAmount(value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Delete') {
+      e.preventDefault();
+    }
   };
 
   return (
@@ -74,7 +91,8 @@ export default function CreateQuiz() {
             type="number"
             id="number"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onInput={handleAmountInput}
+            onKeyDown={handleKeyDown}
             placeholder="Enter the number of questions"
           />
         </div>

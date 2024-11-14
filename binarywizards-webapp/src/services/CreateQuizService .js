@@ -1,4 +1,6 @@
 import config from '../config';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateQuizService = {
   fetchCategories: () => {
@@ -18,9 +20,13 @@ const CreateQuizService = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(quizData),
-    }).then(response => {
+    })
+    .then(async response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        // Récupère les données de la réponse même en cas d'erreur
+        const errorData = await response.json();
+        
+        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
       }
       return response.json();
     });
