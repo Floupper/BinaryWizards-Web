@@ -1,15 +1,18 @@
 import config from '../config';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export async function GetQuestion(id_quizz) {
     return fetch(`${config.API_BASE_URL}quiz/${id_quizz}/question`)
       .then(response => {
         if (!response.ok) {
-          throw new Error('Data recovery error');
+          toast.error('Data recovery error');
         }
         return response.json();
       })
       .catch(error => {
-        throw error;
+        toast.error(error);
       });
   }
   
@@ -29,12 +32,12 @@ export async function GetQuestion(id_quizz) {
     })
       .then(response => {
         if (!response.ok) {
-          throw new Error('Error sending responses');
+          toast.error('Error sending responses');
         }
         return response.json();
       })
       .catch(error => {
-        console.error('Error sending response:', error);
-        throw error;
+        toast.error('Error sending response:'+error);
+        //throw error;
       });
   }

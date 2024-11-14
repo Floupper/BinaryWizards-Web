@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../assets/EndScreen.css";
 import { resetQuiz } from "../services/EndScreenService";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export default function EndScreen() {
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ export default function EndScreen() {
 
   return (
     <div className="EndScreen">
+            <ToastContainer />
       <div className="EndScreenContainer">
         {score !== null && correct_answers_nb !== null && nb_questions_total !== null ? (
           <>

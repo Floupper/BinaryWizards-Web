@@ -1,4 +1,8 @@
 import config from '../config';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
 export async function resetQuiz(quizId) {
     try {
         const url = `${config.API_BASE_URL}quiz/${quizId}`;
@@ -8,9 +12,8 @@ export async function resetQuiz(quizId) {
                 "Content-Type": "application/json",
             },
         });
-        console.log("Quiz reset successfully");
-        console.log(url);
+        toast.info("Quiz reset successfully");
     } catch (error) {
-        console.error("Failed to reset quiz: ", error);
+        toast.error("Failed to reset quiz: "+ error);
     }
 }

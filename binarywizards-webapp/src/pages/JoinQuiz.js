@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/JoinQuiz.css';
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { checkQuizExists } from '../services/JoinQuizService';
+
 
 export default function JoinQuiz() {
   const [gameCode, setGameCode] = useState('');
@@ -11,7 +16,8 @@ export default function JoinQuiz() {
 
   const handleJoin = async () => {
     if (gameCode.trim() === '') {
-      setErrorMessage('Please enter a valid game code.');
+      toast.info('Please enter a valid game code.');
+
       return;
     }
 
@@ -30,6 +36,7 @@ export default function JoinQuiz() {
 
   return (
     <div className="JoinQuizContainer">
+      <ToastContainer />
       <div className="JoinQuizForm">
         <h1>Join a Game</h1>
         <div className="form-group">
