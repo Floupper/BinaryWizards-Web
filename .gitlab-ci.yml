@@ -1,5 +1,7 @@
 image: alpine:3.20
 
+variables:
+  IMAGE_NAME: louisschlegel/s5-01
 lint:
   before_script:
     - apk add --no-cache nodejs npm
@@ -28,8 +30,8 @@ test:
       - binarywizards-webapp/coverage/
   allow_failure: true
 
-  build:
-  stage: build
+build:
+  needs: test
   image: docker:20.10.16
   services:
     - name: docker:20.10.16-dind
@@ -38,7 +40,7 @@ test:
     - docker build -t $IMAGE_NAME .
 
 deploy:
-  stage: deploy
+  needs: build
   image: docker:20.10.16
   services:
     - name: docker:20.10.16-dind
