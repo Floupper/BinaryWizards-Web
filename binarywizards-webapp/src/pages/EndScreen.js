@@ -6,17 +6,18 @@ import { resetQuiz } from "../services/EndScreenService";
 export default function EndScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { score, totalScore, quizId } = location.state || {
+  const { score, correct_answers_nb,nb_questions_total, quizId } = location.state || {
     score: null,
-    totalScore: null,
+    correct_answers_nb: null,
+    nb_questions_total: null,
     quizId: null,
   };
 
   useEffect(() => {
-    if (score === null || totalScore === null || quizId === null) {
+    if (score === null || correct_answers_nb === null || nb_questions_total === null|| quizId === null) {
       navigate("/");
     }
-  }, [score, totalScore, quizId, navigate]);
+  }, [score, correct_answers_nb,nb_questions_total, quizId,navigate]);
 
   const handleRestartQuiz = async () => {
     if (quizId) {
@@ -28,10 +29,13 @@ export default function EndScreen() {
   return (
     <div className="EndScreen">
       <div className="EndScreenContainer">
-        {score !== null && totalScore !== null ? (
+        {score !== null && correct_answers_nb !== null && nb_questions_total !== null ? (
           <>
             <h1>Quiz Completed!</h1>
-            <h2>Your Score: {score}/{totalScore}</h2>
+            <h2>Your Score: {score}</h2>
+            <h2>Correct answer : {correct_answers_nb}/{nb_questions_total}</h2>
+           
+
             <button onClick={() => navigate("/")}>Back to home page</button>
             <button onClick={handleRestartQuiz}>Restart Quiz</button>
           </>
