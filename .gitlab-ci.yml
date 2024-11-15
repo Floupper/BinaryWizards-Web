@@ -1,0 +1,53 @@
+image: alpine:3.20
+
+variables:
+  IMAGE_NAME: louisschlegel/s5-01
+
+lint:
+  before_script:
+    - apk add --no-cache nodejs npm
+  script:
+    - cd binarywizards-webapp/
+    - npm install --verbose
+    - npx eslint "src/**/*.js" -f json -o lint.json
+  artifacts:
+    when: always
+    paths:
+      - binarywizards-webapp/lint.json
+  allow_failure: true
+
+test:
+  before_script:
+    - apk add --no-cache nodejs npm
+  script:
+    - cd binarywizards-webapp/
+    - npm install
+    - npx jest src/tests/**/*.test.js --coverage --coverageDirectory=coverage --coverageProvider=babel --outputFile=test-results.xml
+  artifacts:
+    when: always
+    reports:
+      junit: binarywizards-webapp/test-results.xml
+    paths:
+      - binarywizards-webapp/coverage/
+  allow_failure: true
+
+build:
+  needs: 
+    - test
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
+  script:
+    - docker build -t $IMAGE_NAME .
+
+deploy:
+  needs: 
+    - build
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
+  script:
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    - docker push $IMAGE_NAME
