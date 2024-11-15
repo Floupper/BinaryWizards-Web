@@ -50,7 +50,7 @@ export default function QuestionScreen() {
       setOptions(data.options);
       setQuestionIndex(data.question_index);
       setNbQuestionsTotal(data.nb_questions_total);
-      setScore(data.score);
+      setScore(data.correct_answers_nb);
       setQuestionType(data.question_type);
       setQuestionDifficulty(data.question_difficulty);
       setQuestionCategory(data.question_category);
