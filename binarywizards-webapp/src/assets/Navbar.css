@@ -4,14 +4,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #841584; 
-    padding: 20px;
+    background-color: #3552b0; 
+    padding: 1.25rem;
     color: #ffffff;
   }
   
   .Navbar-logo a {
     color: #ffffff;
-    font-size: 24px;
+    font-size: 1.5rem;
     text-decoration: none;
     font-weight: bold;
   }
@@ -19,7 +19,7 @@
   .Navbar-links {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 1.25rem;
     margin: 0;
     padding: 0;
   }
@@ -31,7 +31,7 @@
   .Navbar-links a {
     color: #ffffff;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 1.125rem;
     transition: color 0.3s;
     margin-right: 2.5rem;
   }

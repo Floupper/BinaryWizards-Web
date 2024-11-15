@@ -84,14 +84,14 @@ export default function CreateQuiz() {
       <div className="CreateQuiz-box">
         <h1>Create a Quiz</h1>
         <div className="form-group">
-          <label htmlFor="category">Category:</label>
+          <label htmlFor="category">Category</label>
           <select
             id="category"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(Number(e.target.value))}
           >
               <option value="" disabled>
-               Select category
+               Select a category
                </option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>{category.name}</option>
@@ -99,7 +99,7 @@ export default function CreateQuiz() {
           </select>
         </div>
         <div className="form-group">
-          <label htmlFor="number">Number of questions:</label>
+          <label htmlFor="number">Number of questions</label>
           <input
             type="number"
             id="number"
@@ -110,15 +110,15 @@ export default function CreateQuiz() {
           />
         </div>
         <div className="form-group">
-  <label htmlFor="difficulty">Difficulty:</label>
+  <label htmlFor="difficulty">Difficulty</label>
   <select
     id="difficulty"
     value={difficulty}
     onChange={(e) => setDifficulty(e.target.value)}
   >
-    {/* Option par défaut non sélectionnable */}
+    {}
     <option value="" disabled>
-      Select difficulty
+      Select a difficulty
     </option>
     {difficulties.map((level) => (
       <option key={level} value={level}>
