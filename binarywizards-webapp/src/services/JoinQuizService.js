@@ -5,11 +5,11 @@ export const checkQuizExists = async (gameCode) => {
   try {
     const response = await fetch(`${config.API_BASE_URL}quiz/${gameCode}/question`);
     if (!response.ok) {
-      toast.error('Quiz not found');
+      throw new Error('Quiz not found');
     }
     return response.json();
   } catch (error) {
-    toast.error('Error checking quiz:', error);
-    //throw error;
+    toast.info('Quizz not found');
+    throw error;
   }
 };
