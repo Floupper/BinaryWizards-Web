@@ -18,7 +18,6 @@ export default function QuestionScreen() {
   const [questionIndex, setQuestionIndex] = useState(); // Index of the current question
   const [nbQuestionsTotal, setNbQuestionsTotal] = useState();   // Total number of questions
   const [score, setScore] = useState();                 // Current player's score
-  const [totalScore, setTotalScore] = useState();       // Total score the player can achieve
   const [questionType, setQuestionType] = useState(''); // Question type (unused)
   const [questionDifficulty, setQuestionDifficulty] = useState(''); // Question difficulty
   const [questionCategory, setQuestionCategory] = useState('');    // Question category
@@ -36,12 +35,11 @@ export default function QuestionScreen() {
 
       // Checks if the quiz is finished
       if (data.quiz_finished) {
-        setTotalScore(data.max_score);
-        setScore(data.score);
+        setScore(data.correct_answers_nb);
 
         if (data.quiz_finished) {
           navigate('/end', {
-              state: { score: data.score, correct_answers_nb: data.correct_answers_nb,nb_questions_total:data.nb_questions_total, quizId: id },
+              state: { correct_answers_nb: data.correct_answers_nb,nb_questions_total:data.nb_questions_total, quizId: id },
           });
           return;
         }
@@ -52,14 +50,13 @@ export default function QuestionScreen() {
       setOptions(data.options);
       setQuestionIndex(data.question_index);
       setNbQuestionsTotal(data.nb_questions_total);
-      setScore(data.score);
+      setScore(data.correct_answers_nb);
       setQuestionType(data.question_type);
       setQuestionDifficulty(data.question_difficulty);
       setQuestionCategory(data.question_category);
       setSelectedQuestionId(null); // Resets the selection
       setIsAnswered(false); // Resets the submission status for the new question
       setIdCorrectAnswers(null); // Resets the correct answer state
-      // setTotalScore(data.total_score);
     } catch (error) {
       toast.error(error.message);
     } finally {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/CreateQuiz.css';
-import CreateQuizService from '../services/CreateQuizService';
+import CreateQuizService from '../services/CreateQuizService ';
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,8 +11,8 @@ export default function CreateQuiz() {
   const [categories, setCategories] = useState([]);
   const [difficulties, setDifficulties] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [amount, setAmount] = useState('');
-  const [difficulty, setDifficulty] = useState('easy');
+  const [amount, setAmount] = useState(10);
+  const [difficulty, setDifficulty] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,12 +32,23 @@ export default function CreateQuiz() {
       toast.info('Please enter a valid number of questions (greater than 0).');
       return;
     }
+    if (selectedCategory === '') {
+      toast.info('Please select a category.');
+      return;
+    }
+
+    if (difficulty === '') {
+      toast.info('Please select a difficulty.');
+      return;
+    }
+
 
     let selectedCat = selectedCategory;
     if (selectedCat === '') {
       const randomIndex = Math.floor(Math.random() * categories.length);
       selectedCat = categories[randomIndex].id;
     }
+
 
     const quizData = {
       category: selectedCat,
@@ -73,20 +84,22 @@ export default function CreateQuiz() {
       <div className="CreateQuiz-box">
         <h1>Create a Quiz</h1>
         <div className="form-group">
-          <label htmlFor="category">Category:</label>
+          <label htmlFor="category">Category</label>
           <select
             id="category"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(Number(e.target.value))}
           >
-            <option value="">Please select a category</option>
+              <option value="" disabled>
+               Select a category
+               </option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>{category.name}</option>
             ))}
           </select>
         </div>
         <div className="form-group">
-          <label htmlFor="number">Number of questions:</label>
+          <label htmlFor="number">Number of questions</label>
           <input
             type="number"
             id="number"
@@ -97,21 +110,23 @@ export default function CreateQuiz() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="difficulty">Difficulty:</label>
-          <select
-            id="difficulty"
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-          >
-            <option value={""}>Any</option>
-            {difficulties.map((level) => (
-              <option key={level} value={level}>
-                {level.charAt(0).toUpperCase() + level.slice(1)}
-              </option>
-            ))}
-
-          </select>
-        </div>
+  <label htmlFor="difficulty">Difficulty</label>
+  <select
+    id="difficulty"
+    value={difficulty}
+    onChange={(e) => setDifficulty(e.target.value)}
+  >
+    {}
+    <option value="" disabled>
+      Select a difficulty
+    </option>
+    {difficulties.map((level) => (
+      <option key={level} value={level}>
+        {level.charAt(0).toUpperCase() + level.slice(1)}
+      </option>
+    ))}
+  </select>
+</div>
         <button onClick={handleSubmit}>Start</button>
       </div>
     </div>

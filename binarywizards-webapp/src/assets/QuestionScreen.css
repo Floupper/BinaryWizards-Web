@@ -74,7 +74,7 @@ body {
 }
 /* Answer buttons styling */
 .Answers button {
-  background-color: #8e44ad; /* Purple color */
+  background-color: #3552b0; /* Purple color */
   color: white;
   font-size: 1rem; /* 16px */
   border: none;
@@ -89,12 +89,12 @@ body {
 
 /* Hover effect for answer buttons */
 .Answers button:hover {
-  background-color: #732d91; /* Slightly darker purple shade */
+  background-color: #283e88; /* Slightly darker purple shade */
 }
 
 /* Validate button */
 button {
-  background-color: #8e44ad;
+  background-color: #3552b0;
   color: white;
   font-size: 1rem; /* 16px */
   border: none;
@@ -106,7 +106,7 @@ button {
 }
 
 button:hover {
-  background-color: #732d91;
+  background-color: #283e88;
 }
 
 /* Feedback text for selected question ID */
@@ -144,7 +144,7 @@ button:hover {
 
 /* Choice buttons styling */
 .QuestionChoiceMultiple button {
-  background-color: #8e44ad;
+  background-color: #3552b0;
   color: white;
   font-size: 1rem; /* 16px */
   border: none;
@@ -157,12 +157,12 @@ button:hover {
 
 /* Hover effect for choice buttons */
 .QuestionChoiceMultiple button:hover {
-  background-color: #732d91;
+  background-color: #283e88;
 }
 
 /* Centered and styled validate button */
 .validate-button {
-  background-color: #8e44ad;
+  background-color: #3552b0;
   color: white;
   font-size: 1rem; /* 16px */
   border: none;
@@ -174,7 +174,7 @@ button:hover {
 }
 
 .validate-button:hover {
-  background-color: #732d91;
+  background-color: #283e88;
 }
 
 /* Styling for the disabled button */

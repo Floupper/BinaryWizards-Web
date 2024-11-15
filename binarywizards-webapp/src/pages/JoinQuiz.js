@@ -38,15 +38,15 @@ export default function JoinQuiz() {
     <div className="JoinQuizContainer">
       <ToastContainer />
       <div className="JoinQuizForm">
-        <h1>Join a Game</h1>
+        <h1>Join a quiz</h1>
         <div className="form-group">
-          <label htmlFor="gameCode">Game Code:</label>
+          <label htmlFor="gameCode">Quiz Code</label>
           <input
             type="text"
             id="gameCode"
             value={gameCode}
             onChange={(e) => setGameCode(e.target.value)}
-            placeholder="Enter the game code"
+            placeholder="Enter the quiz code"
           />
         </div>
         <button onClick={handleJoin} disabled={isLoading}>
