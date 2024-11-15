@@ -116,7 +116,7 @@ export default function CreateQuiz() {
     value={difficulty}
     onChange={(e) => setDifficulty(e.target.value)}
   >
-    {/* Option par défaut non sélectionnable */}
+    {}
     <option value="" disabled>
       Select a difficulty
     </option>
