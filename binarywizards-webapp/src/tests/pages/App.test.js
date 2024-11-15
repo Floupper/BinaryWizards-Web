@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import CreateQuiz from '../pages/CreateQuiz';
-import CreateQuizService from '../services/CreateQuizService';
+import CreateQuiz from '../../pages/CreateQuiz';
+import CreateQuizService from '../../services/CreateQuizService';
 import { ToastContainer } from 'react-toastify';
 
 jest.mock('../services/CreateQuizService', () => ({

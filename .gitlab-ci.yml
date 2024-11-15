@@ -22,7 +22,7 @@ test:
   script:
     - cd binarywizards-webapp/
     - npm install
-    - npx jest src/tests/App.test.js --coverage --coverageDirectory=coverage --coverageProvider=babel --outputFile=test-results.xml
+    - npx jest src/tests/**/*.test.js --coverage --coverageDirectory=coverage --coverageProvider=babel --outputFile=test-results.xml
   artifacts:
     when: always
     reports:
