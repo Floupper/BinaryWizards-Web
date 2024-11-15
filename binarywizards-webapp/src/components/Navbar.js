@@ -6,7 +6,7 @@ export default function Navbar() {
   return (
     <nav className="Navbar">
       <div className="Navbar-logo">
-        <NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : '')}>MyQuizApp</NavLink>
+        <NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : '')}>Quiz</NavLink>
       </div>
       <ul className="Navbar-links">
         <li><NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : '')}>Home</NavLink></li>

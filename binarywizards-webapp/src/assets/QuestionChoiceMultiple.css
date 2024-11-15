@@ -22,7 +22,7 @@
 
 /* Hover effect for buttons */
 .QuestionChoiceMultiple button:hover {
-  background-color: #732d91; /* Darker purple color */
+  background-color: #283e88; /* Darker purple color */
 }
 
 /* Disable cursor for buttons after response */
@@ -42,7 +42,7 @@
 
 /* Choice buttons */
 .QuestionChoiceMultiple button {
-  background-color: #8e44ad; /* Purple color */
+  background-color: #3552b0; /* Purple color */
   color: white;
   font-size: 1rem; /* 16px */
   border: none;
