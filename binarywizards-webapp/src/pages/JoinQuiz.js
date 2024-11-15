@@ -52,7 +52,7 @@ export default function JoinQuiz() {
         <button onClick={handleJoin} disabled={isLoading}>
           {isLoading ? 'Joining...' : 'Join'}
         </button>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
       </div>
     </div>
   );
