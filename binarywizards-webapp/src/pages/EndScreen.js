@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../assets/EndScreen.css";
-import { resetQuiz } from "../services/EndScreenService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { createGameWithQuizId } from '../services/JoinQuizService';
 
 export default function EndScreen() {
   const navigate = useNavigate();
@@ -24,8 +23,8 @@ export default function EndScreen() {
 
   const handleRestartQuiz = async () => {
     if (quizId) {
-      await resetQuiz(quizId);
-      navigate(`/question/${quizId}`);
+      const data = await createGameWithQuizId(quizId);
+      navigate(`/question/${data.game_id}`);
     }
   };
 
