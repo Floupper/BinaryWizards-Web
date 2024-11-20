@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { signupUser, checkUsernameAvailability } from '../services/signupService';
 import { useNavigate } from 'react-router-dom';
 import '../assets/Auth.css';
+import bcrypt from 'bcryptjs';
 
 function SignupScreen() {
   const [username, setUsername] = useState('');
@@ -22,10 +23,11 @@ function SignupScreen() {
         setError('Username is already taken');
         return;
       }
-      const userId = await signupUser(username, password);
+      const hashedPassword = bcrypt.hashSync(password, 10);
+      const userId = await signupUser(username, hashedPassword);
       if (userId) {
         localStorage.setItem('user_id', userId);
-        navigate('/dashboard'); 
+        navigate('/dashboard'); // Redirect to the dashboard or another page after sign up
       }
     } catch (error) {
       console.error('Error during sign up:', error);

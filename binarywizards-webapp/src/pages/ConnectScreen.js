@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connectUser } from '../services/connectService';
 import { useNavigate } from 'react-router-dom';
 import '../assets/Auth.css';
+import bcrypt from 'bcryptjs';
 
 function ConnectScreen() {
   const [username, setUsername] = useState('');
@@ -12,10 +13,11 @@ function ConnectScreen() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userId = await connectUser(username, password);
+      const hashedPassword = bcrypt.hashSync(password, 10);
+      const userId = await connectUser(username, hashedPassword);
       if (userId) {
         localStorage.setItem('user_id', userId);
-        navigate('/dashboard'); // Redirect to the dashboard or another page after login
+        navigate('/dashboard'); 
       }
     } catch (error) {
       console.error('Error during submission:', error);
