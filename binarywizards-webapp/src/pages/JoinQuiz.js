@@ -18,7 +18,7 @@ export default function JoinQuiz() {
 
   const handleCreateQuiz = async () => {
     if (quizCode.trim() === '') {
-      toast.info('Please enter a valid game code.');
+      toast.info('Please enter a valid quiz code.');
       return;
     }
     setIsLoadingQuiz(true);
@@ -45,7 +45,7 @@ export default function JoinQuiz() {
       await checkGameExists(gameCode);
       navigate(`/question/${gameCode}`);
     } catch (error) {
-      setErrorMessage(error.message);
+      toast.error(error.message);
     } finally {
       setIsLoadingGame(false);
     }
@@ -69,7 +69,7 @@ export default function JoinQuiz() {
         <button onClick={handleCreateQuiz} disabled={isLoadingQuiz}>
           {isLoadingQuiz ? 'Joining...' : 'Join'}
         </button>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
       </div>
 
       <div className="JoinGameContainer">

@@ -6,11 +6,11 @@ export const checkGameExists = async (gameCode) => {
     const response = await fetch(`${config.API_BASE_URL}quiz/${gameCode}/question`);
     console.log(response);
     if (!response.ok) {
-      toast.error('Quiz not found');
+      throw new Error('Quiz not found');
     }
     return response.json();
   } catch (error) {
-    toast.error('Error checking quiz:', error);
+    throw new Error('Error checking quiz:');
     //throw error;
   }
 };
@@ -19,11 +19,11 @@ export const createGameWithQuizId = async (quizId) => {
   try {
     const response = await fetch(`${config.API_BASE_URL}game/${quizId}/create`);
     if (!response.ok) {
-      toast.error('Quiz not found');
+      throw new Error('QuizId not found');
     }
     return response.json();
   } catch (error) {
-    toast.error('Error checking quiz:', error);
+    throw new Error('Error during the creation of the game:');
     //throw error;
   }
 };
