@@ -18,6 +18,7 @@ export default function QuestionScreen() {
   const [questionIndex, setQuestionIndex] = useState(); // Index of the current question
   const [nbQuestionsTotal, setNbQuestionsTotal] = useState();   // Total number of questions
   const [score, setScore] = useState();                 // Current player's score
+  const [quizId, setQuizId] = useState();               // Quiz ID
   const [questionType, setQuestionType] = useState(''); // Question type (unused)
   const [questionDifficulty, setQuestionDifficulty] = useState(''); // Question difficulty
   const [questionCategory, setQuestionCategory] = useState('');    // Question category
@@ -26,7 +27,7 @@ export default function QuestionScreen() {
   const [selectedQuestionId, setSelectedQuestionId] = useState(null); // State to store the selected answer
   const [isAnswered, setIsAnswered] = useState(false); // State to block multiple answer submissions
   const [idCorrectAnswers, setIdCorrectAnswers] = useState(); // State to store the correct answer(s)
- 
+  
   // Function to retrieve and update quiz data
   const handleFetchQuiz = async () => {
     try {
@@ -34,10 +35,10 @@ export default function QuestionScreen() {
       const data = await GetQuestion(id);
 
       // Checks if the quiz is finished
-      if (data.quiz_finished) {
+      if (data.game_finished) {
         setScore(data.correct_answers_nb);
 
-        if (data.quiz_finished) {
+        if (data.game_finished) {
           navigate('/end', {
               state: { correct_answers_nb: data.correct_answers_nb,nb_questions_total:data.nb_questions_total, quizId: id },
           });
@@ -54,6 +55,7 @@ export default function QuestionScreen() {
       setQuestionType(data.question_type);
       setQuestionDifficulty(data.question_difficulty);
       setQuestionCategory(data.question_category);
+      setQuizId(data.quiz_id);
       setSelectedQuestionId(null); // Resets the selection
       setIsAnswered(false); // Resets the submission status for the new question
       setIdCorrectAnswers(null); // Resets the correct answer state
@@ -90,7 +92,8 @@ export default function QuestionScreen() {
   };
 
   const paramHUD = {
-    idquizz: id,
+    idparty:id,
+    idquizz: quizId,
     score: score,
     question_index: questionIndex,
     nb_questions_total: nbQuestionsTotal,

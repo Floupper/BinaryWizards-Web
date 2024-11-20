@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 export async function GetQuestion(id_quizz) {
-    return fetch(`${config.API_BASE_URL}quiz/${id_quizz}/question`)
+    return fetch(`${config.API_BASE_URL}game/${id_quizz}/question`)
       .then(response => {
         if (!response.ok) {
           toast.error('Data recovery error');
@@ -17,13 +17,13 @@ export async function GetQuestion(id_quizz) {
   }
   
 
-  export async function PostAnswers(id_quizz, index_question, index_reponse) {
+  export async function PostAnswers(id_game, index_question, index_reponse) {
     const quizQuestionPost = {
       question_index: index_question,
       option_index: index_reponse,
     };
   
-    return fetch(`${config.API_BASE_URL}quiz/${id_quizz}/question`, {
+    return fetch(`${config.API_BASE_URL}game/${id_game}/question`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
