@@ -25,8 +25,7 @@ export default function JoinQuiz() {
 
     try {
       const data = await createGameWithQuizId(quizCode);
-      setGameCode(data.game_id);
-      navigate(`/question/${gameCode}`);
+      navigate(`/question/${data.game_id}`);
     } catch (error) {
       toast.error(error.message);
     } finally {

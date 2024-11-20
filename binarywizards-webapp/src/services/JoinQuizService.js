@@ -3,7 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export const checkGameExists = async (gameCode) => {
   try {
-    const response = await fetch(`${config.API_BASE_URL}quiz/${gameCode}/question`);
+    const response = await fetch(`${config.API_BASE_URL}game/${gameCode}/question`);
 
     if (!response.ok) {
       throw new Error('Quiz not found');
