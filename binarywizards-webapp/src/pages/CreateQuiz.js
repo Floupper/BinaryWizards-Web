@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/CreateQuiz.css';
-import CreateQuizService from '../services/CreateQuizService ';
+import CreateQuizService from '../services/CreateQuizService';
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
