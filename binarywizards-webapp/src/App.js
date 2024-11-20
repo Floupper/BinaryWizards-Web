@@ -4,11 +4,14 @@ import HomeScreen from './pages/HomeScreen';
 import JoinQuiz from './pages/JoinQuiz';
 import CreateQuiz from './pages/CreateQuiz';
 import ConnectScreen from './pages/ConnectScreen.js';
-
+import SignupScreen from './pages/SignupScreen.js';
 import QuestionScreen from './pages/QuestionScreen.js';
+import Dashboard from './pages/Dashboard.js';
 
 import EndScreen from './pages/EndScreen';
 import Navbar from './components/Navbar';
+
+
 
 
 function App() {
@@ -20,6 +23,8 @@ function App() {
         <Route path="/join-quiz" element={<JoinQuiz />} />
         <Route path="/create-quiz" element={<CreateQuiz />} />
         <Route path="/connect" element={<ConnectScreen />} />
+        <Route path="/signup" element={<SignupScreen />} />
+        <Route path="/dashboard" element={<Dashboard />} />
 
         <Route path="/question" element={<Navigate to="/" replace />}/>
         <Route path="/question/:id" element={<QuestionScreen />}/>
