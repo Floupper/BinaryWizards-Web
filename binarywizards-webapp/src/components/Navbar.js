@@ -12,6 +12,8 @@ export default function Navbar() {
         <li><NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : '')}>Home</NavLink></li>
         <li><NavLink to="/join-quiz" className={({ isActive }) => (isActive ? 'active-link' : '')}>Join Quiz</NavLink></li>
         <li><NavLink to="/create-quiz" className={({ isActive }) => (isActive ? 'active-link' : '')}>Create Quiz</NavLink></li>
+        <li><NavLink to="/connect" className={({ isActive }) => (isActive ? 'active-link' : '')}>Connect</NavLink></li>
+
       </ul>
     </nav>
   );
