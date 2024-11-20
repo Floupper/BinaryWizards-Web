@@ -40,7 +40,7 @@ export default function QuestionScreen() {
 
         if (data.game_finished) {
           navigate('/end', {
-              state: { correct_answers_nb: data.correct_answers_nb,nb_questions_total:data.nb_questions_total, gameId: id },
+              state: { correct_answers_nb: data.correct_answers_nb,nb_questions_total:data.nb_questions_total, quizId: data.quiz_id },
           });
           return;
         }

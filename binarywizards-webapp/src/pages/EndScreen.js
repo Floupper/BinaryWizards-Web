@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../assets/EndScreen.css";
-import { resetQuiz } from "../services/EndScreenService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { createGameWithQuizId } from '../services/JoinQuizService';
 
 export default function EndScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const {correct_answers_nb,nb_questions_total, gameId } = location.state || {
+  const {correct_answers_nb,nb_questions_total, quizId } = location.state || {
     
     correct_answers_nb: null,
     nb_questions_total: null,
@@ -17,14 +16,14 @@ export default function EndScreen() {
   };
 
   useEffect(() => {
-    if (correct_answers_nb === null || nb_questions_total === null|| gameId === null) {
+    if (correct_answers_nb === null || nb_questions_total === null|| quizId === null) {
       navigate("/");
     }
-  }, [correct_answers_nb,nb_questions_total, gameId,navigate]);
+  }, [correct_answers_nb,nb_questions_total, quizId,navigate]);
 
   const handleRestartQuiz = async () => {
-    if (gameId) {
-      const data = await resetQuiz(gameId);
+    if (quizId) {
+      const data = await createGameWithQuizId(quizId);
       navigate(`/question/${data.game_id}`);
     }
   };
