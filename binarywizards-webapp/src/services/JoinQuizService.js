@@ -10,13 +10,8 @@ export const checkGameExists = async (gameCode) => {
     }
     return response.json();
   } catch (error) {
-<<<<<<< f6c9d2c501beeaa80e299e579f9b8aed0678052a
     throw new Error('Error checking quiz:');
     //throw error;
-=======
-    toast.info('Quizz not found');
-    throw error;
->>>>>>> dbcbbab99aacb60e8a0684a559ffc3b6d93688e5
   }
 };
 
