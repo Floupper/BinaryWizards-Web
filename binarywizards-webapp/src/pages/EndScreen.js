@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default function EndScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const {correct_answers_nb,nb_questions_total, quizId } = location.state || {
+  const {correct_answers_nb,nb_questions_total, gameId } = location.state || {
     
     correct_answers_nb: null,
     nb_questions_total: null,
@@ -17,15 +17,15 @@ export default function EndScreen() {
   };
 
   useEffect(() => {
-    if (correct_answers_nb === null || nb_questions_total === null|| quizId === null) {
+    if (correct_answers_nb === null || nb_questions_total === null|| gameId === null) {
       navigate("/");
     }
-  }, [correct_answers_nb,nb_questions_total, quizId,navigate]);
+  }, [correct_answers_nb,nb_questions_total, gameId,navigate]);
 
   const handleRestartQuiz = async () => {
-    if (quizId) {
-      await resetQuiz(quizId);
-      navigate(`/question/${quizId}`);
+    if (gameId) {
+      const data = await resetQuiz(gameId);
+      navigate(`/question/${data.game_id}`);
     }
   };
 
