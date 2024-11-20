@@ -7,6 +7,8 @@ import ConnectScreen from './pages/ConnectScreen.js';
 import SignupScreen from './pages/SignupScreen.js';
 import QuestionScreen from './pages/QuestionScreen.js';
 import Dashboard from './pages/Dashboard.js';
+import HistoriqueGamePlay from './pages/HistoriqueGamePlay';
+import DetailCreateQuiz from './pages/DetailCreateQuiz';
 
 import EndScreen from './pages/EndScreen';
 import Navbar from './components/Navbar';
@@ -25,7 +27,8 @@ function App() {
         <Route path="/connect" element={<ConnectScreen />} />
         <Route path="/signup" element={<SignupScreen />} />
         <Route path="/dashboard" element={<Dashboard />} />
-
+        <Route path="/dashboard/historique-game-play/:quizId" element={<HistoriqueGamePlay />} />
+        <Route path="/dashboard/detail-create-quiz/:quizId" element={<DetailCreateQuiz />} />
         <Route path="/question" element={<Navigate to="/" replace />}/>
         <Route path="/question/:id" element={<QuestionScreen />}/>
 
