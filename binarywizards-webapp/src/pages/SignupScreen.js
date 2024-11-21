@@ -13,6 +13,10 @@ function SignupScreen() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return;
+    }
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -24,10 +28,10 @@ function SignupScreen() {
         return;
       }
       const hashedPassword = bcrypt.hashSync(password, 10);
-      const userId = await signupUser(username, hashedPassword);
-      if (userId) {
-        localStorage.setItem('user_id', userId);
-        navigate('/dashboard'); // Redirect to the dashboard or another page after sign up
+      const token = await signupUser(username, hashedPassword);
+      if (token) {
+        localStorage.setItem('token', token);
+        navigate('/dashboard'); 
       }
     } catch (error) {
       console.error('Error during sign up:', error);
@@ -52,7 +56,7 @@ function SignupScreen() {
         </div>
         {error && <p className="error-message">{error}</p>}
         <button type="submit">Sign Up</button>
-        <button type="button" onClick={() => navigate('/login')}>Already have an account? Log In</button>
+        <button type="button" onClick={() => navigate('/connect')}>Already have an account? Log In</button>
       </form>
     </div>
   );

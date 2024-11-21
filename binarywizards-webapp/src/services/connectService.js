@@ -8,7 +8,7 @@ export async function connectUser(username, password) {
       password,
     });
     toast.info("Login successful");
-    return response.data.user_id;
+    return response.data.token;
   } catch (error) {
     throw error;
   }
