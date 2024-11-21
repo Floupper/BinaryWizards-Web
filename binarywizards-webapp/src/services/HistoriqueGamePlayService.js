@@ -1,14 +1,9 @@
-import config from '../config';
+import axiosInstance from '../utils/axiosInstance';
 
 const HistoriqueGamePlayService = {
-  getPlayedGames: (userId, quizId) => {
-    return fetch(`${config.API_BASE_URL}/user/${userId}/${quizId}/playedQuizzes`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(response => response.json());
-  }
+  getPlayedGames: async (userId, quizId) => {
+    return axiosInstance.get(`/user/${userId}/${quizId}/playedQuizzes`).then((response) => response.data);
+  },
 };
 
 export default HistoriqueGamePlayService;

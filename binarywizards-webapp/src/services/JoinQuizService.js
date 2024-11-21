@@ -1,30 +1,20 @@
-import config from '../config';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from '../utils/axiosInstance';
+import { toast } from "react-toastify";
+
 export const checkGameExists = async (gameCode) => {
   try {
-    const response = await fetch(`${config.API_BASE_URL}game/${gameCode}/question`);
-
-    if (!response.ok) {
-      throw new Error('Quiz not found');
-    }
-    return response.json();
+    const response = await axiosInstance.get(`/game/${gameCode}/question`);
+    return response.data;
   } catch (error) {
     throw new Error('Error checking quiz:');
-    //throw error;
   }
 };
 
 export const createGameWithQuizId = async (quizId) => {
   try {
-    const response = await fetch(`${config.API_BASE_URL}game/${quizId}/create`);
-    if (!response.ok) {
-      throw new Error('QuizId not found');
-    }
-    return response.json();
+    const response = await axiosInstance.get(`/game/${quizId}/create`);
+    return response.data;
   } catch (error) {
     throw new Error('Error during the creation of the game:');
-    //throw error;
   }
 };
-
