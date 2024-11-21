@@ -14,9 +14,9 @@ function ConnectScreen() {
     e.preventDefault();
     try {
       const hashedPassword = bcrypt.hashSync(password, 10);
-      const userId = await connectUser(username, hashedPassword);
-      if (userId) {
-        localStorage.setItem('user_id', userId);
+      const token = await connectUser(username, hashedPassword);
+      if (token) {
+        localStorage.setItem('token', token);
         navigate('/dashboard'); 
       }
     } catch (error) {
