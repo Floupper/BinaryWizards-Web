@@ -3,9 +3,9 @@ import { toast } from "react-toastify";
 
 export async function signupUser(username, password) {
   try {
-    const response = await axiosInstance.post('/user/create', {
+    const response = await axiosInstance.post('/user/signup', {
       username,
-      password,
+      password
     });
     toast.info("Sign up successful");
     return response.data.token;
@@ -19,7 +19,7 @@ export async function checkUsernameAvailability(username) {
     const response = await axiosInstance.post('/user/username_avaible', {
       username,
     });
-    return response.data.avaible;
+    return response.data.is_available;
   } catch (error) {
     throw error;
   }
