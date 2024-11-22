@@ -24,7 +24,7 @@ function App() {
         <Route path="/" element={<HomeScreen />} />
         <Route path="/join-quiz" element={<JoinQuiz />} />
         <Route path="/create-quiz" element={<CreateQuiz />} />
-        <Route path="/connect" element={<ConnectScreen />} />
+        <Route path="/signin" element={<ConnectScreen />} />
         <Route path="/signup" element={<SignupScreen />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/historique-game-play/:quizId" element={<HistoriqueGamePlay />} />
