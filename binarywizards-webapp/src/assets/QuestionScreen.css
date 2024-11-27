@@ -189,3 +189,13 @@ button:hover {
   background-color: #3498db; /* Light blue color */
   color: white;
 }
+
+.large-input {
+  width: 100%; /* Largeur totale du conteneur parent */
+  height: 50px; /* Hauteur plus grande */
+  font-size: 16px; /* Taille de texte lisible */
+  padding: 10px; /* Espace intérieur */
+  border: 1px solid #ccc; /* Ajoute une bordure élégante */
+  border-radius: 5px; /* Coins arrondis */
+  box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+}
