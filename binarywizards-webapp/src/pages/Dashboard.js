@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import DashboardService from '../services/DashboardService.js';
 import '../assets/Dashboard.css';
-import PlayedQuizCard from '../components/PlayedQuizCard';
-import CreatedQuizCard from '../components/CreatedQuizCard.js';
+import PlayedQuizCard from '../components/DashboardPlayedQuizCard.js';
+import CreatedQuizCard from '../components/DashboardCreatedQuizCard.js';
 
 export default function Dashboard() {
     const [userQuizzes, setUserQuizzes] = useState([]);
