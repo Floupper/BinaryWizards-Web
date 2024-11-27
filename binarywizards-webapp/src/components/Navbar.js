@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // Importation de useState
+import React, { useState } from 'react'; 
 import { NavLink, useNavigate } from 'react-router-dom';
 import { EmojiProvider, Emoji } from "react-apple-emojis";
 import emojiData from "react-apple-emojis/src/data.json";
