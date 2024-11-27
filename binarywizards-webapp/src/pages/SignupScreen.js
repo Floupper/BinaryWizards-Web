@@ -22,7 +22,6 @@ function SignupScreen() {
     }
     try {
       const usernameAvailable = await checkUsernameAvailability(username);
-      console.log('on est la ',usernameAvailable);
       if (!usernameAvailable) {
         setError('Username is already taken');
         return;
