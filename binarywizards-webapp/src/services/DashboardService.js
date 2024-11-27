@@ -1,32 +1,17 @@
-import config from '../config';
+import axiosInstance from '../utils/axiosInstance';
 
 const DashboardService = {
-  getUserQuizzes: (userId) => {
-    return fetch(`${config.API_BASE_URL}/user/${userId}/quizzes`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(response => response.json());
+  getUserQuizzes: async (userId) => {
+    return axiosInstance.get(`/user/quizzes`).then((response) => response.data);
   },
 
-  getPlayedQuizzes: (userId) => {
-    return fetch(`${config.API_BASE_URL}/user/${userId}/playedQuizzes`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(response => response.json());
+  getPlayedQuizzes: async (userId) => {
+    return axiosInstance.get(`/user/played_games`).then((response) => response.data);
   },
 
-  searchPublicQuizzes: (title) => {
-    return fetch(`${config.API_BASE_URL}/quiz/search?title=${encodeURIComponent(title)}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(response => response.json());
-  }
+  searchPublicQuizzes: async (title) => {
+    return axiosInstance.get(`/quiz/search?title=${encodeURIComponent(title)}`).then((response) => response.data);
+  },
 };
 
 export default DashboardService;

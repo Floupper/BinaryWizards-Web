@@ -1,43 +1,27 @@
-import config from '../config';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
+import axiosInstance from '../utils/axiosInstance';
+import { toast } from "react-toastify";
 
 export async function GetQuestion(id_quizz) {
-    return fetch(`${config.API_BASE_URL}game/${id_quizz}/question`)
-      .then(response => {
-        if (!response.ok) {
-          toast.error('Data recovery error');
-        }
-        return response.json();
-      })
-      .catch(error => {
-        toast.error(error);
-      });
+  try {
+    const response = await axiosInstance.get(`/game/${id_quizz}/question`);
+    return response.data;
+  } catch (error) {
+    toast.error('Data recovery error');
+    throw error;
   }
-  
+}
 
-  export async function PostAnswers(id_game, index_question, index_reponse) {
-    const quizQuestionPost = {
-      question_index: index_question,
-      option_index: index_reponse,
-    };
-  
-    return fetch(`${config.API_BASE_URL}game/${id_game}/question`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(quizQuestionPost),
-    })
-      .then(response => {
-        if (!response.ok) {
-          toast.error('Error sending responses');
-        }
-        return response.json();
-      })
-      .catch(error => {
-        toast.error('Error sending response:'+error);
-        //throw error;
-      });
+export async function PostAnswers(id_game, index_question, index_reponse) {
+  const quizQuestionPost = {
+    question_index: index_question,
+    option_index: index_reponse,
+  };
+
+  try {
+    const response = await axiosInstance.post(`/game/${id_game}/question`, quizQuestionPost);
+    return response.data;
+  } catch (error) {
+    toast.error('Error sending response: ' + error.message);
+    throw error;
   }
+}

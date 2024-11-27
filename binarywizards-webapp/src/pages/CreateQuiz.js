@@ -156,7 +156,6 @@ export default function CreateQuiz(quizIdParameter) {
     .catch(error => {
       
       toast.info(error.message);
-      console.log(error);
     });
   };
 

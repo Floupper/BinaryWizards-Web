@@ -1,23 +1,15 @@
-import config from '../config';
+import axiosInstance from '../utils/axiosInstance';
 import { toast } from "react-toastify";
 
 export async function connectUser(username, password) {
   try {
-    const response = await fetch(`${config.API_BASE_URL}/user/connect`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
+    const response = await axiosInstance.post('/user/signin', {
+      username,
+      password
     });
-    if (!response.ok) {
-      throw new Error('Error during login');
-    }
-    const data = await response.json();
     toast.info("Login successful");
-    return data.user_id;
+    return response.data.token;
   } catch (error) {
-    toast.error("Error during login: " + error.message);
     throw error;
   }
 }

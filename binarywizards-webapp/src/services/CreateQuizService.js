@@ -1,16 +1,17 @@
-import config from '../config';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from '../utils/axiosInstance';
 
 const CreateQuizService = {
-  fetchCategories: () => {
-    return fetch(`${config.API_BASE_URL}categories`)
-      .then(response => response.json());
+  fetchCategories: async () => {
+    return axiosInstance.get('/categories').then((response) => response.data);
   },
-  
-  fetchDifficulties: () => {
-    return fetch(`${config.API_BASE_URL}difficulties`)
-      .then(response => response.json());
+
+    
+  fetchDifficulties: async () => {
+    return axiosInstance.get('/difficulties').then((response) => response.data);
+  },
+
+  createAnonymeQuiz: async (quizData) => {
+    return axiosInstance.post('/quiz', quizData).then((response) => response.data);
   },
 
   createQuiz: (quizData, quizId) => {
@@ -147,9 +148,7 @@ const CreateQuizService = {
       }
       return response.json();
     });
-  }
-
-  
+  },
 };
 
 export default CreateQuizService;

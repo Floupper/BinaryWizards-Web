@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { connectUser } from '../services/connectService';
 import { useNavigate } from 'react-router-dom';
 import '../assets/Auth.css';
-import bcrypt from 'bcryptjs';
 
 function ConnectScreen() {
   const [username, setUsername] = useState('');
@@ -13,10 +12,9 @@ function ConnectScreen() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const hashedPassword = bcrypt.hashSync(password, 10);
-      const userId = await connectUser(username, hashedPassword);
-      if (userId) {
-        localStorage.setItem('user_id', userId);
+      const token = await connectUser(username, password);
+      if (token) {
+        localStorage.setItem('token', token);
         navigate('/dashboard'); 
       }
     } catch (error) {
