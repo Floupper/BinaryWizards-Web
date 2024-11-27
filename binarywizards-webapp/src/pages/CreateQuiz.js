@@ -63,7 +63,6 @@ export default function CreateQuiz() {
     .catch(error => {
       
       toast.info(error.message);
-      console.log(error);
     });
   };
 

@@ -1,0 +1,76 @@
+.QuizRecapScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+  }
+  
+  .return-button {
+    align-self: flex-start;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #3552b0;
+    color: #ffffff;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .return-button:hover {
+    background-color: #283e88;
+  }
+  
+  .recap-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    gap: 2rem;
+  }
+  
+  .quiz-details {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  }
+  
+  .quiz-details h2 {
+    font-size: 2rem;
+    color: #3552b0;
+    margin-bottom: 1rem;
+  }
+  
+  .quiz-details p {
+    font-size: 1.125rem;
+    margin: 0.5rem 0;
+    color: #333;
+  }
+  
+  .questions-panel {
+    flex: 2;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .Question {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  }
+  

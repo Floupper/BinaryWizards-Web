@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import DashboardService from '../services/DashboardService.js';
 import '../assets/Dashboard.css';
-import { Link } from 'react-router-dom';
+import PlayedQuizCard from '../components/DashboardPlayedQuizCard.js';
+import CreatedQuizCard from '../components/DashboardCreatedQuizCard.js';
 
 export default function Dashboard() {
     const [userQuizzes, setUserQuizzes] = useState([]);
     const [playedQuizzes, setPlayedQuizzes] = useState([]);
-    const userId = localStorage.getItem('user_id');
+    const userId = localStorage.getItem('token');
     useEffect(() => {
         if (userId) {
             DashboardService.getUserQuizzes(userId)
@@ -21,39 +22,25 @@ export default function Dashboard() {
 
     return (
         <div className="dashboard-container">
-            <h1>Dashboard</h1>
-
-            <div className="quizzes-container">
-                <div className="created-quizzes">
-                    <h2>Your Created Quizzes</h2>
-                    <div className="quiz-list">
-                        <ul>
-                            {userQuizzes.map((quiz) => (
-                                <li key={quiz.id}>
-                                    <Link to={`/dashboard/historique-game-play/${quiz.id}`}>
-                                    Title: {quiz.title}, Difficulty: {quiz.difficulty}, Questions: {quiz.nb_questions}, Played: {quiz.nb_played}, Average Score: {quiz.average_score}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-
-                <div className="played-quizzes">
-                    <h2>Your Played Quizzes</h2>
-                    <div className="quiz-list">
-                        <ul>
-                            {playedQuizzes.map((quiz) => (
-                                <li key={quiz.quiz_id}>
-                                    <Link to={`/dashboard/historique-game-play/${quiz.quiz_id}`}>
-                                        Quiz ID: {quiz.quiz_id}, Date: {quiz.date}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+          <h1>Dashboard</h1>
+          <div className="quizzes-container">
+            <div className="created-quizzes">
+              <h2>Your Created Quizzes</h2>
+              <div className="quiz-list scrollable">
+                {userQuizzes.map((quiz) => (
+                  <CreatedQuizCard key={quiz.id} quiz={quiz} />
+                ))}
+              </div>
             </div>
+            <div className="played-quizzes">
+              <h2>Your Played Quizzes</h2>
+              <div className="quiz-list scrollable">
+                {playedQuizzes.map((quiz) => (
+                  <PlayedQuizCard key={quiz.game_id} quiz={quiz} />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-    );
+      );
 }

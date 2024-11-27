@@ -2,11 +2,11 @@ import axiosInstance from '../utils/axiosInstance';
 
 const DashboardService = {
   getUserQuizzes: async (userId) => {
-    return axiosInstance.get(`/user/${userId}/quizzes`).then((response) => response.data);
+    return axiosInstance.get(`/user/quizzes`).then((response) => response.data);
   },
 
   getPlayedQuizzes: async (userId) => {
-    return axiosInstance.get(`/user/${userId}/playedQuizzes`).then((response) => response.data);
+    return axiosInstance.get(`/user/played_games`).then((response) => response.data);
   },
 
   searchPublicQuizzes: async (title) => {
