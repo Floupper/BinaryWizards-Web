@@ -28,7 +28,7 @@ export default function Dashboard() {
               <h2>Your Created Quizzes</h2>
               <div className="quiz-list scrollable">
                 {userQuizzes.map((quiz) => (
-                  <CreatedQuizCard key={quiz.id} quiz={quiz} />
+                  <CreatedQuizCard key={quiz.id} quiz={quiz} route={'/dashboard/detail-create-quiz/${quiz.id}'}/>
                 ))}
               </div>
             </div>
