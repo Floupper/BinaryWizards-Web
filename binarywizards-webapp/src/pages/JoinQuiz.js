@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNavigate } from 'react-router-dom';
 import '../assets/JoinQuiz.css';
 
@@ -6,9 +7,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { checkGameExists, createGameWithQuizId } from '../services/JoinQuizService';
+import SearchQuiz from '../components/SearchQuiz';
 
+const queryClient = new QueryClient();
 
 export default function JoinQuiz() {
+  const token = localStorage.getItem('token');
   const [gameCode, setGameCode] = useState('');
   const [quizCode, setQuizCode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -27,7 +31,7 @@ export default function JoinQuiz() {
       const data = await createGameWithQuizId(quizCode);
       navigate(`/question/${data.game_id}`);
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to create game');
     } finally {
       setIsLoadingQuiz(false);
     }
@@ -44,37 +48,24 @@ export default function JoinQuiz() {
       await checkGameExists(gameCode);
       navigate(`/question/${gameCode}`);
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to join game');
     } finally {
       setIsLoadingGame(false);
     }
   };
 
   return (
-    <div className="JoinQuizContainer">
-      <ToastContainer />
-      <div className="JoinQuizForm">
-        <h1>Create a game <br/>with a quiz ID</h1>
-        <div className="form-group">
-          <label htmlFor="quizCode">Quiz Code</label>
-          <input
-            type="text"
-            id="quizzCode"
-            value={quizCode}
-            onChange={(e) => setQuizCode(e.target.value)}
-            placeholder="Enter a quiz code"
-          />
-        </div>
-        <button onClick={handleCreateQuiz} disabled={isLoadingQuiz}>
-          {isLoadingQuiz ? 'Joining...' : 'Join'}
-        </button>
-
+    <QueryClientProvider client={queryClient}>
+    <div>
+      <ToastContainer />           
+      {token ? (
+      <div className="JoinQuizContainer">
+        <SearchQuiz />
       </div>
-
+      ) : 
       <div className="JoinGameContainer">
-        <h1>Join a game</h1>
+        <h1>Play</h1>
         <div className="form-group">
-          <label htmlFor="gameCode">Game Code</label>
           <input
             type="text"
             id="gameCode"
@@ -84,10 +75,11 @@ export default function JoinQuiz() {
           />
         </div>
         <button onClick={handleJoinGame} disabled={isLoadingGame}>
-          {isLoadingGame ? 'Joining...' : 'Join'}
+          {isLoadingGame ? 'Playing...' : 'Play'}
         </button>
-
       </div>
+      }
     </div>
+    </QueryClientProvider>
   );
 }
