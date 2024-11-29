@@ -9,31 +9,36 @@ import QuestionScreen from './pages/QuestionScreen.js';
 import Dashboard from './pages/Dashboard.js';
 import HistoriqueGamePlay from './pages/HistoriqueGamePlay';
 import QuizRecapScreen from './pages/QuizRecapScreen.js';
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import EndScreen from './pages/EndScreen';
 import Navbar from './components/Navbar';
-
+import QuizCreated from './pages/CreateQuizCreated.js';
 
 
 
 function App() {
+
   return (
     <Router>
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<JoinQuiz />} />
         <Route path="/create-quiz" element={<CreateQuiz />} />
+        <Route path="/edit-quiz" element={<CreateQuiz />} />
         <Route path="/signin" element={<ConnectScreen />} />
         <Route path="/signup" element={<SignupScreen />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/historique-game-play/:quizId" element={<HistoriqueGamePlay />} />
         <Route path="/dashboard/detail-create-quiz/:quizId" element={<QuizRecapScreen />} />
-        <Route path="/question" element={<Navigate to="/" replace />}/>
-        <Route path="/question/:id" element={<QuestionScreen />}/>
-
+        <Route path="/question" element={<Navigate to="/" replace />} />
+        <Route path="/question/:id" element={<QuestionScreen />} />
         <Route path="/end" element={<EndScreen />} />
-
+        <Route path="/quiz-created/:quizId" element={<QuizCreated />} />
       </Routes>
+
     </Router>
+
   );
 }
 
