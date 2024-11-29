@@ -1,7 +1,7 @@
 import axiosInstance from '../utils/axiosInstance';
 import { toast } from "react-toastify";
 
-export async function signupUser(username, password) {
+export async function SignupUser(username, password) {
   try {
     const response = await axiosInstance.post('/user/signup', {
       username,

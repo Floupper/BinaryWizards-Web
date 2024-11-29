@@ -7,7 +7,7 @@ import DashboardCreatedQuizCard from './CreatedQuizCard';
 import '../assets/JoinQuizSearchQuiz.css';
 import QuestionRangeSelector from './JoinQuizQuestionRangeSelector';
 
-export default function SearchQuiz() {
+export default function JoinQuizSearchQuiz() {
     const [text, setText] = useState('');
     const [selectedDifficulty, setSelectedDifficulty] = useState("");
     const [difficulties, setDifficulties] = useState([]);
@@ -65,20 +65,6 @@ export default function SearchQuiz() {
             }
         };
     }, [hasNextPage, fetchNextPage]);
-
-    const handlePressCreate = async (quizId) => {
-        try {
-            const gameResponse = await createGameWithQuizId(quizId);
-            if (gameResponse?.game_id) {
-                toast.success("Game created successfully!");
-                // Update the UI or navigate
-            } else {
-                throw new Error('Invalid response');
-            }
-        } catch (error) {
-            toast.error("Failed to create a game. Try again.");
-        }
-    };
 
     const handleSearch = () => {
         refetch();

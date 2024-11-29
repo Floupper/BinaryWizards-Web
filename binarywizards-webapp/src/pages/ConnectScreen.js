@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { connectUser } from '../services/connectService';
+import { ConnectService } from '../services/ConnectService';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
-function ConnectScreen() {
+export default function ConnectScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -12,7 +12,7 @@ function ConnectScreen() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = await connectUser(username, password);
+      const token = await ConnectScreen(username, password);
       if (token) {
         localStorage.setItem('token', token);
         navigate('/dashboard'); 
@@ -69,5 +69,3 @@ function ConnectScreen() {
 
   );
 }
-
-export default ConnectScreen;
