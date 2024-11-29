@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { signupUser, checkUsernameAvailability } from '../services/signupService';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 function SignupScreen() {
   const [username, setUsername] = useState('');
@@ -38,6 +39,7 @@ function SignupScreen() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[rgba(228,187,145,0.5)] via-[rgba(138,43,242,0.5)] to-[rgba(41,96,240,0.5)]">
+      <Navbar />
       <form className="bg-white p-8 rounded-lg shadow-md w-full max-w-md" onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700 font-bold mb-2">Username:</label>

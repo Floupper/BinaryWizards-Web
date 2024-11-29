@@ -19,10 +19,8 @@ import Navbar from './components/Navbar';
 function App() {
   return (
     <Router>
-      <Navbar />
       <Routes>
-        <Route path="/" element={<HomeScreen />} />
-        <Route path="/join-quiz" element={<JoinQuiz />} />
+        <Route path="/" element={<JoinQuiz />} />
         <Route path="/create-quiz" element={<CreateQuiz />} />
         <Route path="/signin" element={<ConnectScreen />} />
         <Route path="/signup" element={<SignupScreen />} />

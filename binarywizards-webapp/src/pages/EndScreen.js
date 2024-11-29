@@ -4,6 +4,7 @@ import "../assets/EndScreen.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createGameWithQuizId } from '../services/JoinQuizService';
+import Navbar from "../components/Navbar";
 
 export default function EndScreen() {
   const navigate = useNavigate();
@@ -30,7 +31,8 @@ export default function EndScreen() {
 
   return (
     <div className="EndScreen">
-            <ToastContainer />
+      <Navbar />
+      <ToastContainer />
       <div className="EndScreenContainer">
         {correct_answers_nb !== null && nb_questions_total !== null ? (
           <>

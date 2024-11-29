@@ -4,7 +4,7 @@ import '../assets/JoinQuiz.css';
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Navbar from '../components/Navbar';
 import { checkGameExists, createGameWithQuizId } from '../services/JoinQuizService';
 
 
@@ -51,6 +51,8 @@ export default function JoinQuiz() {
   };
 
   return (
+    <div className="App">
+    <Navbar />
     <div className="JoinQuizContainer">
       <ToastContainer />
       <div className="JoinQuizForm">
@@ -89,5 +91,7 @@ export default function JoinQuiz() {
 
       </div>
     </div>
+    </div>
+
   );
 }
