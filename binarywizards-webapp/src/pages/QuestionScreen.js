@@ -76,12 +76,9 @@ export default function QuestionScreen() {
       setSelectedQuestionId(selectedId); // Updates the selected answer
       setIsAnswered(true); // Marks that the answer has been submitted
 
-      try {
         const result = await PostAnswers(id, questionIndex, selectedId); // Sends the answer via POST and retrieves the server's response
         setIdCorrectAnswers(result.correct_option_index); // Saves the index of the correct answer
-      } catch (error) {
-        toast.error('Error sending answers');
-      }
+
     }
   };
 
@@ -109,7 +106,7 @@ export default function QuestionScreen() {
 
   return (
     <div className="QuestionScreen">
-            <ToastContainer />
+     
       <div className="HUD">
         <QuestionHUD party_parameters={paramHUD} />
       </div>

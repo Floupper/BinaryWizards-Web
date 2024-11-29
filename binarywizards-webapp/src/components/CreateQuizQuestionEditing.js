@@ -47,6 +47,7 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
+    if(questionId){
     CreateQuizService.fetchQuestionDetails(quizId, questionId)
       .then(data => {
         setQuestionData(data.question);
@@ -83,7 +84,9 @@ useEffect(() => {
           };
         });
       })
+    
       .catch(error => toast.info('Error fetching question details:', error));
+    }
   }, [questionId]);
   
 
@@ -106,6 +109,12 @@ const handleChangeQuestionText = (event) => {
     if (!selectedCategory) {
       toast.error("Please select a category.");
       return;
+    }
+
+    if (!questionText) {
+      toast.error("Please enter a question.");
+      return;
+
     }
   
     if (!quizDifficulty) {
@@ -197,7 +206,7 @@ const handleChangeQuestionText = (event) => {
           onChange={handleChangeQuestionText} // Met à jour l'état à chaque modification
           rows="4"
           cols="50"
-          placeholder="Enter the title of the quiz"
+          placeholder="Enter the question"
             className="large-input"
         /> </h2>
 

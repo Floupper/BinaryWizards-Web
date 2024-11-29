@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import RecapQuizService from '../services/RecapQuizService';
 import RecapQuizQuestion from '../components/RecapQuizQuestion';
 import '../assets/QuizRecapScreen.css';
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const QuizRecapScreen = () => {
   const [quizDetails, setQuizDetails] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -36,10 +37,12 @@ const QuizRecapScreen = () => {
       <div className="recap-container">
         <div className="quiz-details">
           <h2>{quizDetails.title}</h2>
+
           <p>Difficulty: {quizDetails.difficulty}</p>
           <p>Number of Questions: {quizDetails.nb_questions}</p>
           <p>Times Played: {quizDetails.nb_played}</p>
           <p>Average Score: {quizDetails.average_score}</p>
+          <button className="editquiz-button" onClick={() => navigate('/edit-quiz',  { state: { quizId } })}>Edit quiz</button>
         </div>
         <div className="questions-panel">
           <div className="questions-list">
