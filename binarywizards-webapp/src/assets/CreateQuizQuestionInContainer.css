@@ -5,28 +5,28 @@
     align-items: center;
     padding: 1rem;
     margin-bottom: 1rem;
-    background-color: #fff; /* Couleur de fond blanche */
-    border-radius: 0.5rem; /* Coins arrondis */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Effet d'ombre */
-    border: 1px solid #ccc; /* Bordure légère */
+    background-color: #fff; 
+    border-radius: 0.5rem; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    border: 1px solid #ccc;
   }
   
   .question-details {
-    flex: 1; /* Permet au texte de prendre tout l'espace disponible */
+    flex: 1; 
     display: flex;
     flex-direction: column;
-    gap: 0.5rem; /* Espacement entre les textes */
+    gap: 0.5rem; 
   }
   
   .question-details a {
     font-size: 1rem;
-    color: #333; /* Couleur du texte */
+    color: #333; 
   }
   
   .question-buttons {
     display: flex;
     align-items: center;
-    gap: 0.5rem; /* Espacement entre les boutons */
+    gap: 0.5rem; 
   }
   
   .question-buttons button {
