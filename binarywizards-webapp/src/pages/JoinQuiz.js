@@ -20,10 +20,9 @@ export default function JoinQuiz() {
   const [isLoadingQuiz, setIsLoadingQuiz] = useState(false);
   const [isLoadingGame, setIsLoadingGame] = useState(false);
   const navigate = useNavigate();
-
   const handleJoinGame = async () => {
     if (gameCode.trim() === '') {
-      toast.info('Please enter a valid game code.');
+      toast.info('Please enter a valid quiz code.');
       return;
     }
     setIsLoadingGame(true);
@@ -40,32 +39,31 @@ export default function JoinQuiz() {
 
   return (
     <QueryClientProvider client={queryClient}>
-    <div>
-    <Navbar />
-      <ToastContainer />           
-      {token ? (
-      <div className="JoinQuizContainer">
-        <JoinQuizSearchQuiz />
-        <JoinQuizResumeGame />
+      <div>
+        <Navbar />
+        <ToastContainer />
+        {token ? (
+          <div className="JoinQuizContainer">
+            <SearchQuiz />
+          </div>
+        ) :
+          <div className="JoinGameContainer">
+            <h1>Play</h1>
+            <div className="form-group">
+              <input
+                type="text"
+                id="gameCode"
+                value={gameCode}
+                onChange={(e) => setGameCode(e.target.value)}
+                placeholder="Enter the quiz id"
+              />
+            </div>
+            <button onClick={handleJoinGame} disabled={isLoadingGame}>
+              {isLoadingGame ? 'Playing...' : 'Play'}
+            </button>
+          </div>
+        }
       </div>
-      ) : 
-      <div className="JoinGameContainer">
-        <h1>Play</h1>
-        <div className="form-group">
-          <input
-            type="text"
-            id="gameCode"
-            value={gameCode}
-            onChange={(e) => setGameCode(e.target.value)}
-            placeholder="Enter the game code"
-          />
-        </div>
-        <button onClick={handleJoinGame} disabled={isLoadingGame}>
-          {isLoadingGame ? 'Playing...' : 'Play'}
-        </button>
-      </div>
-      }
-    </div>
     </QueryClientProvider>
   );
 }

@@ -45,8 +45,17 @@ export default function Navbar() {
             Create Quiz
           </NavLink>
         </li>
+
         {token ? (
           <>
+            <li className="flex items-center">
+              <EmojiProvider data={emojiData}>
+                <Emoji name="paintbrush" width={20} />
+              </EmojiProvider>
+              <NavLink to="/quick-quiz" className={({ isActive }) => (isActive ? 'text-black' : 'text-black')} style={{ fontFamily: 'Helvetica', fontSize: '1.401rem' }}>
+                Create quick Quiz
+              </NavLink>
+            </li>
             <li>
               <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'text-black' : 'text-black')} style={{ fontFamily: 'Helvetica', fontSize: '1.401rem' }}>
                 Dashboard

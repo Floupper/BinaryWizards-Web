@@ -5,12 +5,14 @@ import CreateQuizService from '../services/CreateQuizService';
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import JoinQuiz from './JoinQuiz';
+import { createGameWithQuizId } from '../services/JoinQuizService';
 
 /*
 Create a quiz as in V0 (when not logged in)
 Thsi is the old create quiz page
 */
-export default function CreateQuizAnonyme() {
+export default function CreateQuizQuick() {
   const navigate = useNavigate();
   //List of categories
   const [categories, setCategories] = useState([]);
@@ -22,10 +24,10 @@ export default function CreateQuizAnonyme() {
 
   //Difficulty selected on the page
   const [difficulty, setDifficulty] = useState('');
-  
+
   //Amount of questions
   const [amount, setAmount] = useState(10);
-  
+
 
   useEffect(() => {
     CreateQuizService.fetchCategories()
@@ -68,14 +70,18 @@ export default function CreateQuizAnonyme() {
       difficulty,
     };
     CreateQuizService.createAnonymeQuiz(quizData)
-    .then(data => {
-      const quizId = data.quiz_id;
-      navigate(`/question/${quizId}`);
-    })
-    .catch(error => {
-      
-      toast.info(error.message);
-    });
+      .then(data => {
+        const quizId = data.quiz_id;
+        createGameWithQuizId(quizId)
+          .then(data => {
+            const gameId = data.game_id;
+            navigate(`/question/${gameId}`);
+          })
+      })
+      .catch(error => {
+
+        toast.info(error.message);
+      });
   };
 
   const handleAmountInput = (e) => {
@@ -101,9 +107,9 @@ export default function CreateQuizAnonyme() {
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(Number(e.target.value))}
           >
-              <option value="" disabled>
-               Select a category
-               </option>
+            <option value="" disabled>
+              Select a category
+            </option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>{category.name}</option>
             ))}
@@ -121,23 +127,23 @@ export default function CreateQuizAnonyme() {
           />
         </div>
         <div className="form-group">
-  <label htmlFor="difficulty">Difficulty</label>
-  <select
-    id="difficulty"
-    value={difficulty}
-    onChange={(e) => setDifficulty(e.target.value)}
-  >
-    {}
-    <option value="" disabled>
-      Select a difficulty
-    </option>
-    {difficulties.map((level) => (
-      <option key={level} value={level}>
-        {level.charAt(0).toUpperCase() + level.slice(1)}
-      </option>
-    ))}
-  </select>
-</div>
+          <label htmlFor="difficulty">Difficulty</label>
+          <select
+            id="difficulty"
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+          >
+            { }
+            <option value="" disabled>
+              Select a difficulty
+            </option>
+            {difficulties.map((level) => (
+              <option key={level} value={level}>
+                {level.charAt(0).toUpperCase() + level.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
         <button onClick={handleSubmit}>Start</button>
       </div>
     </div>
