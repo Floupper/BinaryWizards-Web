@@ -109,8 +109,10 @@ export default function QuestionScreen() {
   }
 
   return (
-    <div className="QuestionScreen">
+    <div>
       <Navbar />
+
+    <div className="QuestionScreen">
       <ToastContainer />
       <div className="HUD">
         <QuestionHUD party_parameters={paramHUD} />
@@ -135,6 +137,7 @@ export default function QuestionScreen() {
           Next
         </button>
       </div>
+    </div>
     </div>
   );
 }
