@@ -1,0 +1,53 @@
+.question-range-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 2rem;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 50rem;
+    margin: 0 auto;
+  }
+  
+  .question-range-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .range-inputs {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+  }
+  
+  .input-label {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #555;
+  }
+  
+  .input-range {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 0.125rem solid #ccc;
+    border-radius: 2rem;
+    width: 100%;
+    text-align: center;
+    outline: none;
+  }
+  
+  .input-range:focus {
+    border-color: #007bff;
+  }
+  
+  .input-range::placeholder {
+    color: #ccc;
+  }
