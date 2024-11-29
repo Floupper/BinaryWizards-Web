@@ -6,6 +6,7 @@ import '../assets/QuestionScreen.css';
 import { GetQuestion, PostAnswers } from '../services/QuestionService';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Navbar from '../components/Navbar';
 // Function for retrieving API data
 
 export default function QuestionScreen() {
@@ -107,6 +108,9 @@ export default function QuestionScreen() {
 
   return (
     <div className="QuestionScreen">
+
+      <Navbar />
+
 
       <div className="HUD">
         <QuestionHUD party_parameters={paramHUD} />

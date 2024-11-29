@@ -21,11 +21,9 @@ function App() {
 
   return (
     <Router>
-      <Navbar />
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<HomeScreen />} />
-        <Route path="/join-quiz" element={<JoinQuiz />} />
+        <Route path="/" element={<JoinQuiz />} />
         <Route path="/create-quiz" element={<CreateQuiz />} />
         <Route path="/edit-quiz" element={<CreateQuiz />} />
         <Route path="/signin" element={<ConnectScreen />} />

@@ -5,7 +5,7 @@ import '../assets/JoinQuiz.css';
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Navbar from '../components/Navbar';
 import { checkGameExists, createGameWithQuizId } from '../services/JoinQuizService';
 import SearchQuiz from '../components/JoinQuizSearchQuiz';
 
@@ -57,6 +57,7 @@ export default function JoinQuiz() {
   return (
     <QueryClientProvider client={queryClient}>
     <div>
+    <Navbar />
       <ToastContainer />           
       {token ? (
       <div className="JoinQuizContainer">

@@ -3,8 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import RecapQuizService from '../services/RecapQuizService';
 import RecapQuizQuestion from '../components/RecapQuizQuestion';
 import '../assets/QuizRecapScreen.css';
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import Navbar from '../components/Navbar';
+
 const QuizRecapScreen = () => {
   const [quizDetails, setQuizDetails] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -33,6 +37,7 @@ const QuizRecapScreen = () => {
 
   return (
     <div className="QuizRecapScreen">
+      <Navbar />
       <button className="return-button" onClick={() => navigate('/dashboard')}>Return to Dashboard</button>
       <div className="recap-container">
         <div className="quiz-details">
