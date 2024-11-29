@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DashboardService from '../services/DashboardService.js';
 import PlayedQuizCard from '../components/DashboardPlayedQuizCard.js';
-import CreatedQuizCard from '../components/DashboardCreatedQuizCard.js';
+import CreatedQuizCard from '../components/CreatedQuizCard.js';
 import Navbar from '../components/Navbar.js';
 
 export default function Dashboard() {
@@ -46,7 +46,7 @@ export default function Dashboard() {
           {activeTab === 'created' && (
             <div className="flex flex-col gap-4">
               {userQuizzes.map((quiz) => (
-                <CreatedQuizCard key={quiz.id} quiz={quiz} />
+                <CreatedQuizCard key={quiz.id} quiz={quiz} route={'/dashboard/detail-create-quiz/${quiz.id}'}/>
               ))}
             </div>
           )}
