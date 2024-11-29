@@ -12,7 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuestionInContainer from '../components/CreateQuizQuestionInContainer';
 import ImportQuestionTrivia from '../components/CreateQuizImportQuestionTrivia';
-import CreateQuizAnonyme from '../components/CreateQuizAnonyme';
+import CreateQuizQuick from './CreateQuizQuick';
 import QuizCreated from './CreateQuizCreated';
 import { MdDescription } from 'react-icons/md';
 import CreateQuizRegisteredPage from '../components/CreateQuizRegistered';
@@ -26,6 +26,12 @@ export default function CreateQuiz() {
   const userId = localStorage.getItem('token');
   const [quizIdRedicted, setQuizIdRedicted] = useState('any');
 
+  useEffect(() => {
+    if (!userId) {
+      navigate('/quick-quiz');
+    }
+  }, []);
+
   if (quizIdRedicted !== 'any') {
     if (quizId) {
       navigate('/dashboard');
@@ -38,16 +44,15 @@ export default function CreateQuiz() {
   return (
     <div>
       {quizIdRedicted === 'any' ? (
-        userId ? (
-          <CreateQuizRegisteredPage quizIdParameter={quizId} setQuizIdRedicted={setQuizIdRedicted} />
-        ) : (
-          <CreateQuizAnonyme />
-        )
-      ) : (
-        <div>
 
-        </div>
-      )}
+        <CreateQuizRegisteredPage quizIdParameter={quizId} setQuizIdRedicted={setQuizIdRedicted} />
+
+      )
+        : (
+          <div>
+            <QuizCreated></QuizCreated>
+          </div>
+        )}
     </div>
   );
 }
