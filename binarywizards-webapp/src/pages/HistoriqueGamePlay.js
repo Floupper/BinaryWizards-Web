@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import HistoriqueGamePlayService from '../services/HistoriqueGamePlayService.js';
 import '../assets/HistoriqueGamePlay.css';
+import Navbar from '../components/Navbar.js';
 
 export default function GameHistory() {
     const { quizId } = useParams();
@@ -18,6 +19,7 @@ export default function GameHistory() {
 
     return (
         <div className="GameHistoryContainer">
+            <Navbar />
             <h1>Game History</h1>
             <p>Quiz ID: {quizId}</p>
             <div className="played-games-list">
