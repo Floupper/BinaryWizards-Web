@@ -46,7 +46,7 @@ export default function Dashboard() {
           {activeTab === 'created' && (
             <div className="flex flex-col gap-4">
               {userQuizzes.map((quiz) => (
-                <CreatedQuizCard key={quiz.id} quiz={quiz} route={'/dashboard/detail-create-quiz/${quiz.id}'}/>
+                <CreatedQuizCard key={quiz.id} quiz={quiz} route={`/dashboard/detail-create-quiz/${quiz.id}`} />
               ))}
             </div>
           )}
