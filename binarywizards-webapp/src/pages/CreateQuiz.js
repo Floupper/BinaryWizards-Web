@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import QuestionInContainer from '../components/CreateQuizQuestionInContainer';
 import ImportQuestionTrivia from '../components/CreateQuizImportQuestionTrivia';
 import CreateQuizAnonyme from '../components/CreateQuizAnonyme';
-import QuizCreated from '../components/CreateQuizCreated';
+import QuizCreated from './CreateQuizCreated';
 import { MdDescription } from 'react-icons/md';
 import CreateQuizRegisteredPage from '../components/CreateQuizRegistered';
 

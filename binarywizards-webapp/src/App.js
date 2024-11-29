@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EndScreen from './pages/EndScreen';
 import Navbar from './components/Navbar';
-import QuizCreated from './components/CreateQuizCreated';
+import QuizCreated from './pages/CreateQuizCreated.js';
 
 
 
