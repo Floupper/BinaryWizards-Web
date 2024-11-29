@@ -6,31 +6,28 @@ import React, { useState } from "react";
 export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput }) {
   const [selectedOption, setSelectedOption] = useState(null);
 
-  if(selectedOptionInput.correctAnswerMultiple === null){
+  if (selectedOptionInput.correctAnswerMultiple === null) {
     setSelectedOptionInput((prevState) => ({
       ...prevState,
-      correctAnswerMultiple : 0, 
+      correctAnswerMultiple: 0,
     }));
-  
+
   };
 
-  // Gère la sélection de la réponse (radio button)
   const handleChangeResponseSelected = (event) => {
-    const id = parseInt(event.target.id, 10); // Récupère l'ID numérique
+    const id = parseInt(event.target.id, 10);
     setSelectedOption(id);
 
-    // Mise à jour de l'état du parent seulement quand la sélection change
+
     setSelectedOptionInput((prevState) => ({
       ...prevState,
-      correctAnswerMultiple: id, // On met à jour la bonne réponse
+      correctAnswerMultiple: id,
     }));
   };
 
-  // Gère la modification du texte des réponses
   const handleChangeAnswerText = (event, id) => {
     const value = event.target.value;
 
-    // Mise à jour de la réponse dans les options
     setSelectedOptionInput((prevState) => ({
       ...prevState,
       choices: prevState.choices.map((choice, index) =>
@@ -38,7 +35,6 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
       ),
     }));
   };
-  console.log(selectedOptionInput);
   return (
     <div>
       {[0, 1, 2, 3].map((id) => (
@@ -46,9 +42,9 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
           <input
             type="radio"
             name="toggle"
-            id={id.toString()} // ID unique pour chaque radio
+            id={id.toString()}
             checked={selectedOptionInput.correctAnswerMultiple === id}
-            onChange={handleChangeResponseSelected} // Déclenche la mise à jour de la bonne réponse
+            onChange={handleChangeResponseSelected}
           />
           <textarea
             id={`question_text_${id}`}
@@ -58,7 +54,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
             cols="50"
             placeholder={`Enter answer ${id + 1}`}
             className="large-input"
-            onChange={(event) => handleChangeAnswerText(event, id)} // Mise à jour du texte de la réponse
+            onChange={(event) => handleChangeAnswerText(event, id)}
           />
         </div>
       ))}

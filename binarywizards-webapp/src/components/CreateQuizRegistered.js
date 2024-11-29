@@ -25,7 +25,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   const [pageTitle, setPageTitle] = useState('Change a Quiz');
   const [TypeOfScreen, setTypeOfScreen] = useState('edit');
   //diffilcies fetching from the API
-  //##################API
+  //#######   API      ########
   const [difficulties, setDifficulties] = useState([]);
   const [quizTitle, setQuizTitle] = useState('');
   const [quizDescription, setQuizDescription] = useState('');
@@ -33,7 +33,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   const [quizIsPublic, setQuizIsPublic] = useState('');
   const [quizQuestions, setQuizQuestions] = useState([]);
 
-  //##################LOCAL
+  //########   LOCAL    ########
   //Public or private (local -> API)
   const [isPublicQuiz, setIsPublicQuiz] = useState(false);
   //Id of the question selected, for passing data
@@ -134,7 +134,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       type: isPublicQuiz ? 1 : 0,
     };
 
-    console.log(quizData);
     CreateQuizService.createQuiz(quizData, quizId)
       .then(() => {
         toast.info('Quiz created successfully! ');

@@ -8,7 +8,7 @@ import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 
 
 export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questionId, quizId, refreshQuizQuestions }) {
-  // État pour gérer l'option sélectionnée
+
 
   const [selectedOptionInput, setSelectedOptionInput] = useState({
     type: 'boolean',
@@ -161,8 +161,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
         options: options,
       };
 
-      console.log(TypeOfScreen);
-      console.log(requestBody);
+
 
       const action = TypeOfScreen === "edit"
         ? CreateQuizService.updateQuestion
@@ -183,7 +182,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
         `Error ${TypeOfScreen ? "updating" : "creating"} question: ${error.message || "Unknown error"
         }`
       );
-      console.error(error);
+
     }
   };
 

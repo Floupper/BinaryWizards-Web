@@ -40,11 +40,10 @@ axiosInstance.interceptors.response.use(
 
         localStorage.removeItem('token');
       } else {
-        console.log('here')
         const errorMessage = error.response.data.error || error.response.data.message || error.message;
         //toast.error(`${errorMessage}`);
         throw new Error(`${errorMessage}`);
-        console.log('here2')
+
       }
     } else {
 
