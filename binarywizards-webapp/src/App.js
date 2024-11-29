@@ -14,7 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import EndScreen from './pages/EndScreen';
 import Navbar from './components/Navbar';
 import QuizCreated from './pages/CreateQuizCreated.js';
-
+import CreateQuizQuick from './pages/CreateQuizQuick.js';
 
 
 function App() {
@@ -35,6 +35,7 @@ function App() {
         <Route path="/question/:id" element={<QuestionScreen />} />
         <Route path="/end" element={<EndScreen />} />
         <Route path="/quiz-created/:quizId" element={<QuizCreated />} />
+        <Route path="/quick-quiz" element={< CreateQuizQuick />} />
       </Routes>
 
     </Router>
