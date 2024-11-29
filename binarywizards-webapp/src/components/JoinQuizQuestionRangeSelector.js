@@ -1,5 +1,5 @@
 import React from 'react';
-import '../assets/QuestionRangeSelector.css';
+import '../assets/JoinQuizQuestionRangeSelector.css';
 
 export default function QuestionRangeSelector({ minQuestions, maxQuestions, onMinChange, onMaxChange }) {
   return (

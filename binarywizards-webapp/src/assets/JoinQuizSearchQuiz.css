@@ -6,43 +6,43 @@
 
 .search-input {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    font-size: 16px;
+    padding: 2rem;
+    margin: 2rem 0;
+    font-size: 3.25rem;
 }
 
 .dropdown {
-    margin: 10px 0;
+    margin: 2rem 0;
 }
 
 .quiz-list {
-    margin-top: 20px;
+    margin-top: 4rem;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 2.25rem;
 }
 
 .loading-indicator {
     text-align: center;
-    margin: 20px 0;
+    margin: 4rem 0;
 }
 
 .empty-message {
     text-align: center;
     color: gray;
-    font-size: 18px;
-    margin-top: 20px;
+    font-size: 3.5rem;
+    margin-top: 4rem;
 }
 
 .load-more-button {
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 16px;
+    margin: 4.125rem auto;
+    padding: 2rem 4.125rem;
+    font-size: 3rem;
     cursor: pointer;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 1rem;
 }
 
 .load-more-button:hover {

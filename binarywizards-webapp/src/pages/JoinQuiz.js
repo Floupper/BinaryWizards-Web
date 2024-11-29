@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { checkGameExists, createGameWithQuizId } from '../services/JoinQuizService';
-import SearchQuiz from '../components/SearchQuiz';
+import SearchQuiz from '../components/JoinQuizSearchQuiz';
 
 const queryClient = new QueryClient();
 

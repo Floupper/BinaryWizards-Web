@@ -1,11 +1,11 @@
 .question-range-container {
     background-color: #fff;
     padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 2rem;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 100%;
-    max-width: 400px;
+    max-width: 50rem;
     margin: 0 auto;
   }
   
@@ -37,8 +37,8 @@
   .input-range {
     padding: 0.5rem;
     font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: 0.125rem solid #ccc;
+    border-radius: 2rem;
     width: 100%;
     text-align: center;
     outline: none;

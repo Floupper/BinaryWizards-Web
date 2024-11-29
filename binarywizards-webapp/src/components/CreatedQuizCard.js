@@ -10,9 +10,8 @@ export default function CreatedQuizCard({ quiz, route }) {
     if (route === `/question/`) {
       createGameWithQuizId(quiz.quiz_id)
         .then(data => {
-          // Assurez-vous que la réponse de createGameWithQuizId contient bien game_id
           if (data?.game_id) {
-            navigate(`${route}${data.game_id}`); // Forme l'URL complète avec game_id
+            navigate(`${route}${data.game_id}`); 
           } else {
             console.error('Game creation failed.');
           }
@@ -21,7 +20,7 @@ export default function CreatedQuizCard({ quiz, route }) {
           console.error('Error creating game:', error);
         });
     } else {
-      navigate(route); // Navigation vers une autre route si ce n'est pas /question/
+      navigate(route);
     }
   };
 
