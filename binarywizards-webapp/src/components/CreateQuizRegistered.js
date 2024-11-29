@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import '../assets/CreateQuiz.css';
 import CreateQuizService from '../services/CreateQuizService';
 import Modal from 'react-modal';
@@ -8,9 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuestionInContainer from './CreateQuizQuestionInContainer';
 import ImportQuestionTrivia from './CreateQuizImportQuestionTrivia';
-import CreateQuizAnonyme from './CreateQuizAnonyme';
-import QuizCreated from './CreateQuizCreated';
-import { MdDescription } from 'react-icons/md';
+
 
 
 Modal.setAppElement('#root');
@@ -18,38 +16,36 @@ Modal.setAppElement('#root');
 
 
 export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRedicted }) {
-  const [categories, setCategories] = useState([]);
-  const [difficulties, setDifficulties] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [amount, setAmount] = useState(10);
-  const [difficulty, setDifficulty] = useState('');
-  const [quizDescription, setQuizDescription] = useState('');
-  const navigate = useNavigate();
+
+
+  const [quizId, setQuizId] = useState(quizIdParameter || '');
+  //Modal of editing/creating question
   const [isModalOpen, setModalOpen] = useState(false);
-
   const [isTriviaModalOpen, setTrivialModalOpen] = useState(false);
-
-  const [isPublicQuiz, setIsPublicQuiz] = useState(false);
-  const [idQuestionSelected, setIdQuestionSelected] = useState('');
-
-  const [TypeOfScreen, setTypeOfScreen] = useState('edit');
   const [pageTitle, setPageTitle] = useState('Change a Quiz');
-
+  const [TypeOfScreen, setTypeOfScreen] = useState('edit');
+  //diffilcies fetching from the API
+  //##################API
+  const [difficulties, setDifficulties] = useState([]);
   const [quizTitle, setQuizTitle] = useState('');
+  const [quizDescription, setQuizDescription] = useState('');
   const [quizDifficulty, setQuizDifficulty] = useState('');
   const [quizIsPublic, setQuizIsPublic] = useState('');
-  const [quizId, setQuizId] = useState(quizIdParameter || '');
   const [quizQuestions, setQuizQuestions] = useState([]);
+
+  //##################LOCAL
+  //Public or private (local -> API)
+  const [isPublicQuiz, setIsPublicQuiz] = useState(false);
+  //Id of the question selected, for passing data
+  const [idQuestionSelected, setIdQuestionSelected] = useState('');
+
+
 
   let initialized = false;
 
   useEffect(() => {
     if (initialized) return;
     initialized = true;
-
-    CreateQuizService.fetchCategories()
-      .then(data => setCategories(data))
-      .catch(error => toast.info('Error fetching categories:', error));
 
     CreateQuizService.fetchDifficulties()
       .then(data => setDifficulties(data))
@@ -81,7 +77,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     if (quizId) {
       CreateQuizService.fetchQuizDetails(quizId)
         .then(data => {
-          setQuizQuestions(data.quiz.questions || []); // Actualiser les questions
+          setQuizQuestions(data.quiz.questions || []);
         })
         .catch(error => toast.info('Error refreshing quiz details:', error));
     }
@@ -131,24 +127,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       return;
     }
 
-
-
-    /*
-        if (!amount || isNaN(amount) || amount <= 0) {
-          toast.info('Please enter a valid number of questions (greater than 0).');
-          return;
-        }
-              if (selectedCategory === '') {
-          toast.info('Please select a category.');
-          return;
-        }
-        let selectedCat = selectedCategory;
-        if (selectedCat === '') {
-          const randomIndex = Math.floor(Math.random() * categories.length);
-          selectedCat = categories[randomIndex].id;
-        }
-    */
-
     const quizData = {
       title: quizTitle,
       difficulty: quizDifficulty,
@@ -158,41 +136,20 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
     console.log(quizData);
     CreateQuizService.createQuiz(quizData, quizId)
-      .then(data => {
+      .then(() => {
         toast.info('Quiz created successfully! ');
-
         setQuizIdRedicted(quizId);
-        /*
-        if (window.history.length > 1) {
-          navigate(-1);
-        } else {
-          navigate('/'); 
-        }
-          */
       })
       .catch(error => {
-
         toast.info(error.message);
       });
   };
-
-  const handleAmountInput = (e) => {
-    const value = e.target.value.replace(/[^\d]/g, '');
-    setAmount(value);
-  };
-
-  const handleKeyDown = (e) => {
-    if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Delete') {
-      e.preventDefault();
-    }
-  };
-
 
   const handleSubmitDeleteQuestion = (questionId) => {
     CreateQuizService.deleteQuestion(quizId, questionId)
       .then(() => {
         toast.info('Question deleted successfully!');
-        refreshQuizQuestions(); // Actualiser la liste après suppression
+        refreshQuizQuestions();
       })
       .catch(error => {
         toast.error('Error deleting question:', error.message);
@@ -246,7 +203,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           id="quiz_title"
           name="quiz_title"
           value={quizTitle}
-          onChange={handleChangeQuizTitle} // Met à jour l'état à chaque modification
+          onChange={handleChangeQuizTitle}
           rows="4"
           cols="50"
           placeholder="Enter the title of the quiz"
@@ -258,7 +215,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             id="quiz_description"
             name="quiz_description"
             value={quizDescription}
-            onChange={handleChangeQuizDescription} // Met à jour l'état à chaque modification
+            onChange={handleChangeQuizDescription}
             rows="10"
             cols="50"
             placeholder="Enter a description for the quiz"
@@ -293,8 +250,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             type="checkbox"
             id="quiz_checkbox"
             name="quiz_checkbox"
-            checked={isPublicQuiz} // Lie la valeur de la case à l'état
-            onChange={handleChangeIsPublicQuiz} // Appelle la fonction de gestion lors des changements
+            checked={isPublicQuiz}
+            onChange={handleChangeIsPublicQuiz}
           />
           Publish this quiz
         </label>
@@ -305,7 +262,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
         <div className="question_list">
           {quizQuestions.map((question) => (
             <QuestionInContainer
-              key={question.question_id} // Propriété "key" ajoutée ici
+              key={question.question_id}
               question_text={question.question_text}
               question_difficulty={question.question_difficulty}
               question_category={question.question_category}
@@ -313,7 +270,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
               setIdQuestionSelected={setIdQuestionSelected}
               setModalOpen={setModalOpen}
               setTypeOfScreen={setTypeOfScreen}
-              handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)} // Lien avec l'ID
+              handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
             />
           ))}
         </div>

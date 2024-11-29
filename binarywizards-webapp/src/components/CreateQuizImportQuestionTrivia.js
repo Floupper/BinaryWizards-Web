@@ -17,15 +17,16 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
   //Amount of questions to import
   const [amount, setAmount] = useState(10);
 
-
+  const [isDisabled, setIsDisabled] = useState(false);
   useEffect(() => {
+
     CreateQuizService.fetchCategories()
       .then(data => setCategories(data))
-      .catch(error => toast.info('Error fetching categories:', error));
+    // .catch(error => toast.info('Error fetching categories:', error));
 
     CreateQuizService.fetchDifficulties()
       .then(data => setDifficulties(data))
-      .catch(error => toast.info('Error fetching difficulties:', error));
+    //  .catch(error => toast.info('Error fetching difficulties:', error));
 
   }, []);
 
@@ -35,49 +36,55 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
     setAmount(value);
   };
 
+  //Function to prevent the user to enter anything else than a number
   const handleKeyDown = (e) => {
     if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Delete') {
       e.preventDefault();
     }
   };
 
+  //Function to handle the change of the category
   const handleCategoryChange = (event) => {
     setSelectedCategory(parseInt(event.target.value, 10));
   };
 
+  //Function to handle the submit of the form
   const handleSubmitImport = () => {
 
+    //Check if the amount is a number and is greater than 0
     if (!amount || isNaN(amount) || amount <= 0) {
       toast.info('Please enter a valid number of questions (greater than 0).');
       return;
     }
+    //Check if the category is selected
     if (selectedCategory === '') {
       toast.info('Please select a category.');
       return;
     }
-
+    // Check if the difficulty is selected
     if (difficulty === '') {
       toast.info('Please select a difficulty.');
       return;
     }
 
+    setIsDisabled(true);
+
+
+    //Data to send to the API
     const triviaData = {
       amount: parseInt(amount, 10),
       difficulty: difficulty,
       category: selectedCategory,
     };
+
+
+    //Call the API to import the questions
     CreateQuizService.importQuestionTrivia(triviaData, quizId)
       .then(() => {
         refreshQuizQuestions();
         toast.info("Questions imported successfully!")
         setTrivialModalOpen(false);
-
       })
-      .catch(error => {
-        toast.error('Error while importing questions :(');
-      });
-
-
 
   };
   return (
@@ -125,7 +132,7 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
       </div>
 
 
-      <button onClick={handleSubmitImport}>Import Questions</button>
+      <button disabled={isDisabled} onClick={handleSubmitImport}>Import Questions</button>
       <button onClick={() => setTrivialModalOpen(false)}>Fermer</button>
     </div>
   )

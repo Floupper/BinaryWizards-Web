@@ -58,7 +58,7 @@ const CreateQuizService = {
 
   deleteQuestion: (quizId, questionId) => {
     try {
-      return axiosInstance.delete(`/quiz/${quizId}/${questionId}}`).then((response) => response.data);
+      return axiosInstance.delete(`/quiz/${quizId}/${questionId}`).then((response) => response.data);
     }
     catch (error) {
       throw new Error('Erreur lors de la suppression de la question');

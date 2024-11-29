@@ -18,22 +18,22 @@ Modal.setAppElement('#root');
 export default function CreateQuiz() {
   const navigate = useNavigate();
   const location = useLocation();
-  const {quizId}  = location.state ||{quizId:''} ;
+  const { quizId } = location.state || { quizId: '' };
   const userId = localStorage.getItem('token');
   const [quizIdRedicted, setQuizIdRedicted] = useState('any');
 
   if (quizIdRedicted !== 'any') {
     if (quizId) {
-      navigate('/dashboard');      
+      navigate('/dashboard');
     } else {
       navigate('/quiz-created/' + quizIdRedicted);
 
     }
-    return null; // Empêche le composant d'afficher quelque chose après la navigation
+    return null;
   }
   return (
     <div>
-      {quizIdRedicted==='any' ? (
+      {quizIdRedicted === 'any' ? (
         userId ? (
           <CreateQuizRegisteredPage quizIdParameter={quizId} setQuizIdRedicted={setQuizIdRedicted} />
         ) : (
@@ -41,7 +41,7 @@ export default function CreateQuiz() {
         )
       ) : (
         <div>
- 
+
         </div>
       )}
     </div>
@@ -49,4 +49,4 @@ export default function CreateQuiz() {
 }
 
 
-  
+

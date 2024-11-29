@@ -27,10 +27,11 @@ export default function QuestionScreen() {
   const [selectedQuestionId, setSelectedQuestionId] = useState(null); // State to store the selected answer
   const [isAnswered, setIsAnswered] = useState(false); // State to block multiple answer submissions
   const [idCorrectAnswers, setIdCorrectAnswers] = useState(); // State to store the correct answer(s)
-  
+
   // Function to retrieve and update quiz data
   const handleFetchQuiz = async () => {
     try {
+
       // Retrieves the question & answer
       const data = await GetQuestion(id);
 
@@ -40,7 +41,7 @@ export default function QuestionScreen() {
 
         if (data.game_finished) {
           navigate('/end', {
-              state: { correct_answers_nb: data.correct_answers_nb,nb_questions_total:data.nb_questions_total, quizId: data.quiz_id },
+            state: { correct_answers_nb: data.correct_answers_nb, nb_questions_total: data.nb_questions_total, quizId: data.quiz_id },
           });
           return;
         }
@@ -76,8 +77,8 @@ export default function QuestionScreen() {
       setSelectedQuestionId(selectedId); // Updates the selected answer
       setIsAnswered(true); // Marks that the answer has been submitted
 
-        const result = await PostAnswers(id, questionIndex, selectedId); // Sends the answer via POST and retrieves the server's response
-        setIdCorrectAnswers(result.correct_option_index); // Saves the index of the correct answer
+      const result = await PostAnswers(id, questionIndex, selectedId); // Sends the answer via POST and retrieves the server's response
+      setIdCorrectAnswers(result.correct_option_index); // Saves the index of the correct answer
 
     }
   };
@@ -89,7 +90,7 @@ export default function QuestionScreen() {
   };
 
   const paramHUD = {
-    idparty:id,
+    idparty: id,
     idquizz: quizId,
     score: score,
     question_index: questionIndex,
@@ -106,7 +107,7 @@ export default function QuestionScreen() {
 
   return (
     <div className="QuestionScreen">
-     
+
       <div className="HUD">
         <QuestionHUD party_parameters={paramHUD} />
       </div>

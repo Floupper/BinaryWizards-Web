@@ -18,6 +18,7 @@ import QuizCreated from './components/CreateQuizCreated';
 
 
 function App() {
+
   return (
     <Router>
       <Navbar />
@@ -32,12 +33,14 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/historique-game-play/:quizId" element={<HistoriqueGamePlay />} />
         <Route path="/dashboard/detail-create-quiz/:quizId" element={<QuizRecapScreen />} />
-        <Route path="/question" element={<Navigate to="/" replace />}/>
-        <Route path="/question/:id" element={<QuestionScreen />}/>
+        <Route path="/question" element={<Navigate to="/" replace />} />
+        <Route path="/question/:id" element={<QuestionScreen />} />
         <Route path="/end" element={<EndScreen />} />
         <Route path="/quiz-created/:quizId" element={<QuizCreated />} />
       </Routes>
+
     </Router>
+
   );
 }
 

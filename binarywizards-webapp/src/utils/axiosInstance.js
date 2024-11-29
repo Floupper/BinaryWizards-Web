@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import config from '../config';
 
 const axiosInstance = axios.create({
@@ -40,10 +40,11 @@ axiosInstance.interceptors.response.use(
 
         localStorage.removeItem('token');
       } else {
-
+        console.log('here')
         const errorMessage = error.response.data.error || error.response.data.message || error.message;
-        // toast.error(`${errorMessage}`);
+        //toast.error(`${errorMessage}`);
         throw new Error(`${errorMessage}`);
+        console.log('here2')
       }
     } else {
 
