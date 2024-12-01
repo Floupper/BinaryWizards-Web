@@ -195,7 +195,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             />
           </Modal>
         </div>
-        <h2>Quiz ID: {quizId}</h2>
+
         <h1>{pageTitle}</h1>
         <label htmlFor="quiz_title">Titre du quiz :</label>
         <h2>  <input
