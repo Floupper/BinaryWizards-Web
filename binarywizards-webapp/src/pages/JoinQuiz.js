@@ -20,26 +20,11 @@ export default function JoinQuiz() {
   const [isLoadingGame, setIsLoadingGame] = useState(false);
   const navigate = useNavigate();
 
-  const handleCreateQuiz = async () => {
-    if (quizCode.trim() === '') {
-      toast.info('Please enter a valid quiz code.');
-      return;
-    }
-    setIsLoadingQuiz(true);
 
-    try {
-      const data = await createGameWithQuizId(quizCode);
-      navigate(`/question/${data.game_id}`);
-    } catch (error) {
-      toast.error(error.message || 'Failed to create game');
-    } finally {
-      setIsLoadingQuiz(false);
-    }
-  };
 
   const handleJoinGame = async () => {
     if (gameCode.trim() === '') {
-      toast.info('Please enter a valid game code.');
+      toast.info('Please enter a valid quiz code.');
       return;
     }
     setIsLoadingGame(true);
@@ -56,31 +41,31 @@ export default function JoinQuiz() {
 
   return (
     <QueryClientProvider client={queryClient}>
-    <div>
-    <Navbar />
-      <ToastContainer />           
-      {token ? (
-      <div className="JoinQuizContainer">
-        <SearchQuiz />
+      <div>
+        <Navbar />
+        <ToastContainer />
+        {token ? (
+          <div className="JoinQuizContainer">
+            <SearchQuiz />
+          </div>
+        ) :
+          <div className="JoinGameContainer">
+            <h1>Play</h1>
+            <div className="form-group">
+              <input
+                type="text"
+                id="gameCode"
+                value={gameCode}
+                onChange={(e) => setGameCode(e.target.value)}
+                placeholder="Enter the quiz id"
+              />
+            </div>
+            <button onClick={handleJoinGame} disabled={isLoadingGame}>
+              {isLoadingGame ? 'Playing...' : 'Play'}
+            </button>
+          </div>
+        }
       </div>
-      ) : 
-      <div className="JoinGameContainer">
-        <h1>Play</h1>
-        <div className="form-group">
-          <input
-            type="text"
-            id="gameCode"
-            value={gameCode}
-            onChange={(e) => setGameCode(e.target.value)}
-            placeholder="Enter the game code"
-          />
-        </div>
-        <button onClick={handleJoinGame} disabled={isLoadingGame}>
-          {isLoadingGame ? 'Playing...' : 'Play'}
-        </button>
-      </div>
-      }
-    </div>
     </QueryClientProvider>
   );
 }

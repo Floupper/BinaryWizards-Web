@@ -16,12 +16,6 @@ export async function PostAnswers(id_game, index_question, index_reponse) {
     question_index: index_question,
     option_index: index_reponse,
   };
-
-  try {
-    const response = await axiosInstance.post(`/game/${id_game}/question`, quizQuestionPost);
-    return response.data;
-  } catch (error) {
-    toast.error('Error sending response: ' + error.message);
-    throw error;
-  }
+  const response = await axiosInstance.post(`/game/${id_game}/question`, quizQuestionPost);
+  return response.data;
 }
