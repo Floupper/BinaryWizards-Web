@@ -22,6 +22,7 @@ const CreateQuizService = {
 
   createQuiz: async (quizData, quizId) => {
     try {
+
       return axiosInstance.post(`/quiz/${quizId}`, quizData).then((response) => response.data);
     } catch (error) {
       throw new Error('Error creating the quiz');
