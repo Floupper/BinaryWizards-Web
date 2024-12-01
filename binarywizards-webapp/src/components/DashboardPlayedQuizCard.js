@@ -4,8 +4,9 @@ import { MdReplay } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import {createGameWithQuizId} from '../services/JoinQuizService';
 import '../assets/PlayedQuizCard.css';
-
+import dayjs from 'dayjs';
 export default function PlayedQuizCard({ quiz }) {
+  const formattedDate = dayjs(quiz.date_game_creation).format("DD/MM/YYYY");
   const navigate = useNavigate();
 
   const handleCardClick = () => {
@@ -23,15 +24,14 @@ export default function PlayedQuizCard({ quiz }) {
   return (
     <div className="played-quiz-card" onClick={handleCardClick}>
       <div className="quiz-info">
-        <h3>Score: {quiz.correct_answers_nb}/{quiz.current_question_index}</h3>
-        <p>Date: {new Date(quiz.date_game_creation).toLocaleDateString()}</p>
-        <p>Quiz ID: {quiz.quiz_id}</p>
+        <h3>Title: {quiz.title}</h3>
+        {quiz.current_question_index}/{quiz.nb_questions_total}
+        <p>Date: {formattedDate}</p>
         <p className="quiz-status">
           {quiz.nb_questions_total === quiz.current_question_index ? (
             <MdReplay className="quiz-icon" />
           ) : (
             <FaPlay className="quiz-icon" />
-
           )}
         </p>
       </div>

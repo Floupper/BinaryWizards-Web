@@ -12,7 +12,7 @@ export default function ConnectScreen() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = await ConnectScreen(username, password);
+      const token = await ConnectService(username, password);
       if (token) {
         localStorage.setItem('token', token);
         navigate('/dashboard'); 

@@ -39,12 +39,13 @@ export default function JoinQuiz() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div>
+      <div className='container'>
         <Navbar />
         <ToastContainer />
         {token ? (
           <div className="JoinQuizContainer">
-            <SearchQuiz />
+            <JoinQuizSearchQuiz />
+            <JoinQuizResumeGame />
           </div>
         ) :
           <div className="JoinGameContainer">

@@ -9,16 +9,19 @@ import QuestionRangeSelector from './JoinQuizQuestionRangeSelector';
 
 export default function JoinQuizSearchQuiz() {
     const [text, setText] = useState('');
-    const [selectedDifficulty, setSelectedDifficulty] = useState("");
+    const [selectedDifficulty, setSelectedDifficulty] = useState("all");
     const [difficulties, setDifficulties] = useState([]);
     const quizListRef = useRef(null); 
-    const [minQuestions, setMinQuestions] = useState(1);
+    const [minQuestions, setMinQuestions] = useState(0);
     const [maxQuestions, setMaxQuestions] = useState(50);
 
     useEffect(() => {
-        handleSearch(); // Initial search
+        // Fetch difficulties
         CreateQuizService.fetchDifficulties()
-            .then(data => setDifficulties(data))
+            .then((data) => {
+                const updatedData = ['all', ...data]; 
+                setDifficulties(updatedData); 
+            })
             .catch(error => toast.error(`Error fetching difficulties: ${error.message}`));
     }, []);
 
@@ -43,17 +46,21 @@ export default function JoinQuizSearchQuiz() {
         enabled: false,
     });
 
+    // Trigger refetch on parameter updates
+    useEffect(() => {
+        refetch();
+    }, [text, selectedDifficulty, minQuestions, maxQuestions, refetch]);
+
     const handleScroll = () => {
         if (quizListRef.current) {
-            const isBottom =
-                quizListRef.current.scrollHeight ===
-                quizListRef.current.scrollTop + quizListRef.current.clientHeight;
-            if (isBottom && hasNextPage) {
+            const { scrollHeight, scrollTop, clientHeight } = quizListRef.current;
+            if (scrollHeight === scrollTop + clientHeight && hasNextPage) {
                 fetchNextPage();
             }
         }
     };
 
+    // Attach and detach scroll event listener
     useEffect(() => {
         const listElement = quizListRef.current;
         if (listElement) {
@@ -66,8 +73,8 @@ export default function JoinQuizSearchQuiz() {
         };
     }, [hasNextPage, fetchNextPage]);
 
-    const handleSearch = () => {
-        refetch();
+    const handleTextChange = (value) => {
+        setText(value);
     };
 
     return (
@@ -78,7 +85,7 @@ export default function JoinQuizSearchQuiz() {
                 className="search-input"
                 placeholder="Enter the text to search for a quiz"
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={(e) => handleTextChange(e.target.value)}
             />
             <QuestionRangeSelector
                 minQuestions={minQuestions}
@@ -100,9 +107,6 @@ export default function JoinQuizSearchQuiz() {
                     </option>
                 ))}
             </select>
-            <button onClick={handleSearch} className="search-button">
-                Search
-            </button>
 
             {isLoading && <div className="loading-indicator">Loading...</div>}
             <div
@@ -112,6 +116,7 @@ export default function JoinQuizSearchQuiz() {
             >
                 {data?.pages?.flatMap((page) => page?.quizzes || []).map((item) => (
                     <DashboardCreatedQuizCard
+                        key={item.id} // Assurez-vous que `id` est une clé unique pour les quizzes
                         quiz={item}
                         route={'/question/'}
                     />
@@ -121,9 +126,10 @@ export default function JoinQuizSearchQuiz() {
                     <div className="loading-indicator">Loading more...</div>
                 )}
 
-                {!isLoading && (!data?.pages || data.pages.flatMap((page) => page?.quizzes || []).length === 0) && (
-                    <div className="empty-message">No quizzes found.</div>
-                )}
+                {!isLoading &&
+                    (!data?.pages || data.pages.flatMap((page) => page?.quizzes || []).length === 0) && (
+                        <div className="empty-message">No quizzes found.</div>
+                    )}
             </div>
         </div>
     );

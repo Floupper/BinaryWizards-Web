@@ -23,7 +23,7 @@ export const fetchSearchedQuiz = async ({ text = '', difficulty = '', minQuestio
     }
 
     // Add difficulty if provided
-    if (difficulty) {
+    if (difficulty.trim() && difficulty != 'all') {
       params.append('difficulty', difficulty);
     }
 
