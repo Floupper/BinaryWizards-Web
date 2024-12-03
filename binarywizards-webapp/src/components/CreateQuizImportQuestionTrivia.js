@@ -85,6 +85,10 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
         toast.info("Questions imported successfully!")
         setTrivialModalOpen(false);
       })
+      .catch((error) => {
+        toast.info(error.message);
+        setIsDisabled(false);
+      });
 
   };
   return (

@@ -44,6 +44,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   let initialized = false;
 
   useEffect(() => {
+
+
     if (initialized) return;
     initialized = true;
 
@@ -116,13 +118,14 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   const handleSubmitSave = () => {
 
-    if (quizTitle === '') {
+    if (!quizTitle) {
       toast.info('Please select a title.');
+
       return;
     }
 
 
-    if (quizDifficulty === '') {
+    if (!quizDifficulty) {
       toast.info('Please select a difficulty.');
       return;
     }

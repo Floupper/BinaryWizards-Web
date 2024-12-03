@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
-import '../assets/RecapQuizQuestion.css';
 import RecapQuizService from '../services/RecapQuizService';
 
 const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
@@ -28,26 +27,30 @@ const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
   };
 
   return (
-    <div className="Question">
-      <div className="Question-header">
-        <h3>Question {questionNumber}: {questionText}</h3>
-        <NavLink to="#" onClick={toggleShowAnswers} className="show-answers-link">
+    <div className="p-4 mb-6">
+      <div className="Question-header flex justify-between items-center">
+        <h3 className="text-black font-sifonn text-xl">Question {questionNumber}: {questionText}</h3>
+        <NavLink to="#" onClick={toggleShowAnswers} className="text-black font-medium text-lg ml-4">
           {showAnswers ? 'Hide Answers' : 'Show Answers'}
         </NavLink>
       </div>
       {showAnswers && questionDetails && (
-        <div className="question-stats">
-          <p>Total Answers: {questionDetails.total_answers}</p>
-          <p>Correct Answers Count: {questionDetails.correct_answers_count}</p>
-          <p>Accuracy Rate: {questionDetails.accuracy_rate}%</p>
-          <ul className="Answers-list">
+        <div className="mt-4 p-6 border border-gray-300 rounded-[2rem] bg-white shadow-inner">
+          <ul className="Answers-list space-y-2">
             {questionDetails.option_selection_stats.map((option, index) => (
-              <li key={option.option_id} className={`Answer ${option.is_correct_answer ? 'correct' : 'incorrect'}`}>
-                {option.option_text} <span className="icon">{option.is_correct_answer ? '✔️' : '❌'}</span>
-                <span className="selection-percentage"> ({option.selection_percentage}%)</span>
+              <li key={option.option_id} className={`p-3 border-[0.125rem] rounded-lg ${option.is_correct_answer ? 'border-green-500' : 'border-red-500'} flex justify-between items-center`}> 
+                <span>{option.option_text}</span>
+                <span className="ml-2 text-gray-500">({option.selection_percentage}%)</span>
+                <span className="ml-2">{option.is_correct_answer ? '✔️' : '❌'}</span>
+
               </li>
             ))}
           </ul>
+          <div className="mt-6 text-sm text-gray-700">
+            <p>Total Answers: {questionDetails.total_answers}</p>
+            <p>Correct Answers Count: {questionDetails.correct_answers_count}</p>
+            <p>Accuracy Rate: {questionDetails.accuracy_rate}%</p>
+          </div>
         </div>
       )}
     </div>

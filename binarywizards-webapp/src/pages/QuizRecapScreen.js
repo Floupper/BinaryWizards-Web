@@ -2,12 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import RecapQuizService from '../services/RecapQuizService';
 import RecapQuizQuestion from '../components/RecapQuizQuestion';
-import '../assets/QuizRecapScreen.css';
-
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import Navbar from '../components/Navbar';
+import { EmojiProvider, Emoji } from "react-apple-emojis";
+import emojiData from "react-apple-emojis/src/data.json";
 
 const QuizRecapScreen = () => {
   const [quizDetails, setQuizDetails] = useState(null);
@@ -28,29 +25,60 @@ const QuizRecapScreen = () => {
 
     fetchQuizData();
 
-    return () => {};
+    return () => { };
   }, [quizId]);
 
   if (!quizDetails) {
     return <div>Loading...</div>;
   }
 
-  return (
-    <div className="QuizRecapScreen">
-      <Navbar />
-      <button className="return-button" onClick={() => navigate('/dashboard')}>Return to Dashboard</button>
-      <div className="recap-container">
-        <div className="quiz-details">
-          <h2>{quizDetails.title}</h2>
+  const renderDifficultyStars = (difficulty) => {
+    switch (difficulty.toLowerCase()) {
+      case 'easy':
+        return '⭐';
+      case 'medium':
+        return '⭐⭐';
+      case 'hard':
+        return '⭐⭐⭐';
+      default:
+        return difficulty;
+    }
+  };
 
-          <p>Difficulty: {quizDetails.difficulty}</p>
-          <p>Number of Questions: {quizDetails.nb_questions}</p>
-          <p>Times Played: {quizDetails.nb_played}</p>
+  return (
+    <div className="min-h-screen bg-[#F4F2EE]">
+      <Navbar />
+
+      <EmojiProvider data={emojiData}>
+        <button
+          className="return-button flex items-center bg-transparent border border-gray-400 text-gray-700 py-2 px-4 rounded-[1.75rem] mt-4 ml-4 hover:bg-gray-100"
+          onClick={() => navigate('/dashboard')}
+        >
+          <Emoji name="left-arrow" width={20} className="mr-2" />
+          Return to Dashboard
+        </button>
+      </EmojiProvider>
+
+      <div className="recap-container flex flex-col lg:flex-row items-start justify-center mt-8 space-y-8 lg:space-y-0 lg:space-x-20 w-full px-4">
+        <div className="quiz-details p-6 rounded-[1.75rem] w-full lg:w-auto border border-black relative">
+          <EmojiProvider data={emojiData}>
+            <button
+              className="absolute top-0 right-0 mt-2 mr-2 bg-none border-none"
+              onClick={() => navigate('/')}
+            >
+              <Emoji name="paintbrush" width={30} />
+            </button>
+          </EmojiProvider>
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-4">
+            <h2 className="text-2xl font-semibold text-black break-words mr-4">{quizDetails.title}</h2>
+          </div>
+          <p className="mb-2">Difficulty: {renderDifficultyStars(quizDetails.difficulty)}</p>
+          <p className="mb-2">Number of Questions: {quizDetails.nb_questions}</p>
+          <p className="mb-2">Times Played: {quizDetails.nb_played}</p>
           <p>Average Score: {quizDetails.average_score}</p>
-          <button className="editquiz-button" onClick={() => navigate('/edit-quiz',  { state: { quizId } })}>Edit quiz</button>
         </div>
-        <div className="questions-panel">
-          <div className="questions-list">
+        <div className="questions-panel w-full lg:w-fit h-[700px] overflow-y-auto">
+          <div className="questions-list space-y-4">
             {questions.map((question, index) => (
               <RecapQuizQuestion
                 key={question.question_id}
