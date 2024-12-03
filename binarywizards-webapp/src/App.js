@@ -28,7 +28,7 @@ function App() {
         <Route path="/signin" element={<ConnectScreen />} />
         <Route path="/signup" element={<SignupScreen />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dashboard/histort-game-play/:quizId" element={<HistoryGamePlay />} />
+        <Route path="/dashboard/history-game-play/:quizId" element={<HistoryGamePlay />} />
         <Route path="/dashboard/detail-create-quiz/:quizId" element={<QuizRecapScreen />} />
         <Route path="/question" element={<Navigate to="/" replace />} />
         <Route path="/question/:id" element={<QuestionScreen />} />

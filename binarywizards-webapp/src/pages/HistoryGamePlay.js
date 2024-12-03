@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import HistoryGamePlayService from '../services/HistoryGamePlayService.js';
 import '../assets/HistoriqueGamePlay.css';
+import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar.js';
 
 export default function HistoryGameHistory() {
@@ -13,7 +14,7 @@ export default function HistoryGameHistory() {
         if (userId && quizId) {
             HistoryGamePlayService.getPlayedGames(userId, quizId)
                 .then(data => setPlayedGames(data))
-                .catch(error => console.error('Error fetching played games:', error));
+                .catch(error => toast.error('Error fetching played games:', error));
         }
     }, [userId, quizId]);
 

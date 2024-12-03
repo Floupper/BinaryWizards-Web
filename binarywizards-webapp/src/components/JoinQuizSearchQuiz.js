@@ -116,7 +116,7 @@ export default function JoinQuizSearchQuiz() {
             >
                 {data?.pages?.flatMap((page) => page?.quizzes || []).map((item) => (
                     <DashboardCreatedQuizCard
-                        key={item.id} // Assurez-vous que `id` est une clé unique pour les quizzes
+                        key={item.id}
                         quiz={item}
                         route={'/question/'}
                     />
