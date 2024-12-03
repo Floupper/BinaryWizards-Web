@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signupUser, checkUsernameAvailability } from '../services/signupService';
+import { SignupUser, checkUsernameAvailability } from '../services/SignupService';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
@@ -26,7 +26,7 @@ function SignupScreen() {
         setError('Username is already taken');
         return;
       }
-      const token = await signupUser(username, password);
+      const token = await SignupUser(username, password);
       if (token) {
         localStorage.setItem('token', token);
         navigate('/dashboard'); 

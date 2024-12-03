@@ -7,7 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from '../components/Navbar';
 import { checkGameExists, createGameWithQuizId } from '../services/JoinQuizService';
-import SearchQuiz from '../components/JoinQuizSearchQuiz';
+import JoinQuizSearchQuiz from '../components/JoinQuizSearchQuiz';
+import JoinQuizResumeGame from '../components/JoinQuizResumeGame';
 
 const queryClient = new QueryClient();
 
@@ -19,9 +20,6 @@ export default function JoinQuiz() {
   const [isLoadingQuiz, setIsLoadingQuiz] = useState(false);
   const [isLoadingGame, setIsLoadingGame] = useState(false);
   const navigate = useNavigate();
-
-
-
   const handleJoinGame = async () => {
     if (gameCode.trim() === '') {
       toast.info('Please enter a valid quiz code.');
@@ -41,12 +39,13 @@ export default function JoinQuiz() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div>
+      <div className='container'>
         <Navbar />
         <ToastContainer />
         {token ? (
           <div className="JoinQuizContainer">
-            <SearchQuiz />
+            <JoinQuizSearchQuiz />
+            <JoinQuizResumeGame />
           </div>
         ) :
           <div className="JoinGameContainer">

@@ -7,18 +7,21 @@ import DashboardCreatedQuizCard from './CreatedQuizCard';
 import '../assets/JoinQuizSearchQuiz.css';
 import QuestionRangeSelector from './JoinQuizQuestionRangeSelector';
 
-export default function SearchQuiz() {
+export default function JoinQuizSearchQuiz() {
     const [text, setText] = useState('');
-    const [selectedDifficulty, setSelectedDifficulty] = useState("");
+    const [selectedDifficulty, setSelectedDifficulty] = useState("all");
     const [difficulties, setDifficulties] = useState([]);
     const quizListRef = useRef(null); 
-    const [minQuestions, setMinQuestions] = useState(1);
+    const [minQuestions, setMinQuestions] = useState(0);
     const [maxQuestions, setMaxQuestions] = useState(50);
 
     useEffect(() => {
-        handleSearch(); // Initial search
+        // Fetch difficulties
         CreateQuizService.fetchDifficulties()
-            .then(data => setDifficulties(data))
+            .then((data) => {
+                const updatedData = ['all', ...data]; 
+                setDifficulties(updatedData); 
+            })
             .catch(error => toast.error(`Error fetching difficulties: ${error.message}`));
     }, []);
 
@@ -43,17 +46,21 @@ export default function SearchQuiz() {
         enabled: false,
     });
 
+    // Trigger refetch on parameter updates
+    useEffect(() => {
+        refetch();
+    }, [text, selectedDifficulty, minQuestions, maxQuestions, refetch]);
+
     const handleScroll = () => {
         if (quizListRef.current) {
-            const isBottom =
-                quizListRef.current.scrollHeight ===
-                quizListRef.current.scrollTop + quizListRef.current.clientHeight;
-            if (isBottom && hasNextPage) {
+            const { scrollHeight, scrollTop, clientHeight } = quizListRef.current;
+            if (scrollHeight === scrollTop + clientHeight && hasNextPage) {
                 fetchNextPage();
             }
         }
     };
 
+    // Attach and detach scroll event listener
     useEffect(() => {
         const listElement = quizListRef.current;
         if (listElement) {
@@ -66,22 +73,8 @@ export default function SearchQuiz() {
         };
     }, [hasNextPage, fetchNextPage]);
 
-    const handlePressCreate = async (quizId) => {
-        try {
-            const gameResponse = await createGameWithQuizId(quizId);
-            if (gameResponse?.game_id) {
-                toast.success("Game created successfully!");
-                // Update the UI or navigate
-            } else {
-                throw new Error('Invalid response');
-            }
-        } catch (error) {
-            toast.error("Failed to create a game. Try again.");
-        }
-    };
-
-    const handleSearch = () => {
-        refetch();
+    const handleTextChange = (value) => {
+        setText(value);
     };
 
     return (
@@ -92,7 +85,7 @@ export default function SearchQuiz() {
                 className="search-input"
                 placeholder="Enter the text to search for a quiz"
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={(e) => handleTextChange(e.target.value)}
             />
             <QuestionRangeSelector
                 minQuestions={minQuestions}
@@ -114,9 +107,6 @@ export default function SearchQuiz() {
                     </option>
                 ))}
             </select>
-            <button onClick={handleSearch} className="search-button">
-                Search
-            </button>
 
             {isLoading && <div className="loading-indicator">Loading...</div>}
             <div
@@ -126,6 +116,7 @@ export default function SearchQuiz() {
             >
                 {data?.pages?.flatMap((page) => page?.quizzes || []).map((item) => (
                     <DashboardCreatedQuizCard
+                        key={item.id}
                         quiz={item}
                         route={'/question/'}
                     />
@@ -135,9 +126,10 @@ export default function SearchQuiz() {
                     <div className="loading-indicator">Loading more...</div>
                 )}
 
-                {!isLoading && (!data?.pages || data.pages.flatMap((page) => page?.quizzes || []).length === 0) && (
-                    <div className="empty-message">No quizzes found.</div>
-                )}
+                {!isLoading &&
+                    (!data?.pages || data.pages.flatMap((page) => page?.quizzes || []).length === 0) && (
+                        <div className="empty-message">No quizzes found.</div>
+                    )}
             </div>
         </div>
     );

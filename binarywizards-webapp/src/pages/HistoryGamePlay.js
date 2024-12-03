@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import HistoriqueGamePlayService from '../services/HistoriqueGamePlayService.js';
+import HistoryGamePlayService from '../services/HistoryGamePlayService.js';
 import '../assets/HistoriqueGamePlay.css';
+import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar.js';
 
-export default function GameHistory() {
+export default function HistoryGameHistory() {
     const { quizId } = useParams();
     const [playedGames, setPlayedGames] = useState([]);
     const userId = localStorage.getItem('user_id');
 
     useEffect(() => {
         if (userId && quizId) {
-            HistoriqueGamePlayService.getPlayedGames(userId, quizId)
+            HistoryGamePlayService.getPlayedGames(userId, quizId)
                 .then(data => setPlayedGames(data))
-                .catch(error => console.error('Error fetching played games:', error));
+                .catch(error => toast.error('Error fetching played games:', error));
         }
     }, [userId, quizId]);
 
