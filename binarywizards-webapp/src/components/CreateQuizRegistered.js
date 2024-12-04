@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import '../assets/CreateQuiz.css';
 import CreateQuizService from '../services/CreateQuizService';
 import Modal from 'react-modal';
 import CreateQuizzQuestion from './CreateQuizQuestionEditing';

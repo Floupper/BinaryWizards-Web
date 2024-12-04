@@ -15,7 +15,7 @@ const renderDifficultyStars = (difficulty) => {
   }
 };
 
-export default function CreatedQuizCard({ quiz, route }) {
+export default function JoinQuizCard({ quiz, route }) {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
@@ -37,13 +37,11 @@ export default function CreatedQuizCard({ quiz, route }) {
   };
 
   return (
-    <div className="created-quiz-card p-4 bg-white border-2 border-gray-300 rounded-[32px] cursor-pointer hover:bg-gray-100 flex items-end w-[90rem] h-[10.063rem]" onClick={handleCardClick}>
-      <div className="quiz-info flex items-end justify-between w-full h-full">
-        <div className="flex quiz-title bg-white/50 rounded-[32px] p-2 border-2 border-black w-[25%] h-full items-center justify-center">
-          <h3 className="text-lg font-bold text-black text-center break-all">Title: {quiz.title}</h3>
-        </div>
-        <p className="text-sm">Difficulty: {renderDifficultyStars(quiz.difficulty)}</p>
-        <p className="text-sm"> {quiz.total_questions} Questions</p>
+    <div className="join-quiz-card p-2 bg-white border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 flex items-center w-[40rem] h-[4rem] mb-5" onClick={handleCardClick}>
+      <div className="quiz-info flex justify-between items-center w-full ">
+          <h3 className="text-sm font-semibold text-black text-center break-all">{quiz.title}</h3>
+          <p className="text-xs text-center">Difficulty: {renderDifficultyStars(quiz.difficulty)}</p>
+          <p className="text-xs text-center">{quiz.nb_questions} Questions</p>
       </div>
     </div>
   );

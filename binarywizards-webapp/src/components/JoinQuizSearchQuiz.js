@@ -3,8 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { fetchSearchedQuiz, createGameWithQuizId } from '../services/JoinQuizService';
 import CreateQuizService from '../services/CreateQuizService';
-import DashboardCreatedQuizCard from './CreatedQuizCard';
-import '../assets/JoinQuizSearchQuiz.css';
+import JoinQuizCard from './JoinQuizCard';
 import QuestionRangeSelector from './JoinQuizQuestionRangeSelector';
 
 export default function JoinQuizSearchQuiz() {
@@ -15,16 +14,16 @@ export default function JoinQuizSearchQuiz() {
     const [minQuestions, setMinQuestions] = useState(0);
     const [maxQuestions, setMaxQuestions] = useState(50);
 
+    // Récupération des difficultés lors du montage du composant
     useEffect(() => {
-        // Fetch difficulties
         CreateQuizService.fetchDifficulties()
             .then((data) => {
-                const updatedData = ['all', ...data]; 
-                setDifficulties(updatedData); 
+                setDifficulties(['all', ...data]);
             })
-            .catch(error => toast.error(`Error fetching difficulties: ${error.message}`));
+            .catch(error => toast.error(`Erreur lors de la récupération des difficultés : ${error.message}`));
     }, []);
 
+    // Utilisation de useInfiniteQuery pour gérer l'infini défilement
     const {
         data,
         isLoading,
@@ -43,24 +42,25 @@ export default function JoinQuizSearchQuiz() {
                 minQuestions,
             }),
         getNextPageParam: (lastPage) => lastPage?.nextPage ?? undefined,
-        enabled: false,
+        enabled: false, // Désactivation de l'exécution automatique
     });
 
-    // Trigger refetch on parameter updates
+    // Déclenche le refetch lorsque les paramètres changent
     useEffect(() => {
         refetch();
     }, [text, selectedDifficulty, minQuestions, maxQuestions, refetch]);
 
+    // Gestion du défilement infini
     const handleScroll = () => {
         if (quizListRef.current) {
             const { scrollHeight, scrollTop, clientHeight } = quizListRef.current;
-            if (scrollHeight === scrollTop + clientHeight && hasNextPage) {
+            if (scrollHeight - scrollTop <= clientHeight + 50 && hasNextPage && !isFetchingNextPage) { // Ajout d'un tampon de 50px
                 fetchNextPage();
             }
         }
     };
 
-    // Attach and detach scroll event listener
+    // Attache et détache l'écouteur d'événement de défilement
     useEffect(() => {
         const listElement = quizListRef.current;
         if (listElement) {
@@ -71,35 +71,46 @@ export default function JoinQuizSearchQuiz() {
                 listElement.removeEventListener('scroll', handleScroll);
             }
         };
-    }, [hasNextPage, fetchNextPage]);
+    }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
+    // Gestion des changements de texte
     const handleTextChange = (value) => {
         setText(value);
     };
 
+    // Gestion des changements de nombre de questions
+    const handleMinQuestionsChange = (value) => {
+        setMinQuestions(value);
+    };
+
+    const handleMaxQuestionsChange = (value) => {
+        setMaxQuestions(value);
+    };
+
     return (
-        <div className="search-quiz-container">
-            <h2>Browse Quiz</h2>
+        <div className="flex flex-col items-center p-8 w-full">
+            <h2 className="text-2xl font-bold text-white mb-6">Rechercher un Quiz</h2>
             <input
                 type="text"
-                className="search-input"
-                placeholder="Enter the text to search for a quiz"
+                className="p-4 text-lg border-2 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                placeholder="Entrez le texte pour rechercher un quiz"
                 value={text}
                 onChange={(e) => handleTextChange(e.target.value)}
             />
             <QuestionRangeSelector
                 minQuestions={minQuestions}
                 maxQuestions={maxQuestions}
-                onMinChange={setMinQuestions}
-                onMaxChange={setMaxQuestions}
+                onMinChange={handleMinQuestionsChange}
+                onMaxChange={handleMaxQuestionsChange}
+                className="w-full p-2 text-lg border-2 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <select
                 value={selectedDifficulty}
                 onChange={(e) => setSelectedDifficulty(e.target.value)}
-                className="dropdown"
+                className="mt-4 p-2 text-lg border-2 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
             >
                 <option value="" disabled>
-                    Select difficulty
+                    Sélectionnez une difficulté
                 </option>
                 {difficulties.map((difficulty) => (
                     <option key={difficulty} value={difficulty}>
@@ -108,29 +119,39 @@ export default function JoinQuizSearchQuiz() {
                 ))}
             </select>
 
-            {isLoading && <div className="loading-indicator">Loading...</div>}
+            {isLoading && <div className="text-lg text-gray-600 mb-4">Chargement...</div>}
+            
             <div
-                className="quiz-list"
+                className="w-full p-2 rounded-lg overflow-y-auto max-h-60" 
                 ref={quizListRef}
-                style={{ overflowY: 'auto', maxHeight: '20rem' }}
             >
                 {data?.pages?.flatMap((page) => page?.quizzes || []).map((item) => (
-                    <DashboardCreatedQuizCard
+                    <JoinQuizCard
                         key={item.id}
                         quiz={item}
                         route={'/question/'}
+                        className="mb-4"
                     />
                 ))}
 
                 {isFetchingNextPage && (
-                    <div className="loading-indicator">Loading more...</div>
+                    <div className="text-lg text-gray-600 mt-3">Chargement de plus...</div>
                 )}
 
                 {!isLoading &&
                     (!data?.pages || data.pages.flatMap((page) => page?.quizzes || []).length === 0) && (
-                        <div className="empty-message">No quizzes found.</div>
+                        <div className="text-lg text-gray-600 text-center mt-3">Aucun quiz trouvé.</div>
                     )}
             </div>
+            
+            {!isFetchingNextPage && hasNextPage && (
+                <button
+                    onClick={() => fetchNextPage()}
+                    className="mt-3 px-6 py-2 bg-[#8B2DF1] text-white rounded-md hover:bg-[#7322c3] focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                    Charger Plus
+                </button>
+            )}
         </div>
     );
 }
