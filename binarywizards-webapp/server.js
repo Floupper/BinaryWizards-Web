@@ -2,6 +2,7 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
+require("dotenv").config();
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-const httpsPort = Number(process.env.PORT) || 33034;
+const httpsPort = process.env.REACT_APP_PORT;
 
 let sslOptions = {};
 if (process.env.APP_ENV === "server") {
