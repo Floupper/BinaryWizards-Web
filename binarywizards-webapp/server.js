@@ -25,7 +25,6 @@ if (process.env.APP_ENV === "server") {
     };
     console.log("SSL Certificates loads with succs.");
   } catch (err) {
-    console.error("Erreur lors du chargement des certificats SSL :", err);
     console.error("Error loading SSL certificates :", err);
   }
 }
