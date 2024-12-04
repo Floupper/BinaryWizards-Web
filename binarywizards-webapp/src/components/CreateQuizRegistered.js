@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import QuestionInContainer from './CreateQuizQuestionInContainer';
 import ImportQuestionTrivia from './CreateQuizImportQuestionTrivia';
 import CreateQuizNavbar from './CreateQuizNavbar';
-
+import ProgressBar from './ProgressBar';
 
 Modal.setAppElement('#root');
 
@@ -37,7 +37,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   const [isPublicQuiz, setIsPublicQuiz] = useState(false);
   //Id of the question selected, for passing data
   const [idQuestionSelected, setIdQuestionSelected] = useState('');
-
+  const [idQuestionSelectedForProgress, setIdQuestionSelectedForProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
 
 
   //NAVBAR
@@ -71,6 +72,21 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     }
   }, []);
 
+  useEffect(() => {
+
+    console.log('length', quizQuestions.length);
+    console.log('select progress', idQuestionSelectedForProgress);
+    if (quizQuestions.length > 0) {
+      const progressValue = ((idQuestionSelectedForProgress + 1) / quizQuestions.length) * 100;
+      setProgress(progressValue);
+    }
+    else {
+      setProgress(100);
+    }
+    console.log('tot', (idQuestionSelectedForProgress / quizQuestions.length) * 100);
+
+  }, [idQuestionSelectedForProgress, quizQuestions]);
+
 
   useEffect(() => {
     if (quizId) {
@@ -103,12 +119,9 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
 
 
-  const handleChangeQuizTitle = (event) => {
-    setQuizTitle(event.target.value);
-  };
-
-  const handleChangeQuizDescription = (event) => {
-    setQuizDescription(event.target.value);
+  const handleSelectedQuestionProgressBar = (questionId) => {
+    console.log("Selected Question ID:", questionId);  // Affiche l'ID de la question
+    setIdQuestionSelectedForProgress(questionId);  // Mets à jour l'ID sélectionné pour le calcul de la progression
   };
 
   const handleSubmitCreateQuestion = (event) => {
@@ -176,7 +189,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
         setQuiz={setQuiz}
 
       />
-
+      <ProgressBar progress={progress} />
       <div className="CreateQuiz-box">
         <div className='trivia modal'>
           <Modal isOpen={isTriviaModalOpen}
@@ -221,17 +234,23 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
         <div className="question_list">
           {quizQuestions.map((question) => (
+
             <QuestionInContainer
+
               key={question.question_id}
               question_text={question.question_text}
               question_difficulty={question.question_difficulty}
               question_category={question.question_category}
               question_id={question.question_id}
+              question_index={question.question_index || 0}
               setIdQuestionSelected={setIdQuestionSelected}
               setModalOpen={setModalOpen}
               setTypeOfScreen={setTypeOfScreen}
               handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
+              handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}  // Assure-toi de passer la fonction ici
+
             />
+
           ))}
         </div>
 
