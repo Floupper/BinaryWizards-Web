@@ -1,33 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../assets/CreateQuiz.css';
 import CreateQuizService from '../services/CreateQuizService';
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import JoinQuiz from './JoinQuiz';
 import { createGameWithQuizId } from '../services/JoinQuizService';
+import Navbar from '../components/Navbar';
 
-/*
-Create a quiz as in V0 (when not logged in)
-Thsi is the old create quiz page
-*/
 export default function CreateQuizQuick() {
   const navigate = useNavigate();
-  //List of categories
   const [categories, setCategories] = useState([]);
-  //List of difficulties
   const [difficulties, setDifficulties] = useState([]);
-
-  //Selected category on the page
   const [selectedCategory, setSelectedCategory] = useState('');
-
-  //Difficulty selected on the page
   const [difficulty, setDifficulty] = useState('');
-
-  //Amount of questions
   const [amount, setAmount] = useState(10);
-
 
   useEffect(() => {
     CreateQuizService.fetchCategories()
@@ -40,8 +25,6 @@ export default function CreateQuizQuick() {
   }, []);
 
   const handleSubmit = () => {
-
-
     if (!amount || isNaN(amount) || amount <= 0) {
       toast.info('Please enter a valid number of questions (greater than 0).');
       return;
@@ -56,13 +39,11 @@ export default function CreateQuizQuick() {
       return;
     }
 
-
     let selectedCat = selectedCategory;
     if (selectedCat === '') {
       const randomIndex = Math.floor(Math.random() * categories.length);
       selectedCat = categories[randomIndex].id;
     }
-
 
     const quizData = {
       category: selectedCat,
@@ -79,7 +60,6 @@ export default function CreateQuizQuick() {
           })
       })
       .catch(error => {
-
         toast.info(error.message);
       });
   };
@@ -96,55 +76,71 @@ export default function CreateQuizQuick() {
   };
 
   return (
-    <div className="CreateQuiz-container">
-
-      <div className="CreateQuiz-box">
-        <h1>Create a Quiz</h1>
-        <div className="form-group">
-          <label htmlFor="category">Category</label>
-          <select
-            id="category"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(Number(e.target.value))}
-          >
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>{category.name}</option>
-            ))}
-          </select>
+    <div className="min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/backgrounds/CreateQuizCuickBackground.svg')" }}
+    >
+      <Navbar />
+      <div className="flex flex-col items-center justify-center"
+        style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+      >
+        <div className="bg-white bg-opacity-0 rounded-lg max-w-lg w-full p-8 space-y-6 text-center">
+          <h1 className="text-4xl font-bold text-white font-mixed">Create a Quiz</h1>
+          <form className="space-y-4">
+            <div className="form-group">
+              <label htmlFor="category" className="block text-sm font-medium text-white">Category</label>
+              <select
+                id="category"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(Number(e.target.value))}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black"
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="number" className="block text-sm font-medium text-white">Number of questions</label>
+              <input
+                type="number"
+                id="number"
+                value={amount}
+                onInput={handleAmountInput}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter the number of questions"
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="difficulty" className="block text-sm font-medium text-white">Difficulty</label>
+              <select
+                id="difficulty"
+                value={difficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black"
+              >
+                <option value="" disabled>
+                  Select a difficulty
+                </option>
+                {difficulties.map((level) => (
+                  <option key={level} value={level}>
+                    {level.charAt(0).toUpperCase() + level.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition duration-300"
+            >
+              Start
+            </button>
+          </form>
         </div>
-        <div className="form-group">
-          <label htmlFor="number">Number of questions</label>
-          <input
-            type="number"
-            id="number"
-            value={amount}
-            onInput={handleAmountInput}
-            onKeyDown={handleKeyDown}
-            placeholder="Enter the number of questions"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="difficulty">Difficulty</label>
-          <select
-            id="difficulty"
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-          >
-            { }
-            <option value="" disabled>
-              Select a difficulty
-            </option>
-            {difficulties.map((level) => (
-              <option key={level} value={level}>
-                {level.charAt(0).toUpperCase() + level.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button onClick={handleSubmit}>Start</button>
       </div>
     </div>
   );
