@@ -49,6 +49,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     if (initialized) return;
     initialized = true;
 
+
     CreateQuizService.fetchDifficulties()
       .then(data => setDifficulties(data))
       .catch(error => toast.info('Error fetching difficulties:', error));
