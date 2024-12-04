@@ -156,7 +156,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
       const requestBody = {
         question_text: questionText,
         question_difficulty: quizDifficulty,
-        question_category: selectedCategory,
+        question_category: categories[selectedCategory].name,
         question_type: questionType,
         options: options,
       };
