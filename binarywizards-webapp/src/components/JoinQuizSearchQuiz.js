@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { fetchSearchedQuiz, createGameWithQuizId } from '../services/JoinQuizService';
 import CreateQuizService from '../services/CreateQuizService';
-import DashboardCreatedQuizCard from './CreatedQuizCard';
+import DashboardCreatedQuizCard from './DashboardCreatedQuizCard';
 import '../assets/JoinQuizSearchQuiz.css';
 import QuestionRangeSelector from './JoinQuizQuestionRangeSelector';
 
@@ -11,7 +11,7 @@ export default function JoinQuizSearchQuiz() {
     const [text, setText] = useState('');
     const [selectedDifficulty, setSelectedDifficulty] = useState("all");
     const [difficulties, setDifficulties] = useState([]);
-    const quizListRef = useRef(null); 
+    const quizListRef = useRef(null);
     const [minQuestions, setMinQuestions] = useState(0);
     const [maxQuestions, setMaxQuestions] = useState(50);
 
@@ -19,8 +19,8 @@ export default function JoinQuizSearchQuiz() {
         // Fetch difficulties
         CreateQuizService.fetchDifficulties()
             .then((data) => {
-                const updatedData = ['all', ...data]; 
-                setDifficulties(updatedData); 
+                const updatedData = ['all', ...data];
+                setDifficulties(updatedData);
             })
             .catch(error => toast.error(`Error fetching difficulties: ${error.message}`));
     }, []);

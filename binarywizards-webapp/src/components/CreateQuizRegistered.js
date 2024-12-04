@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import '../assets/CreateQuiz.css';
 import CreateQuizService from '../services/CreateQuizService';
 import Modal from 'react-modal';
 import CreateQuizzQuestion from './CreateQuizQuestionEditing';
@@ -8,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuestionInContainer from './CreateQuizQuestionInContainer';
 import ImportQuestionTrivia from './CreateQuizImportQuestionTrivia';
-
+import CreateQuizNavbar from './CreateQuizNavbar';
 
 
 Modal.setAppElement('#root');
@@ -38,6 +37,16 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   const [isPublicQuiz, setIsPublicQuiz] = useState(false);
   //Id of the question selected, for passing data
   const [idQuestionSelected, setIdQuestionSelected] = useState('');
+
+
+
+  //NAVBAR
+  const [quiz, setQuiz] = useState({
+    difficulty: 'easy',
+    isPublic: false,
+    title: '',
+    description: ''
+  });
 
 
 
@@ -119,22 +128,22 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   const handleSubmitSave = () => {
 
-    if (!quizTitle) {
+    if (!quiz.title) {
       toast.info('Please select a title.');
 
       return;
     }
 
 
-    if (!quizDifficulty) {
+    if (!quiz.difficulty) {
       toast.info('Please select a difficulty.');
       return;
     }
 
     const quizData = {
-      title: quizTitle,
-      difficulty: quizDifficulty,
-      description: quizDescription,
+      title: quiz.title,
+      difficulty: quiz.difficulty,
+      description: quiz.description,
       type: isPublicQuiz ? 1 : 0,
     };
 
@@ -161,7 +170,12 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   return (
     <div className="CreateQuiz-container">
+      <CreateQuizNavbar
+        handleSubmitSave={handleSubmitSave}
+        quiz={quiz}
+        setQuiz={setQuiz}
 
+      />
 
       <div className="CreateQuiz-box">
         <div className='trivia modal'>
@@ -200,64 +214,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           </Modal>
         </div>
 
-        <h1>{pageTitle}</h1>
-        <label htmlFor="quiz_title">Titre du quiz :</label>
-        <h2>  <input
-          id="quiz_title"
-          name="quiz_title"
-          value={quizTitle}
-          onChange={handleChangeQuizTitle}
-          rows="4"
-          cols="50"
-          placeholder="Enter the title of the quiz"
-          className="large-input"
-        /> </h2>
-        <div className="description">
-          <label htmlFor="quiz_description">Description du quiz :</label>
-          <h2>  <input
-            id="quiz_description"
-            name="quiz_description"
-            value={quizDescription}
-            onChange={handleChangeQuizDescription}
-            rows="10"
-            cols="50"
-            placeholder="Enter a description for the quiz"
-            className="large-input"
-          /> </h2>
 
-        </div>
-
-        <div className="form-group">
-
-
-          <label htmlFor="difficulty">Difficulty</label>
-          <select
-            id="difficulty"
-            value={quizDifficulty}
-            onChange={(e) => setQuizDifficulty(e.target.value)}
-          >
-            { }
-            <option value="" disabled>
-              Select a difficulty
-            </option>
-            {difficulties.map((level) => (
-              <option key={level} value={level}>
-                {level.charAt(0).toUpperCase() + level.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <label htmlFor="quiz_checkbox">
-          <input
-            type="checkbox"
-            id="quiz_checkbox"
-            name="quiz_checkbox"
-            checked={isPublicQuiz}
-            onChange={handleChangeIsPublicQuiz}
-          />
-          Publish this quiz
-        </label>
         <h2>
           {quizQuestions.length} {quizQuestions.length < 2 ? 'question' : 'questions'}
         </h2>

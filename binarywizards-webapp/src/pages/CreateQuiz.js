@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import '../assets/CreateQuiz.css';
+
 import CreateQuizService from '../services/CreateQuizService';
 
 import Modal from 'react-modal';
