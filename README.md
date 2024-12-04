@@ -1,6 +1,6 @@
 ## Prerequisites
-Before you can run the Mobile project, which is the mobile quiz application, you need to ensure you have an API.
-You can either work locally with the API and the mobile app, or use a remote API.
+Before you can run the Web project, which is the web quiz application, you need to ensure you have an API.
+You can either work locally with the API and the web app, or use a remote API.
 In this case, you have two options:
 
 Local API
