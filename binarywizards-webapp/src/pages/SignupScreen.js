@@ -8,6 +8,7 @@ function SignupScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,6 +20,7 @@ function SignupScreen() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     if (password.length < 8) {
       setError('Password must be at least 8 characters long');
       return;
@@ -27,6 +29,9 @@ function SignupScreen() {
       setError('Passwords do not match');
       return;
     }
+
+    setIsLoading(true);
+
     try {
       const usernameAvailable = await checkUsernameAvailability(username);
       if (!usernameAvailable) {
@@ -36,11 +41,13 @@ function SignupScreen() {
       const token = await SignupUser(username, password);
       if (token) {
         localStorage.setItem('token', token);
-        navigate('/dashboard'); 
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error('Error during sign up:', error);
       setError('Failed to create an account');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,6 +64,7 @@ function SignupScreen() {
               onChange={(e) => setUsername(e.target.value)}
               required
               className="w-full p-3 border border-black rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+              disabled={isLoading}
             />
           </div>
           <div className="mb-4">
@@ -67,6 +75,7 @@ function SignupScreen() {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full p-3 border border-black rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+              disabled={isLoading}
             />
           </div>
           <div className="mb-4">
@@ -77,19 +86,49 @@ function SignupScreen() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               className="w-full p-3 border border-black rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+              disabled={isLoading}
             />
           </div>
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-black text-white py-3 rounded-lg mb-4 hover:bg-gray-800 transition"
+            className={`w-full bg-black text-white py-3 rounded-lg mb-4 transition ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+              }`}
+            disabled={isLoading}
           >
-            Sign Up
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-3 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                Loading...
+              </div>
+            ) : (
+              'Sign Up'
+            )}
           </button>
           <button
             type="button"
             onClick={() => navigate('/signin')}
             className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
+            disabled={isLoading}
           >
             Already have an account? Log In
           </button>
