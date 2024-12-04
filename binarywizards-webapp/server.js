@@ -31,7 +31,7 @@ if (process.env.APP_ENV === "server") {
 
 if (process.env.APP_ENV === "server") {
   https.createServer(sslOptions, app).listen(httpsPort, () => {
-    console.log(`🚀 Server running on https://localhost:${httpsPort}`);
+    console.log(`🚀 Server running on https://0.0.0.0:${httpsPort}`);
   });
 } else {
   app.listen(httpsPort, "0.0.0.0", () => {
