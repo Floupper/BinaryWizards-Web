@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,6 +15,7 @@ export default function EndScreen() {
     nb_questions_total: null,
     quizId: null,
   };
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (correct_answers_nb === null || nb_questions_total === null || quizId === null) {
@@ -24,14 +25,22 @@ export default function EndScreen() {
 
   const handleRestartQuiz = async () => {
     if (quizId) {
-      const data = await createGameWithQuizId(quizId);
-      navigate(`/question/${data.game_id}`);
+      setIsLoading(true);
+      try {
+        const data = await createGameWithQuizId(quizId);
+        navigate(`/question/${data.game_id}`);
+      } catch (error) {
+        console.error('Error restarting quiz:', error);
+        toast.error('Failed to restart quiz. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   return (
     <div className="min-h-screen bg-cover bg-center"
-    style={{ backgroundImage: "url('/backgrounds/EndScreenBackground.svg')" }}
+      style={{ backgroundImage: "url('/backgrounds/EndScreenBackground.svg')" }}
     >
       <Navbar />
 
@@ -85,7 +94,8 @@ export default function EndScreen() {
                   Back to home page
                 </button>
                 <button
-                  className="text-white font-bold py-4 px-8"
+                  className={`text-white font-bold py-4 px-8 flex items-center justify-center transition ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+                    }`}
                   style={{
                     backgroundColor: "#000000",
                     borderRadius: "1.09875rem", // 17.58px in rem
@@ -93,8 +103,32 @@ export default function EndScreen() {
                     fontSize: "1.5rem"
                   }}
                   onClick={handleRestartQuiz}
+                  disabled={isLoading}
                 >
-                  Restart Quiz
+                  {isLoading ? (
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    'Restart Quiz'
+                  )}
                 </button>
               </div>
             </>
