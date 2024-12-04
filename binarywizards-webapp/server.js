@@ -6,10 +6,10 @@ require("dotenv").config();
 
 const app = express();
 
-// Servir les fichiers statiques de l'application React buildée
+// Serve static files from the React app
 app.use(express.static(path.join(__dirname, "build")));
 
-// Toute autre route redirige vers index.html (pour React Router)
+// Redirect all other routes to index.html (for React Router)
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
@@ -23,9 +23,10 @@ if (process.env.APP_ENV === "server") {
       key: fs.readFileSync(process.env.key),
       cert: fs.readFileSync(process.env.cert),
     };
-    console.log("Certificats SSL chargés avec succès.");
+    console.log("SSL Certificates loads with succs.");
   } catch (err) {
     console.error("Erreur lors du chargement des certificats SSL :", err);
+    console.error("Error loading SSL certificates :", err);
   }
 }
 
