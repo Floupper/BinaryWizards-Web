@@ -1,19 +1,22 @@
-import axios from 'axios';
+import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import config from '../config';
+import config from "../config";
+
+const test = process.env.REACT_APP_API_BASE_URL;
+console.log(test);
 
 const axiosInstance = axios.create({
   baseURL: config.API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
@@ -28,31 +31,28 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       const status = error.response.status;
 
-
       if (status === 401) {
-        toast.error('Session expired, please login again.');
-
+        toast.error("Session expired, please login again.");
 
         setTimeout(() => {
-          window.location.href = '/signin';
+          window.location.href = "/signin";
         }, 1000);
 
-
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
       } else {
-        const errorMessage = error.response.data.error || error.response.data.message || error.message;
+        const errorMessage =
+          error.response.data.error ||
+          error.response.data.message ||
+          error.message;
         //toast.error(`${errorMessage}`);
         throw new Error(`${errorMessage}`);
-
       }
     } else {
-
-      toast.error('Network error :(');
+      toast.error("Network error :(");
     }
 
     return Promise.reject(error);
   }
 );
-
 
 export default axiosInstance;
