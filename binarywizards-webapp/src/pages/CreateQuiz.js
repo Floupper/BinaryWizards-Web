@@ -43,7 +43,7 @@ export default function CreateQuiz() {
     return null;
   }
   return (
-    <div>
+    <div className=" min-h-screen bg-cover bg-center bg-[#F4F2EE] ">
       {quizIdRedicted === 'any' ? (
 
         <CreateQuizRegisteredPage quizIdParameter={quizId} setQuizIdRedicted={setQuizIdRedicted} />

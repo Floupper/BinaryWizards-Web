@@ -22,7 +22,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   const [isModalOpen, setModalOpen] = useState(false);
   const [isTriviaModalOpen, setTrivialModalOpen] = useState(false);
   const [pageTitle, setPageTitle] = useState('Change a Quiz');
-  const [TypeOfScreen, setTypeOfScreen] = useState('edit');
+  const [TypeOfScreen, setTypeOfScreen] = useState('create');
   //diffilcies fetching from the API
   //#######   API      ########
   const [difficulties, setDifficulties] = useState([]);
@@ -123,11 +123,14 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     console.log("Selected Question ID:", questionId);  // Affiche l'ID de la question
     setIdQuestionSelectedForProgress(questionId);  // Mets à jour l'ID sélectionné pour le calcul de la progression
   };
-
-  const handleSubmitCreateQuestion = (event) => {
+  const resetCreateQuestionForm = () => {
     setTypeOfScreen('create');
     setIdQuestionSelected('');
-    setModalOpen(true);
+  }
+  const handleSubmitCreateQuestion = (event) => {
+    setTypeOfScreen('create');
+    resetCreateQuestionForm();
+    setIdQuestionSelected('');
   };
   const handleSubmitImportTrivia = (event) => {
     setTrivialModalOpen(true);
@@ -182,88 +185,83 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   };
 
   return (
-    <div className="CreateQuiz-container">
-      <CreateQuizNavbar
-        handleSubmitSave={handleSubmitSave}
-        quiz={quiz}
-        setQuiz={setQuiz}
+    <div className="CreateQuiz-container flex flex-col gap-4 p-4">
+      {/* Navbar et barre de progression */}
+      <CreateQuizNavbar handleSubmitSave={handleSubmitSave} quiz={quiz} setQuiz={setQuiz} />
 
-      />
-      <ProgressBar progress={progress} />
-      <div className="CreateQuiz-box">
-        <div className='trivia modal'>
-          <Modal isOpen={isTriviaModalOpen}
-            onRequestClose={() => setTrivialModalOpen(false)}
-            style={{
-              overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-              content: { padding: '20px', borderRadius: '10px' },
-            }}>
+      <div className="trivia modal">
+        <Modal
+          isOpen={isTriviaModalOpen}
+          onRequestClose={() => setTrivialModalOpen(false)}
+          className="modal-content"
+          overlayClassName="modal-overlay"
+        >
+          <ImportQuestionTrivia
+            setTrivialModalOpen={setTrivialModalOpen}
+            quizId={quizId}
+            refreshQuizQuestions={refreshQuizQuestions}
+          />
+        </Modal>
+      </div>
 
-            <ImportQuestionTrivia
-              setTrivialModalOpen={setTrivialModalOpen}
-              quizId={quizId}
-              refreshQuizQuestions={refreshQuizQuestions}
-            ></ImportQuestionTrivia>
-
-          </Modal>
-        </div>
-        <div className="modal">
-          <Modal
-            isOpen={isModalOpen}
-            onRequestClose={() => setModalOpen(false)}
-            style={{
-              overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-              content: { padding: '20px', borderRadius: '10px' },
-            }}
+      {/* Conteneur principal */}
+      <div className="flex flex-row gap-4">
+        {/* Section des questions (à gauche) */}
+        <div className="w-1/4 flex flex-col gap-4 overflow-y-auto max-h-[80vh]">
+          <h2 className="text-xl font-semibold">
+            {quizQuestions.length} {quizQuestions.length < 2 ? 'question' : 'questions'}
+          </h2>
+          <div className="gap-4">
+            <div className="flex flex-col gap-4">
+              {quizQuestions.map((question) => (
+                <QuestionInContainer
+                  key={question.question_id}
+                  question_text={question.question_text}
+                  question_difficulty={question.question_difficulty}
+                  question_category={question.question_category}
+                  question_id={question.question_id}
+                  question_index={question.question_index || 0}
+                  setIdQuestionSelected={setIdQuestionSelected}
+                  setModalOpen={setModalOpen}
+                  setTypeOfScreen={setTypeOfScreen}
+                  handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
+                  handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}
+                />
+              ))}
+            </div>
+          </div>
+          <button
+            onClick={handleSubmitCreateQuestion}
+            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
           >
-            <CreateQuizzQuestion
-
-              TypeOfScreen={TypeOfScreen}
-              setModalOpen={setModalOpen}
-              quizId={quizId}
-              questionId={idQuestionSelected}
-              refreshQuizQuestions={refreshQuizQuestions}
-            />
-          </Modal>
+            Create question
+          </button>
+          <button
+            onClick={handleSubmitImportTrivia}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Import questions from Trivia
+          </button>
         </div>
 
-
-        <h2>
-          {quizQuestions.length} {quizQuestions.length < 2 ? 'question' : 'questions'}
-        </h2>
-
-        <div className="question_list">
-          {quizQuestions.map((question) => (
-
-            <QuestionInContainer
-
-              key={question.question_id}
-              question_text={question.question_text}
-              question_difficulty={question.question_difficulty}
-              question_category={question.question_category}
-              question_id={question.question_id}
-              question_index={question.question_index || 0}
-              setIdQuestionSelected={setIdQuestionSelected}
-              setModalOpen={setModalOpen}
-              setTypeOfScreen={setTypeOfScreen}
-              handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
-              handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}  // Assure-toi de passer la fonction ici
-
-            />
-
-          ))}
-        </div>
-
-
-
-
-
-        <div className="end_button">
-          <button onClick={handleSubmitImportTrivia}>Import questions from Trivia</button>
-          <button onClick={handleSubmitCreateQuestion}>Create question</button>
-          <button onClick={handleSubmitSave}>Sauvegarder</button>
+        {/* Section CreateQuizQuestionEditing (à droite) */}
+        <div className="w-full h-full bg-white shadow-md rounded-lg p-4">
+          <ProgressBar progress={progress} />
+          <CreateQuizzQuestion
+            TypeOfScreen={TypeOfScreen}
+            setModalOpen={setModalOpen}
+            quizId={quizId}
+            questionId={idQuestionSelected}
+            refreshQuizQuestions={refreshQuizQuestions}
+            resetCreateQuestionForm={resetCreateQuestionForm}
+          />
         </div>
       </div>
+
+      {/* Boutons d'action (en bas) */}
+      <div className="flex justify-end gap-4 mt-4">
+      </div>
     </div>
+
   );
 }

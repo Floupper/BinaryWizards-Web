@@ -91,53 +91,72 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
       });
 
   };
+
   return (
-    <div>
-      <div className="category">
-        <label htmlFor="category">Category</label>
-        <select
-          id="category"
-          value={selectedCategory}
-          onChange={handleCategoryChange}>
+    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md z-50">
+      {/* Background overlay (optional) */}
+      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
-          <option value="" disabled>Select a category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>{category.name}</option>
-          ))}
-        </select>
+      {/* Modal container */}
+      <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg z-10">
+        <div className="text-center text-2xl font-bold text-purple-700 mb-4">
+          Import generated questions into your quiz
+        </div>
+        <div className="mb-4">
+          <label htmlFor="category" className="block text-lg font-medium text-gray-700">Category</label>
+          <select
+            id="category"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+            className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+            <option value="" disabled>Select a category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>{category.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="number" className="block text-lg font-medium text-gray-700">Number of questions</label>
+          <input
+            type="number"
+            id="number"
+            value={amount}
+            onInput={handleAmountInput}
+            onKeyDown={handleKeyDown}
+            placeholder="Enter the number of questions"
+            className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="difficulty" className="block text-lg font-medium text-gray-700">Difficulty</label>
+          <select
+            id="difficulty"
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+            className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+            <option value="" disabled>Select a difficulty</option>
+            {difficulties.map((level) => (
+              <option key={level} value={level}>{level.charAt(0).toUpperCase() + level.slice(1)}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <button
+            disabled={isDisabled}
+            onClick={handleSubmitImport}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300">
+            Import Questions
+          </button>
+          <button
+            onClick={() => setTrivialModalOpen(false)}
+            className="text-gray-600 hover:text-gray-800">
+            <span className="text-xl">&times;</span>
+          </button>
+        </div>
       </div>
-      <div className="form-group">
-        <label htmlFor="number">Number of questions</label>
-        <input
-          type="number"
-          id="number"
-          value={amount}
-          onInput={handleAmountInput}
-          onKeyDown={handleKeyDown}
-          placeholder="Enter the number of questions" />
-      </div>
-      <div className="form-group">
-        <label htmlFor="difficulty">Difficulty</label>
-        <select
-          id="difficulty"
-          value={difficulty}
-          onChange={(e) => setDifficulty(e.target.value)}>
-          <option value="" disabled>
-            Select a difficulty
-          </option>
-
-          {difficulties.map((level) => (
-            <option key={level} value={level}>
-              {level.charAt(0).toUpperCase() + level.slice(1)}
-            </option>
-          ))}
-
-        </select>
-      </div>
-
-
-      <button disabled={isDisabled} onClick={handleSubmitImport}>Import Questions</button>
-      <button onClick={() => setTrivialModalOpen(false)}>Fermer</button>
     </div>
-  )
+  );
 }

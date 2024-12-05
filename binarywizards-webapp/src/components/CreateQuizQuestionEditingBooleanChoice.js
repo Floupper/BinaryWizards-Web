@@ -37,25 +37,55 @@ export default function BooleanChoiceQuestion({ selectedOptionInput, setSelected
 
 
   return (
-    <>  <div>
-      <input
-        type="radio"
-        name="toggle"
-        id='False'
-        checked={selectedOptionInput.correctAnswerBoolean === 0}
-        onChange={handleChangeResponseSelected} />
-      <a id='False' onClick={handleChangeResponseSelected}>False</a>
-    </div>
-      <div>
+    <div className="grid grid-cols-2 gap-4 mt-4">
+      {/* Option False */}
+      <label className="flex items-center">
         <input
           type="radio"
-          name="toggle"
-          id='True'
+          name="trueFalse"
+          checked={selectedOptionInput.correctAnswerBoolean === 0}
+          onChange={() =>
+            setSelectedOptionInput({ ...selectedOptionInput, correctAnswerBoolean: 0 })
+          }
+          className="hidden" // Cache le bouton radio
+        />
+        <div
+          className={`w-full p-3 border rounded-md text-center cursor-pointer ${selectedOptionInput.correctAnswerBoolean === 0
+              ? "border-blue-600 bg-blue-100"
+              : "border-gray-300 bg-white"
+            }`}
+          onClick={() =>
+            setSelectedOptionInput({ ...selectedOptionInput, correctAnswerBoolean: 0 })
+          }
+        >
+          False
+        </div>
+      </label>
+
+      {/* Option True */}
+      <label className="flex items-center">
+        <input
+          type="radio"
+          name="trueFalse"
           checked={selectedOptionInput.correctAnswerBoolean === 1}
-          onChange={handleChangeResponseSelected} />
-        <a id='True' onClick={handleChangeResponseSelected}>True</a>
-      </div>
-    </>
+          onChange={() =>
+            setSelectedOptionInput({ ...selectedOptionInput, correctAnswerBoolean: 1 })
+          }
+          className="hidden" // Cache le bouton radio
+        />
+        <div
+          className={`w-full p-3 border rounded-md text-center cursor-pointer ${selectedOptionInput.correctAnswerBoolean === 1
+              ? "border-blue-600 bg-blue-100"
+              : "border-gray-300 bg-white"
+            }`}
+          onClick={() =>
+            setSelectedOptionInput({ ...selectedOptionInput, correctAnswerBoolean: 1 })
+          }
+        >
+          True
+        </div>
+      </label>
+    </div>
 
   );
 

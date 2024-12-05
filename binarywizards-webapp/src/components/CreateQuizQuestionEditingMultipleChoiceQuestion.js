@@ -14,16 +14,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
 
   };
 
-  const handleChangeResponseSelected = (event) => {
-    const id = parseInt(event.target.id, 10);
-    setSelectedOption(id);
 
-
-    setSelectedOptionInput((prevState) => ({
-      ...prevState,
-      correctAnswerMultiple: id,
-    }));
-  };
 
   const handleChangeAnswerText = (event, id) => {
     const value = event.target.value;
@@ -37,27 +28,30 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
   };
   return (
     <div>
-      {[0, 1, 2, 3].map((id) => (
-        <div key={id} style={{ marginBottom: '10px' }}>
-          <input
-            type="radio"
-            name="toggle"
-            id={id.toString()}
-            checked={selectedOptionInput.correctAnswerMultiple === id}
-            onChange={handleChangeResponseSelected}
-          />
-          <textarea
-            id={`question_text_${id}`}
-            name={`question_text_${id}`}
-            value={selectedOptionInput?.choices ? selectedOptionInput.choices[id] : ''}
-            rows="2"
-            cols="50"
-            placeholder={`Enter answer ${id + 1}`}
-            className="large-input"
-            onChange={(event) => handleChangeAnswerText(event, id)}
-          />
-        </div>
-      ))}
+      <div className="grid grid-cols-2 gap-4">
+        {[0, 1, 2, 3].map((id) => (
+          <div key={id} className="flex items-center">
+            <input
+              type="radio"
+              name="multipleChoice"
+              className="text-blue-600 focus:ring-blue-500"
+              checked={selectedOptionInput.correctAnswerMultiple === id}
+              onChange={() =>
+                setSelectedOptionInput({ ...selectedOptionInput, correctAnswerMultiple: id })
+              }
+            />
+            <input
+              type="text"
+              value={selectedOptionInput.choices[id]}
+              onChange={(e) => handleChangeAnswerText(e, id)}
+              placeholder={`Option ${id + 1}`}
+              className={`w-full p-3 ml-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 
+                ${selectedOptionInput.correctAnswerMultiple === id ? 'border-green-500 bg-green-100' : ''}`}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
+
 }
