@@ -72,8 +72,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   useEffect(() => {
 
-    console.log('length', quizQuestions.length);
-    console.log('select progress', idQuestionSelectedForProgress);
     if (quizQuestions.length > 0) {
       const progressValue = ((idQuestionSelectedForProgress + 1) / quizQuestions.length) * 100;
       setProgress(progressValue);
@@ -81,7 +79,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     else {
       setProgress(100);
     }
-    console.log('tot', (idQuestionSelectedForProgress / quizQuestions.length) * 100);
 
   }, [idQuestionSelectedForProgress, quizQuestions]);
 
@@ -208,8 +205,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
         <div className=" grid min-grid-rows-[70vh_1fr_2fr] grid-flow-col max-h-[70vh] pl-4">
           {/* Section des questions (à gauche) */}
           <div className=" flex flex-col max-h-30 
-           gap-4 overflow-y-auto  scrollbar-thin scrollbar-thumb-gray-500 ">
-            <div className="flex items-center  flex-col gap-4 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-gray-500 ">
+           gap-4 overflow-y-auto  scrollbar-thin scrollbar-thumb-gray-500 mr-5 ">
+            <div className="flex items-center  flex-col gap-4  scrollbar-thin scrollbar-thumb-gray-500 p-0">
               {//<h2 className=" text-xl font-semibold">
                 // {quizQuestions.length} {quizQuestions.length < 2 ? 'question' : 'questions'}
                 //</h2>
@@ -236,7 +233,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             </div>
 
           </div>
-          <div className="size-full flex justify-center items-center ">
+          <div className="size-full flex justify-center items-center pr-4 mr-5 ">
             <div className="flex flex-col justify-center  w-[30vh] row-span-1 row-start-2 col-end-1 ">
 
 
@@ -264,7 +261,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
               {/* Cette partie a le dégradé de couleur avec des marges et un padding */}
               <CreateQuizzQuestion
                 TypeOfScreen={TypeOfScreen}
-                setModalOpen={setModalOpen}
                 quizId={quizId}
                 questionId={idQuestionSelected}
                 refreshQuizQuestions={refreshQuizQuestions}

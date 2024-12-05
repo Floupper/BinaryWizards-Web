@@ -28,7 +28,16 @@ export default function QuestionInContainer({ setTypeOfScreen, question_id, ques
 
   return (
     <div className="flex flex-col items-center gap-2 ">
-      <div className="text-lg font-bold text-gray-800">Question {question_index + 1}</div>
+
+      <div className="flex flex-row text-lg font-bold text-gray-800 gap-2">
+        <button
+          id={question_id}
+          className=" flex justify-self-end m-0 p-0 text-grey-500 text-2xl transition-transform bg-transparent border-none hover:bg-transparent"
+          onClick={handleSubmitDeleteQuestion}
+        >
+          🗑️
+        </button>
+        Question {question_index + 1}</div>
       <div className="flex items-start gap-2">
         {/* Conteneur principal */}
         <div
@@ -45,13 +54,7 @@ export default function QuestionInContainer({ setTypeOfScreen, question_id, ques
 
         {/* Poubelle */}
 
-        <button
-          id={question_id}
-          className=" flex justify-self-end m-0 p-0 text-grey-500 text-2xl transition-transform bg-transparent border-none hover:bg-transparent"
-          onClick={handleSubmitDeleteQuestion}
-        >
-          🗑️
-        </button>
+
 
 
       </div>

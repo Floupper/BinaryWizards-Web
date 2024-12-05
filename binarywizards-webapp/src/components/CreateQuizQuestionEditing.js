@@ -5,7 +5,7 @@ import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoic
 import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
-export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questionId, quizId, refreshQuizQuestions, resetCreateQuestionForm }) {
+export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, resetCreateQuestionForm }) {
 
 
   const [selectedOptionInput, setSelectedOptionInput] = useState({
@@ -35,6 +35,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
 
   useEffect(() => {
     if (resetCreateQuestionForm) {
+      console.log("resetCreateQuestionForm", resetCreateQuestionForm);
       setQuestionText('Write your question');  // Réinitialise le texte de la question
       setSelectedOptionInput({
         type: 'boolean',
