@@ -14,7 +14,6 @@ export default function JoinQuizSearchQuiz() {
     const [minQuestions, setMinQuestions] = useState(0);
     const [maxQuestions, setMaxQuestions] = useState(50);
 
-    // Récupération des difficultés lors du montage du composant
     useEffect(() => {
         CreateQuizService.fetchDifficulties()
             .then((data) => {
@@ -23,7 +22,6 @@ export default function JoinQuizSearchQuiz() {
             .catch(error => toast.error(`Erreur lors de la récupération des difficultés : ${error.message}`));
     }, []);
 
-    // Utilisation de useInfiniteQuery pour gérer l'infini défilement
     const {
         data,
         isLoading,
@@ -42,25 +40,22 @@ export default function JoinQuizSearchQuiz() {
                 minQuestions,
             }),
         getNextPageParam: (lastPage) => lastPage?.nextPage ?? undefined,
-        enabled: false, // Désactivation de l'exécution automatique
+        enabled: false, 
     });
 
-    // Déclenche le refetch lorsque les paramètres changent
     useEffect(() => {
         refetch();
     }, [text, selectedDifficulty, minQuestions, maxQuestions, refetch]);
 
-    // Gestion du défilement infini
     const handleScroll = () => {
         if (quizListRef.current) {
             const { scrollHeight, scrollTop, clientHeight } = quizListRef.current;
-            if (scrollHeight - scrollTop <= clientHeight + 50 && hasNextPage && !isFetchingNextPage) { // Ajout d'un tampon de 50px
+            if (scrollHeight - scrollTop <= clientHeight + 50 && hasNextPage && !isFetchingNextPage) { 
                 fetchNextPage();
             }
         }
     };
 
-    // Attache et détache l'écouteur d'événement de défilement
     useEffect(() => {
         const listElement = quizListRef.current;
         if (listElement) {
@@ -73,12 +68,10 @@ export default function JoinQuizSearchQuiz() {
         };
     }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
-    // Gestion des changements de texte
     const handleTextChange = (value) => {
         setText(value);
     };
 
-    // Gestion des changements de nombre de questions
     const handleMinQuestionsChange = (value) => {
         setMinQuestions(value);
     };
