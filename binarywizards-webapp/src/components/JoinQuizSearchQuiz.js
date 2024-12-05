@@ -3,6 +3,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { fetchSearchedQuiz } from '../services/JoinQuizService';
 import CreateQuizService from '../services/CreateQuizService';
+import DashboardCreatedQuizCard from './DashboardCreatedQuizCard';
+
 import JoinQuizCard from './JoinQuizCard';
 
 export default function JoinQuizSearchQuiz() {

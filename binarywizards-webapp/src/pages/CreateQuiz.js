@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import QuizCreated from './CreateQuizCreated';
 import CreateQuizRegisteredPage from '../components/CreateQuizRegistered';
 
@@ -32,7 +31,7 @@ export default function CreateQuiz() {
     return null;
   }
   return (
-    <div>
+    <div className=" min-h-screen bg-cover bg-center bg-[#F4F2EE] ">
       {quizIdRedicted === 'any' ? (
 
         <CreateQuizRegisteredPage quizIdParameter={quizId} setQuizIdRedicted={setQuizIdRedicted} />

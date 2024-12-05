@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DashboardService from '../services/DashboardService.js';
 import PlayedQuizCard from '../components/DashboardPlayedQuizCard.js';
-import CreatedQuizCard from '../components/CreatedQuizCard.js';
+import CreatedQuizCard from '../components/DashboardCreatedQuizCard.js';
 import Navbar from '../components/Navbar.js';
 
 export default function Dashboard() {

@@ -1,8 +1,12 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
+
+
+
 import { createGameWithQuizId } from '../services/JoinQuizService';
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 
 export default function QuizCreated() {
   const navigate = useNavigate();

@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createGameWithQuizId } from '../services/JoinQuizService';
+import { toast } from 'react-toastify';
 
-const renderDifficultyStars = (difficulty) => {
+export const renderDifficultyStars = (difficulty) => {
   switch (difficulty.toLowerCase()) {
     case 'easy':
       return '⭐';
@@ -23,13 +24,13 @@ export default function CreatedQuizCard({ quiz, route }) {
       createGameWithQuizId(quiz.quiz_id)
         .then(data => {
           if (data?.game_id) {
-            navigate(`${route}${data.game_id}`); 
+            navigate(`${route}${data.game_id}`);
           } else {
-            console.error('Game creation failed.');
+            toast.error('Game creation failed.');
           }
         })
         .catch(error => {
-          console.error('Error creating game:', error);
+          toast.error('Error creating game:', error);
         });
     } else {
       navigate(route);
