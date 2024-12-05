@@ -37,13 +37,13 @@ export default function CreatedQuizCard({ quiz, route }) {
   };
 
   return (
-    <div className="created-quiz-card p-4 bg-white border-2 border-gray-300 rounded-[32px] cursor-pointer hover:bg-gray-100 w-[90rem] h-[10.063rem] flex items-end" onClick={handleCardClick}>
+    <div className="created-quiz-card p-4 bg-white border-2 border-gray-300 rounded-[32px] cursor-pointer hover:bg-gray-100 flex items-end w-[90rem] h-[10.063rem]" onClick={handleCardClick}>
       <div className="quiz-info flex items-end justify-between w-full h-full">
         <div className="flex quiz-title bg-white/50 rounded-[32px] p-2 border-2 border-black w-[25%] h-full items-center justify-center">
           <h3 className="text-lg font-bold text-black text-center break-all">Title: {quiz.title}</h3>
         </div>
         <p className="text-sm">Difficulty: {renderDifficultyStars(quiz.difficulty)}</p>
-        <p className="text-sm"> {quiz.nb_questions} Questions</p>
+        <p className="text-sm"> {quiz.total_questions} Questions</p>
       </div>
     </div>
   );

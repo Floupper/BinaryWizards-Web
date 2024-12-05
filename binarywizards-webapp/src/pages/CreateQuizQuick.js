@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreateQuizService from '../services/CreateQuizService';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createGameWithQuizId } from '../services/JoinQuizService';
 import Navbar from '../components/Navbar';
@@ -13,6 +13,7 @@ export default function CreateQuizQuick() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [difficulty, setDifficulty] = useState('');
   const [amount, setAmount] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     CreateQuizService.fetchCategories()
@@ -24,7 +25,7 @@ export default function CreateQuizQuick() {
       .catch(error => toast.info('Error fetching difficulties:', error));
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!amount || isNaN(amount) || amount <= 0) {
       toast.info('Please enter a valid number of questions (greater than 0).');
       return;
@@ -39,29 +40,31 @@ export default function CreateQuizQuick() {
       return;
     }
 
-    let selectedCat = selectedCategory;
-    if (selectedCat === '') {
-      const randomIndex = Math.floor(Math.random() * categories.length);
-      selectedCat = categories[randomIndex].id;
-    }
+    setIsLoading(true);
 
-    const quizData = {
-      category: selectedCat,
-      amount: Number(amount),
-      difficulty,
-    };
-    CreateQuizService.createAnonymeQuiz(quizData)
-      .then(data => {
-        const quizId = data.quiz_id;
-        createGameWithQuizId(quizId)
-          .then(data => {
-            const gameId = data.game_id;
-            navigate(`/question/${gameId}`);
-          })
-      })
-      .catch(error => {
-        toast.info(error.message);
-      });
+    try {
+      let selectedCat = selectedCategory;
+      if (selectedCat === '') {
+        const randomIndex = Math.floor(Math.random() * categories.length);
+        selectedCat = categories[randomIndex].id;
+      }
+
+      const quizData = {
+        category: selectedCat,
+        amount: Number(amount),
+        difficulty,
+      };
+
+      const data = await CreateQuizService.createAnonymeQuiz(quizData);
+      const quizId = data.quiz_id;
+      const gameData = await createGameWithQuizId(quizId);
+      const gameId = gameData.game_id;
+      navigate(`/question/${gameId}`);
+    } catch (error) {
+      toast.info(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleAmountInput = (e) => {
@@ -135,9 +138,37 @@ export default function CreateQuizQuick() {
             <button
               type="button"
               onClick={handleSubmit}
-              className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition duration-300"
+              className={`w-full bg-black text-white py-2 rounded-md transition duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+                }`}
+              disabled={isLoading}
             >
-              Start
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin h-5 w-5 mr-3 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                  Loading...
+                </div>
+              ) : (
+                'Start'
+              )}
             </button>
           </form>
         </div>

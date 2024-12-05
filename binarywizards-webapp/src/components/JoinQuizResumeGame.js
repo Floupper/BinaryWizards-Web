@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import HistoryGamePlayService from "../services/HistoryGamePlayService";
-import DashboardPlayQuizCard from "./DashboardPlayedQuizCard";
-import "../assets/JoinQuizSearchQuiz.css";
+import ResumGameCard from "./ResumGameCard";
 
 export default function JoinQuizResumeGame() {
   const gameListRef = useRef(null);
@@ -14,7 +13,6 @@ export default function JoinQuizResumeGame() {
   const handleSearch = () => {
     refetch();
   };
-
 
   const {
     data,
@@ -54,20 +52,23 @@ export default function JoinQuizResumeGame() {
   }, [hasNextPage, fetchNextPage]);
 
   return (
-    <div className="search-quiz-container">
-      <h2>Resume Game</h2>
+    <div className="container mx-auto px-4 py-6">
+      <h2 className="text-2xl font-bold mb-4">Resume Game</h2>
 
-      {isLoading && <div className="loading-indicator">Loading...</div>}
+      {isLoading && (
+        <div className="flex justify-center items-center h-20">
+          <span className="text-gray-500">Loading...</span>
+        </div>
+      )}
 
       <div
-        className="game-list"
+        className="game-list overflow-y-auto border border-gray-300 rounded-lg p-4 mx-auto w-[37.5rem]"
         ref={gameListRef}
-        style={{ overflowY: "auto", maxHeight: "20rem" }}
       >
         {data?.pages
           ?.flatMap((page) => page.unfinished_games || [])
           .map((item) => (
-            <DashboardPlayQuizCard
+            <ResumGameCard
               key={item.game_id}
               quiz={item}
               route={`/question/${item.game_id}`}
@@ -75,14 +76,18 @@ export default function JoinQuizResumeGame() {
           ))}
 
         {isFetchingNextPage && (
-          <div className="loading-indicator">Loading more...</div>
+          <div className="flex justify-center items-center h-20">
+            <span className="text-gray-500">Loading more...</span>
+          </div>
         )}
 
         {!isLoading &&
           (!data?.pages ||
-            data.pages.flatMap((page) => page.unfinished_games || [])
-              .length === 0) && (
-            <div className="empty-message">No games found.</div>
+            data.pages.flatMap((page) => page.unfinished_games || []).length ===
+              0) && (
+            <div className="flex justify-center items-center h-20">
+              <span className="text-gray-500">No games found.</span>
+            </div>
           )}
       </div>
     </div>

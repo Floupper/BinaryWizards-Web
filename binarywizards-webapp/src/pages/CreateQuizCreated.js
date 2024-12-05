@@ -8,8 +8,6 @@ import { createGameWithQuizId } from '../services/JoinQuizService';
 import { toast } from "react-toastify";
 
 
-//Screen when the quiz is created
-
 export default function QuizCreated() {
   const navigate = useNavigate();
   const { quizId } = useParams();

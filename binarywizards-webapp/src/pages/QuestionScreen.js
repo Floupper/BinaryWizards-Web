@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import QuestionHUD from '../components/QuestionHUD';
 import QuestionChoiceMultiple from '../components/QuestionChoiceMultiple';
-import '../assets/QuestionScreen.css';
 import { GetQuestion, PostAnswers } from '../services/QuestionService';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,7 +27,7 @@ export default function QuestionScreen() {
   const [selectedQuestionId, setSelectedQuestionId] = useState(null); // State to store the selected answer
   const [isAnswered, setIsAnswered] = useState(false); // State to block multiple answer submissions
   const [idCorrectAnswers, setIdCorrectAnswers] = useState(); // State to store the correct answer(s)
-  
+
   // Function to retrieve and update quiz data
   const handleFetchQuiz = async () => {
     try {
@@ -41,7 +40,7 @@ export default function QuestionScreen() {
 
         if (data.game_finished) {
           navigate('/end', {
-              state: { correct_answers_nb: data.correct_answers_nb,nb_questions_total:data.nb_questions_total, quizId: data.quiz_id },
+            state: { correct_answers_nb: data.correct_answers_nb, nb_questions_total: data.nb_questions_total, quizId: data.quiz_id },
           });
           return;
         }
@@ -81,7 +80,12 @@ export default function QuestionScreen() {
         const result = await PostAnswers(id, questionIndex, selectedId); // Sends the answer via POST and retrieves the server's response
         setIdCorrectAnswers(result.correct_option_index); // Saves the index of the correct answer
       } catch (error) {
-        toast.error('Error sending answers');
+        if (error.message == "Question's index invalid") {
+          toast.success('Actualization of the current question');
+          await handleFetchQuiz();
+        } else {
+          toast.error('Error sending answers');
+        }
       }
     }
   };
@@ -93,7 +97,7 @@ export default function QuestionScreen() {
   };
 
   const paramHUD = {
-    idparty:id,
+    idparty: id,
     idquizz: quizId,
     score: score,
     question_index: questionIndex,
@@ -112,32 +116,32 @@ export default function QuestionScreen() {
     <div>
       <Navbar />
 
-    <div className="QuestionScreen">
-      <ToastContainer />
-      <div className="HUD">
-        <QuestionHUD party_parameters={paramHUD} />
+      <div className="QuestionScreen">
+        <ToastContainer />
+        <div className="HUD">
+          <QuestionHUD party_parameters={paramHUD} />
+        </div>
+
+        <h1 className="Question">{questionText}</h1>
+
+        <div className="Answers">
+          <QuestionChoiceMultiple
+            question_choice={options}
+            correctOptionIndex={idCorrectAnswers}
+            onQuestionSelect={handleQuestionSelect}
+            selectedQuestionId={selectedQuestionId}
+            isAnswered={isAnswered}  // Pass the state of the answer submission
+          />
+
+          <button
+            className={`validate-button ${!isAnswered ? 'disabled' : ''}`}
+            onClick={handleReload}
+            disabled={!isAnswered}  // Disables the button if no answer is selected
+          >
+            Next
+          </button>
+        </div>
       </div>
-
-      <h1 className="Question">{questionText}</h1>
-
-      <div className="Answers">
-        <QuestionChoiceMultiple
-          question_choice={options}
-          correctOptionIndex={idCorrectAnswers}
-          onQuestionSelect={handleQuestionSelect}
-          selectedQuestionId={selectedQuestionId}
-          isAnswered={isAnswered}  // Pass the state of the answer submission
-        />
-
-        <button
-          className={`validate-button ${!isAnswered ? 'disabled' : ''}`}
-          onClick={handleReload}
-          disabled={!isAnswered}  // Disables the button if no answer is selected
-        >
-          Next
-        </button>
-      </div>
-    </div>
     </div>
   );
 }
