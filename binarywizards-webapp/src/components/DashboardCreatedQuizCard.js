@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createGameWithQuizId } from '../services/JoinQuizService';
+import { toast } from 'react-toastify';
 
 export const renderDifficultyStars = (difficulty) => {
   switch (difficulty.toLowerCase()) {
