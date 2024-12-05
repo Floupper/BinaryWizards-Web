@@ -82,11 +82,11 @@ export default function JoinQuizSearchQuiz() {
 
     return (
         <div className="flex flex-col items-center p-8 w-full">
-            <h2 className="text-2xl font-bold text-white mb-6">Rechercher un Quiz</h2>
+            <h2 className="text-2xl font-bold text-white mb-6">Browse Quiz</h2>
             <input
                 type="text"
                 className="p-4 text-lg border-2 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                placeholder="Entrez le texte pour rechercher un quiz"
+                placeholder="Enter the text to search for a quiz"
                 value={text}
                 onChange={(e) => handleTextChange(e.target.value)}
             />
@@ -103,7 +103,7 @@ export default function JoinQuizSearchQuiz() {
                 className="mt-4 p-2 text-lg border-2 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
             >
                 <option value="" disabled>
-                    Sélectionnez une difficulté
+                    Select difficulty
                 </option>
                 {difficulties.map((difficulty) => (
                     <option key={difficulty} value={difficulty}>
