@@ -206,11 +206,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           <div className=" flex flex-col max-h-30 
            gap-4 overflow-y-auto  scrollbar-thin scrollbar-thumb-gray-500 mr-5 ">
             <div className="flex items-center  flex-col gap-4  scrollbar-thin scrollbar-thumb-gray-500 p-0">
-              {//<h2 className=" text-xl font-semibold">
-                // {quizQuestions.length} {quizQuestions.length < 2 ? 'question' : 'questions'}
-                //</h2>
-                // not in the maquette 
-              }
+
               <div className="flex flex-col gap-4 w-[35vh]">
                 {quizQuestions.map((question) => (
                   <QuestionInContainer
@@ -257,7 +253,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             <ProgressBar progress={progress} />
 
             <div>
-              {/*  */}
+
               <CreateQuizzQuestion
                 TypeOfScreen={TypeOfScreen}
                 quizId={quizId}
@@ -269,7 +265,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           </div>
         </div>
 
-        {/* */}
+
 
       </div>
 
