@@ -5,7 +5,6 @@ import { fetchSearchedQuiz } from '../services/JoinQuizService';
 import CreateQuizService from '../services/CreateQuizService';
 import DashboardCreatedQuizCard from './DashboardCreatedQuizCard';
 
-import QuestionRangeSelector from './JoinQuizQuestionRangeSelector';
 import JoinQuizCard from './JoinQuizCard';
 
 export default function JoinQuizSearchQuiz() {
