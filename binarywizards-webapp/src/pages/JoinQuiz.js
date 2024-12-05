@@ -1,25 +1,23 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNavigate } from 'react-router-dom';
-import '../assets/JoinQuiz.css';
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from '../components/Navbar';
-import { checkGameExists, createGameWithQuizId } from '../services/JoinQuizService';
+import { checkGameExists } from '../services/JoinQuizService';
 import JoinQuizSearchQuiz from '../components/JoinQuizSearchQuiz';
 import JoinQuizResumeGame from '../components/JoinQuizResumeGame';
+import { EmojiProvider, Emoji } from "react-apple-emojis";
+import emojiData from "react-apple-emojis/src/data.json";
 
 const queryClient = new QueryClient();
 
 export default function JoinQuiz() {
   const token = localStorage.getItem('token');
   const [gameCode, setGameCode] = useState('');
-  const [quizCode, setQuizCode] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoadingQuiz, setIsLoadingQuiz] = useState(false);
   const [isLoadingGame, setIsLoadingGame] = useState(false);
   const navigate = useNavigate();
+
   const handleJoinGame = async () => {
     if (gameCode.trim() === '') {
       toast.info('Please enter a valid quiz code.');
@@ -37,33 +35,61 @@ export default function JoinQuiz() {
     }
   };
 
+  const handleCreateQuiz = () => {
+    navigate('/create-quiz');
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
-      <div className='container'>
+      <div className="min-h-screen flex flex-col bg-cover bg-center"
+        style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
+      >
         <Navbar />
         <ToastContainer />
-        {token ? (
-          <div className="JoinQuizContainer">
-            <JoinQuizSearchQuiz />
-            <JoinQuizResumeGame />
-          </div>
-        ) :
-          <div className="JoinGameContainer">
-            <h1>Play</h1>
-            <div className="form-group">
-              <input
-                type="text"
-                id="gameCode"
-                value={gameCode}
-                onChange={(e) => setGameCode(e.target.value)}
-                placeholder="Enter the quiz id"
-              />
+        <div className="flex flex-1 items-center justify-center mt-8">
+          {token ? (
+            <div className="flex flex-col items-center space-y-12">
+              <JoinQuizSearchQuiz />
+              <JoinQuizResumeGame />
             </div>
-            <button onClick={handleJoinGame} disabled={isLoadingGame}>
-              {isLoadingGame ? 'Playing...' : 'Play'}
-            </button>
-          </div>
-        }
+          ) : (
+            <div className="w-full flex flex-col items-center">
+              <div className="p-8 rounded-lg max-w-md w-full text-center">
+                <h1 className="text-4xl font-bold mb-6 text-white">Search Quiz</h1>
+                <div className="form-group mb-4">
+                  <input
+                    type="text"
+                    id="gameCode"
+                    value={gameCode}
+                    onChange={(e) => setGameCode(e.target.value)}
+                    placeholder="Enter the quiz id"
+                    className="w-full p-2 rounded-lg border border-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+                  />
+                </div>
+                <button
+                  onClick={handleJoinGame}
+                  disabled={isLoadingGame}
+                  className="w-[30%] bg-black text-white py-2 rounded-md hover:bg-gray-800 transition duration-300 mb-8"
+                >
+                  {isLoadingGame ? 'Playing...' : 'Play'}
+                </button>
+              </div>
+              
+              <div className="p-6 rounded-lg max-w-lg w-[20%] text-center mt-52">
+                <div className="w-full h-1 bg-[#8B2DF1] mb-4"></div>
+                <button
+                  onClick={handleCreateQuiz}
+                  className="flex justify-center w-full bg-white text-black py-4 rounded-2xl hover:bg-gray-100 transition duration-300"
+                >
+                  Create Quiz
+                  <EmojiProvider data={emojiData}>
+                    <Emoji name="paintbrush" width={20} />
+                  </EmojiProvider>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </QueryClientProvider>
   );
