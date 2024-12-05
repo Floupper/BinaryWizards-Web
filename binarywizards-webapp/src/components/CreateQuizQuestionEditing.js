@@ -1,13 +1,11 @@
-
 import CreateQuizService from '../services/CreateQuizService';
 import React, { useEffect, useState } from 'react';
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
-import { MultipleChoiceQuestion, MultipleChoiceQuestion2 } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
+import { toast } from "react-toastify";
+import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
 import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
+import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
-
-export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questionId, quizId, refreshQuizQuestions }) {
+export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, resetCreateQuestionForm }) {
 
 
   const [selectedOptionInput, setSelectedOptionInput] = useState({
@@ -19,7 +17,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [quizDifficulty, setQuizDifficulty] = useState('');
+  const [quizDifficulty, setQuizDifficulty] = useState('easy');
   const [difficulties, setDifficulties] = useState([]);
   const [difficulty, setDifficulty] = useState('');
 
@@ -32,7 +30,25 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
   const [questionType, setQuestionType] = useState('boolean');
   const [questionOptions, setQuestionOptions] = useState();
 
-  const [questionText, setQuestionText] = useState('');
+  const [questionText, setQuestionText] = useState('Write your question');
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (resetCreateQuestionForm) {
+
+      setQuestionText('Write your question');
+      setSelectedOptionInput({
+        type: 'boolean',
+        choices: ['', '', '', ''],
+        correctAnswerBoolean: 0,
+        correctAnswerMultiple: 0
+      });
+      setIsEditing(false);
+      setQuestionData();
+      setQuizDifficulty('easy');
+      setSelectedCategory('');
+    }
+  }, [resetCreateQuestionForm]);
 
 
   useEffect(() => {
@@ -89,19 +105,14 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
     }
   }, [questionId]);
 
+  const handleEditClick = () => setIsEditing(true);
 
-  const handleOptionChange = (event) => {
-    setQuestionType(event.target.value);
+  const handleBlur = () => {
+    if (!questionText.trim()) {
+      setQuestionText("Write your question");
+    }
+    setIsEditing(false);
   };
-
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-  };
-
-  const handleChangeQuestionText = (event) => {
-    setQuestionText(event.target.value);
-  };
-
 
   const handleSubmit = async () => {
     if (!selectedCategory) {
@@ -152,11 +163,10 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
         throw new Error("Invalid question type");
       }
 
-
       const requestBody = {
         question_text: questionText,
         question_difficulty: quizDifficulty,
-        question_category: categories[selectedCategory].name,
+        question_category: selectedCategory,
         question_type: questionType,
         options: options,
       };
@@ -174,7 +184,6 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
       toast.success(
         `Question successfully ${TypeOfScreen ? "updated" : "created"}!`
       );
-      setModalOpen(false);
       refreshQuizQuestions();
     } catch (error) {
 
@@ -186,114 +195,136 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
     }
   };
 
+  const handleOnDifficultyChange = (newDifficulty) => {
+    setQuizDifficulty(newDifficulty)
+
+  };
+
 
   return (
     <div>
-      <div>
+      <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg  ">
+        <div className="flex flex-col flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[50vh] ">
+          {/* Editable Question */}
+          <div className="flex items-center items-center justify-center text-center mb-6">
+            {!isEditing ? (
+              <h1
+                className="text-2xl font-bold text-gray-800 cursor-pointer hover:underline "
+                onClick={handleEditClick}
+              >
+                {questionText}
+              </h1>
+            ) : (
+              <input
+                type="text"
+                value={questionText}
+                onChange={(e) => setQuestionText(e.target.value)}
+                onBlur={handleBlur}
+                autoFocus
+                className="text-2xl font-bold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
+              />
+            )}
+          </div>
 
-        <label htmlFor="question_text">Question :</label>
-        <h2>  <input
-          id="question_text"
-          name="question_text"
-          value={questionText}
-          onChange={handleChangeQuestionText}
-          rows="4"
-          cols="50"
-          placeholder="Enter the question"
-          className="large-input"
-        /> </h2>
+          {/* Options */}
+          <div className="flex  justify-center">
+            {questionType === "multiple" ? (
+              <MultipleChoiceQuestion
+
+                selectedOptionInput={selectedOptionInput}
+                setSelectedOptionInput={setSelectedOptionInput}
+              />
+            ) : (
+              <BooleanChoiceQuestion
+                selectedOptionInput={selectedOptionInput}
+                setSelectedOptionInput={setSelectedOptionInput}
+              />
+            )}
+          </div>
 
 
-        <div className="category">
-          <label htmlFor="category">Category</label>
+
+
+
+        </div >
+      </div>
+      <div className="flex items-baseline justify-center space-x-6 mt-6 flex-wrap">
+        {/* Question Type */}
+        <div className="flex items-baseline space-x-4">
+          <span className="text-lg font-medium text-gray-700 whitespace-nowrap">Question Type</span>
+          <div className="flex items-baseline space-x-4">
+            <button
+              onClick={() => setQuestionType("boolean")}
+              className={`px-4 py-2 rounded-md font-medium bg-white border-2 hover:bg-transparent ${questionType === "boolean"
+                ? "border-[#8B2DF1] text-gray-800 shadow-md shadow-[#8B2DF1] focus:ring-0 focus:outline-none"
+                : "border-gray-300 text-gray-800 hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
+                }`}
+            >
+              True/False
+            </button>
+
+            <button
+              onClick={() => setQuestionType("multiple")}
+              className={`px-4 py-2 rounded-md font-medium bg-white hover:bg-transparent ${questionType === "multiple"
+                ? " text-gray-800 shadow-md shadow-[#8B2DF1] focus:ring-0 focus:outline-none"
+                : "border-gray-300 text-gray-800 hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
+                }`}
+            >
+              Multiple Choice
+            </button>
+          </div>
+        </div>
+
+        <span className=" text-2xl text-gray-500">|</span>
+
+        {/* Difficulty Selection */}
+        <div className="flex items-baseline space-x-4">
+          <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
+            Difficulty question
+          </label>
+          <DifficultyQuizStars
+            className="flex-grow"
+            initialDifficulty={quizDifficulty}
+            onDifficultyChange={handleOnDifficultyChange}
+          />
+        </div>
+
+        <span className="text-2xl text-gray-500">|</span>
+
+        {/* Category Selection */}
+        <div className="flex items-baseline space-x-4">
+          <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
+            Category
+          </label>
           <select
             id="category"
             value={selectedCategory}
-            onChange={handleCategoryChange}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="" disabled>
               Select a category
             </option>
             {categories.map((category) => (
-              <option key={category.id} value={category.id}>{category.name}</option>
-            ))}
-          </select>
-        </div>
-
-
-        <div className="form-group">
-          <label htmlFor="difficulty">Difficulty</label>
-          <select
-            id="difficulty"
-            value={quizDifficulty}
-            onChange={(e) => setQuizDifficulty(e.target.value)}
-          >
-            { }
-            <option value="" disabled>
-              Select a difficulty
-            </option>
-            {difficulties.map((level) => (
-              <option key={level} value={level}>
-                {level.charAt(0).toUpperCase() + level.slice(1)}
+              <option key={category.id} value={category.name}>
+                {category.name}
               </option>
             ))}
           </select>
         </div>
 
+        <span className="text-2xl text-gray-500">|</span>
+
+        {/* Save Button */}
         <div>
-          <form>
-            <label>
-              <input
-                type="radio"
-                name="toggle"
-                value="boolean"
-                checked={questionType === "boolean"}
-                onChange={handleOptionChange}
-              />
-              Boolean
-            </label>
-            <label style={{ marginLeft: "10px" }}>
-              <input
-                type="radio"
-                name="toggle"
-                value="multiple"
-                checked={questionType === "multiple"}
-                onChange={handleOptionChange}
-              />
-              Multiple
-            </label>
-          </form>
-
-          {questionType === "multiple" && (
-            <div >
-              <label style={{ marginLeft: "10px" }}>
-
-                <MultipleChoiceQuestion
-                  setAnswerText={setAnswerText}
-                  setResponseIndex={setResponseIndex}
-                  questionOptions={questionOptions}
-                  questionType={questionType}
-                  selectedOptionInput={selectedOptionInput}
-                  setSelectedOptionInput={setSelectedOptionInput}
-                  setQuestionOptions={setQuestionOptions}
-                />
-              </label>
-            </div>
-          )}
-          {questionType === "boolean" && (
-            <div >
-
-              <BooleanChoiceQuestion
-                selectedOptionInput={selectedOptionInput}
-                setSelectedOptionInput={setSelectedOptionInput}
-
-              />
-            </div>
-          )}
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          >
+            Save Question
+          </button>
         </div>
       </div>
-      <button onClick={() => setModalOpen(false)}>Fermer</button>
-      <button onClick={handleSubmit}>Save Question</button>
     </div>
-  )
+  );
 };

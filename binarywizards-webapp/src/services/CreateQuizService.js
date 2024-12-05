@@ -1,7 +1,4 @@
 import axiosInstance from '../utils/axiosInstance';
-import config from '../config';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const CreateQuizService = {
   fetchCategories: async () => {
