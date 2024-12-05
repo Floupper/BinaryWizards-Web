@@ -16,6 +16,7 @@ export default function JoinQuiz() {
   const token = localStorage.getItem('token');
   const [gameCode, setGameCode] = useState('');
   const [isLoadingGame, setIsLoadingGame] = useState(false);
+  const [activeTab, setActiveTab] = useState('search');
   const navigate = useNavigate();
 
   const handleJoinGame = async () => {
@@ -46,11 +47,24 @@ export default function JoinQuiz() {
       >
         <Navbar />
         <ToastContainer />
-        <div className="flex flex-1 items-center justify-center mt-8">
+        <div className="flex flex-1 items-center justify-center mt-5">
           {token ? (
-            <div className="flex flex-col items-center space-y-12">
-              <JoinQuizSearchQuiz />
-              <JoinQuizResumeGame />
+            <div className="flex flex-col items-center">
+              <div className="flex space-x-8 mb-8">
+                <button
+                  onClick={() => setActiveTab('search')}
+                  className={`text-xl font-bold ${activeTab === 'search' ? 'border-b-4 border-[#8B2DF1]' : ''}`}
+                >
+                  Search Quiz
+                </button>
+                <button
+                  onClick={() => setActiveTab('resume')}
+                  className={`text-xl font-bold ${activeTab === 'resume' ? 'border-b-4 border-[#8B2DF1]' : ''}`}
+                >
+                  Resume Game
+                </button>
+              </div>
+              {activeTab === 'search' ? <JoinQuizSearchQuiz /> : <JoinQuizResumeGame />}
             </div>
           ) : (
             <div className="w-full flex flex-col items-center">
