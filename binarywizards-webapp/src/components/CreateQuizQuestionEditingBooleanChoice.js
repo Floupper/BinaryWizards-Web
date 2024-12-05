@@ -47,7 +47,7 @@ export default function BooleanChoiceQuestion({ selectedOptionInput, setSelected
           onChange={() =>
             setSelectedOptionInput({ ...selectedOptionInput, correctAnswerBoolean: 0 })
           }
-          className="hidden" // Cache le bouton radio
+          className="hidden"
         />
         <div
           className={`w-full p-3 border rounded-md text-center cursor-pointer ${selectedOptionInput.correctAnswerBoolean === 0
@@ -71,7 +71,7 @@ export default function BooleanChoiceQuestion({ selectedOptionInput, setSelected
           onChange={() =>
             setSelectedOptionInput({ ...selectedOptionInput, correctAnswerBoolean: 1 })
           }
-          className="hidden" // Cache le bouton radio
+          className="hidden"
         />
         <div
           className={`w-full p-3 border rounded-md text-center cursor-pointer ${selectedOptionInput.correctAnswerBoolean === 1

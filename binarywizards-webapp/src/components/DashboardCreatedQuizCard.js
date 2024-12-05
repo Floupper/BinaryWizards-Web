@@ -25,11 +25,11 @@ export default function CreatedQuizCard({ quiz, route }) {
           if (data?.game_id) {
             navigate(`${route}${data.game_id}`);
           } else {
-            console.error('Game creation failed.');
+            toast.error('Game creation failed.');
           }
         })
         .catch(error => {
-          console.error('Error creating game:', error);
+          toast.error('Error creating game:', error);
         });
     } else {
       navigate(route);

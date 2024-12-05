@@ -115,8 +115,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
 
   const handleSelectedQuestionProgressBar = (questionId) => {
-    console.log("Selected Question ID:", questionId);  // Affiche l'ID de la question
-    setIdQuestionSelectedForProgress(questionId);  // Mets à jour l'ID sélectionné pour le calcul de la progression
+
+    setIdQuestionSelectedForProgress(questionId);
   };
   const resetCreateQuestionForm = () => {
     setTypeOfScreen('create');
@@ -181,7 +181,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   return (
     <div className="CreateQuiz p-0 m-0">
-      {/* Navbar et barre de progression */}
+      {/*  */}
 
       <CreateQuizNavbar handleSubmitSave={handleSubmitSave} quiz={quiz} setQuiz={setQuiz} />
       <div className="CreateQuiz-container  flex flex-col gap-4 ">
@@ -200,10 +200,9 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           </Modal>
         </div>
 
-        {/* Conteneur principal */}
 
         <div className=" grid min-grid-rows-[70vh_1fr_2fr] grid-flow-col max-h-[70vh] pl-4">
-          {/* Section des questions (à gauche) */}
+
           <div className=" flex flex-col max-h-30 
            gap-4 overflow-y-auto  scrollbar-thin scrollbar-thumb-gray-500 mr-5 ">
             <div className="flex items-center  flex-col gap-4  scrollbar-thin scrollbar-thumb-gray-500 p-0">
@@ -252,13 +251,13 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
             </div>
           </div>
-          {/* Section CreateQuizQuestionEditing (à droite) */}
+          {/*  CreateQuizQuestionEditing */}
 
           <div className="flex flex-col  row-span-2 col-start-2 col-span-2 rounded-lg pr-10">
             <ProgressBar progress={progress} />
 
             <div>
-              {/* Cette partie a le dégradé de couleur avec des marges et un padding */}
+              {/*  */}
               <CreateQuizzQuestion
                 TypeOfScreen={TypeOfScreen}
                 quizId={quizId}
@@ -270,7 +269,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           </div>
         </div>
 
-        {/* Boutons d'action (en bas) */}
+        {/* */}
 
       </div>
 

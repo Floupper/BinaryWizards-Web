@@ -9,19 +9,14 @@ export default function QuestionInContainer({ setTypeOfScreen, question_id, ques
 
   };
 
-
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-  }
   const colors = [
-    'from-[#ff7f50] to-[#87cefa]',  // Couleur 1
-    'from-[#f39c12] to-[#d35400]',  // Couleur 2
-    'from-[#8e44ad] to-[#2980b9]',  // Couleur 3
-    'from-[#1abc9c] to-[#16a085]',  // Couleur 4
-    'from-[#e74c3c] to-[#c0392b]',  // Couleur 5
+    'from-[#ff7f50] to-[#87cefa]',  // Color 1
+    'from-[#f39c12] to-[#d35400]',  // Color 2
+    'from-[#8e44ad] to-[#2980b9]',  // Color 3
+    'from-[#1abc9c] to-[#16a085]',  // Color 4
+    'from-[#e74c3c] to-[#c0392b]',  // Color 5
   ];
 
-  // Utilisation de l'index pour récupérer la couleur appropriée
   const backgroundClass = colors[question_index % colors.length];
 
 
@@ -39,7 +34,7 @@ export default function QuestionInContainer({ setTypeOfScreen, question_id, ques
         </button>
         Question {question_index + 1}</div>
       <div className="flex items-start gap-2">
-        {/* Conteneur principal */}
+        {/*  */}
         <div
           className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center  bg-gradient-to-r ${backgroundClass} rounded-lg p-2 shadow-lg cursor-pointer border-[#8B2DF1] border-2`}
           onClick={handleSubmitEditQuestion}
@@ -52,7 +47,7 @@ export default function QuestionInContainer({ setTypeOfScreen, question_id, ques
           </div>
         </div>
 
-        {/* Poubelle */}
+
 
 
 

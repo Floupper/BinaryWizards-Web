@@ -35,20 +35,20 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
   useEffect(() => {
     if (resetCreateQuestionForm) {
-      console.log("resetCreateQuestionForm", resetCreateQuestionForm);
-      setQuestionText('Write your question');  // Réinitialise le texte de la question
+
+      setQuestionText('Write your question');
       setSelectedOptionInput({
         type: 'boolean',
         choices: ['', '', '', ''],
         correctAnswerBoolean: 0,
         correctAnswerMultiple: 0
-      });  // Réinitialise les options de réponse
+      });
       setIsEditing(false);
       setQuestionData();
       setQuizDifficulty('easy');
       setSelectedCategory('');
     }
-  }, [resetCreateQuestionForm]); // Le formulaire se réinitialise lorsque resetCreateQuestionForm est appelé
+  }, [resetCreateQuestionForm]);
 
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
   const handleBlur = () => {
     if (!questionText.trim()) {
-      setQuestionText("Write your question"); // Remet le texte par défaut si vide
+      setQuestionText("Write your question");
     }
     setIsEditing(false);
   };
@@ -241,7 +241,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
               />
             )}
           </div>
-          {/* Actions */}
+          {/*  */}
 
 
 
