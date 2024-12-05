@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { fetchSearchedQuiz, createGameWithQuizId } from '../services/JoinQuizService';
+import { fetchSearchedQuiz } from '../services/JoinQuizService';
 import CreateQuizService from '../services/CreateQuizService';
 import JoinQuizCard from './JoinQuizCard';
-import QuestionRangeSelector from './JoinQuizQuestionRangeSelector';
 
 export default function JoinQuizSearchQuiz() {
     const [text, setText] = useState('');
     const [selectedDifficulty, setSelectedDifficulty] = useState("all");
     const [difficulties, setDifficulties] = useState([]);
-    const quizListRef = useRef(null); 
+    const quizListRef = useRef(null);
     const [minQuestions, setMinQuestions] = useState(0);
     const [maxQuestions, setMaxQuestions] = useState(50);
 
@@ -40,7 +39,7 @@ export default function JoinQuizSearchQuiz() {
                 minQuestions,
             }),
         getNextPageParam: (lastPage) => lastPage?.nextPage ?? undefined,
-        enabled: false, 
+        enabled: false,
     });
 
     useEffect(() => {
@@ -50,7 +49,7 @@ export default function JoinQuizSearchQuiz() {
     const handleScroll = () => {
         if (quizListRef.current) {
             const { scrollHeight, scrollTop, clientHeight } = quizListRef.current;
-            if (scrollHeight - scrollTop <= clientHeight + 50 && hasNextPage && !isFetchingNextPage) { 
+            if (scrollHeight - scrollTop <= clientHeight + 50 && hasNextPage && !isFetchingNextPage) {
                 fetchNextPage();
             }
         }
@@ -70,14 +69,25 @@ export default function JoinQuizSearchQuiz() {
 
     const handleTextChange = (value) => {
         setText(value);
+        refetch();
     };
 
-    const handleMinQuestionsChange = (value) => {
-        setMinQuestions(value);
+    const handleMinChange = (value) => {
+        const parsedValue = Math.max(0, parseInt(value, 10) || 0);
+        setMinQuestions(parsedValue);
+        if (parsedValue > maxQuestions) {
+            setMaxQuestions(parsedValue);
+        }
+        refetch();
     };
 
-    const handleMaxQuestionsChange = (value) => {
-        setMaxQuestions(value);
+    const handleMaxChange = (value) => {
+        const parsedValue = Math.min(50, parseInt(value, 10) || 50);
+        setMaxQuestions(parsedValue);
+        if (parsedValue < minQuestions) {
+            setMinQuestions(parsedValue);
+        }
+        refetch();
     };
 
     return (
@@ -90,13 +100,31 @@ export default function JoinQuizSearchQuiz() {
                 value={text}
                 onChange={(e) => handleTextChange(e.target.value)}
             />
-            <QuestionRangeSelector
-                minQuestions={minQuestions}
-                maxQuestions={maxQuestions}
-                onMinChange={handleMinQuestionsChange}
-                onMaxChange={handleMaxQuestionsChange}
-                className="w-full p-2 text-lg border-2 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+            <h2 className="text-lg text-white font-semibold mb-2">Select the number of questions</h2>
+            <div className="flex space-x-4">
+                <div className="flex flex-col">
+                    <label htmlFor="minQuestions" className="mb-2 text-white">Min</label>
+                    <input
+                        id="minQuestions"
+                        type="number"
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        value={minQuestions}
+                        onChange={(e) => handleMinChange(e.target.value)}
+                        placeholder="Min"
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="maxQuestions" className="mb-2 text-white">Max</label>
+                    <input
+                        id="maxQuestions"
+                        type="number"
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        value={maxQuestions}
+                        onChange={(e) => handleMaxChange(e.target.value)}
+                        placeholder="Max"
+                    />
+                </div>
+            </div>
             <select
                 value={selectedDifficulty}
                 onChange={(e) => setSelectedDifficulty(e.target.value)}
@@ -112,10 +140,10 @@ export default function JoinQuizSearchQuiz() {
                 ))}
             </select>
 
-            {isLoading && <div className="text-lg text-gray-600 mb-4">Chargement...</div>}
-            
+            {isLoading && <div className="text-lg text-gray-600 mb-4">Loading...</div>}
+
             <div
-                className="w-full p-2 rounded-lg overflow-y-auto max-h-60" 
+                className="w-full p-2 rounded-lg overflow-y-auto max-h-60"
                 ref={quizListRef}
             >
                 {data?.pages?.flatMap((page) => page?.quizzes || []).map((item) => (
@@ -136,7 +164,7 @@ export default function JoinQuizSearchQuiz() {
                         <div className="text-lg text-gray-600 text-center mt-3">No quiz found.</div>
                     )}
             </div>
-            
+
             {!isFetchingNextPage && hasNextPage && (
                 <button
                     onClick={() => fetchNextPage()}

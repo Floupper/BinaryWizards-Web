@@ -1,7 +1,3 @@
-import '../assets/QuestionChoiceMultiple.css';
-
-import '../assets/QuestionChoiceMultiple.css';
-
 export default function QuestionChoiceMultiple({ question_choice, correctOptionIndex, selectedQuestionId, isAnswered, onQuestionSelect }) {
   return (
     <div className="QuestionChoiceMultiple">

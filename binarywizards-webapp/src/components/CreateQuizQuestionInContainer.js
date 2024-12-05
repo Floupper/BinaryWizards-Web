@@ -1,5 +1,3 @@
-import '../assets/CreateQuizQuestionInContainer.css';
-
 export default function QuestionInContainer({ setTypeOfScreen, question_id, question_text, question_difficulty, question_category, setIdQuestionSelected, setModalOpen, handleSubmitDeleteQuestion }) {
   const handleSubmitEditQuestion = (event) => {
     setTypeOfScreen('edit');
