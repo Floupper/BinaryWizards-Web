@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { fetchSearchedQuiz } from '../services/JoinQuizService';
 import CreateQuizService from '../services/CreateQuizService';
 import DashboardCreatedQuizCard from './DashboardCreatedQuizCard';
-import '../assets/JoinQuizSearchQuiz.css';
+
 import QuestionRangeSelector from './JoinQuizQuestionRangeSelector';
 import JoinQuizCard from './JoinQuizCard';
 
