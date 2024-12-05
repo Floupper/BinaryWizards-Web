@@ -1,7 +1,7 @@
 
 import CreateQuizService from '../services/CreateQuizService';
 import React, { useEffect, useState } from 'react';
-
+import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 import { toast } from "react-toastify";
 
 //Component showed when the user wants to import questions from the trivia API
@@ -13,7 +13,7 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
   //stock the difficulties fetched from the API
   const [difficulties, setDifficulties] = useState([]);
   // contain the selected difficulty (locally) by the user. It will be sent to the API one the button validate is pressed
-  const [difficulty, setDifficulty] = useState('');
+  const [difficulty, setDifficulty] = useState('easy');
   //Amount of questions to import
   const [amount, setAmount] = useState(10);
 
@@ -98,7 +98,7 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
       {/* Modal container */}
-      <div className="bg-white w-[50vh] rounded-lg p-6  w-full shadow-lg z-10">
+      <div className="bg-white w-[50vh] rounded-lg p-6  shadow-lg z-10">
 
         <div className="flex flex-row-reverse items-center justify-around ">
           <button
@@ -139,17 +139,14 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
         </div>
 
         <div className="mb-4">
-          <label htmlFor="difficulty" className="block text-lg font-medium text-gray-700">Difficulty</label>
-          <select
-            id="difficulty"
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-            className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
-            <option value="" disabled>Select a difficulty</option>
-            {difficulties.map((level) => (
-              <option key={level} value={level}>{level.charAt(0).toUpperCase() + level.slice(1)}</option>
-            ))}
-          </select>
+          <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
+            Difficulty question
+          </label>
+          <DifficultyQuizStars
+            className="flex-grow"
+            initialDifficulty={difficulty}
+            onDifficultyChange={(newDifficulty) => setDifficulty(newDifficulty)}
+          />
         </div>
 
         <div className="flex justify-between items-center">
