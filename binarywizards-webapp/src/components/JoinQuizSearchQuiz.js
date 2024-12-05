@@ -19,7 +19,7 @@ export default function JoinQuizSearchQuiz() {
             .then((data) => {
                 setDifficulties(['all', ...data]);
             })
-            .catch(error => toast.error(`Erreur lors de la récupération des difficultés : ${error.message}`));
+            .catch(error => toast.error(`Error fetching difficulties : ${error.message}`));
     }, []);
 
     const {
