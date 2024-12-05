@@ -215,7 +215,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                 //</h2>
                 // not in the maquette 
               }
-              <div className="flex flex-col gap-4 min-w-[10vh] max-w-[30vh]">
+              <div className="flex flex-col gap-4 w-[35vh]">
                 {quizQuestions.map((question) => (
                   <QuestionInContainer
 
@@ -236,19 +236,24 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             </div>
 
           </div>
-          <div className="relative max-h-[5vh] row-span-1 row-start-2 col-end-1 ">
-            <button
-              onClick={handleSubmitCreateQuestion}
-              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-            >
-              Create question
-            </button>
-            <button
-              onClick={handleSubmitImportTrivia}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-            >
-              Import questions from Trivia
-            </button>
+          <div className="size-full flex justify-center items-center ">
+            <div className="flex flex-col justify-center  w-[30vh] row-span-1 row-start-2 col-end-1 ">
+
+
+              <button
+                onClick={handleSubmitCreateQuestion}
+                className="text-white bg-black px-4 py-2 rounded-lg hover:bg-black"
+              >
+                Create question
+              </button>
+              <button
+                onClick={handleSubmitImportTrivia}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-blue-600"
+              >
+                Import questions from Trivia
+              </button>
+
+            </div>
           </div>
           {/* Section CreateQuizQuestionEditing (à droite) */}
 
