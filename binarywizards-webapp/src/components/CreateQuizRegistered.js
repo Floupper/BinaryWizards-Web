@@ -183,10 +183,11 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   };
 
   return (
-    <div className="CreateQuiz">
+    <div className="CreateQuiz p-0 m-0">
       {/* Navbar et barre de progression */}
+
       <CreateQuizNavbar handleSubmitSave={handleSubmitSave} quiz={quiz} setQuiz={setQuiz} />
-      <div className="CreateQuiz-container  flex flex-col gap-4 p-4">
+      <div className="CreateQuiz-container  flex flex-col gap-4 ">
         <div className="trivia modal">
           <Modal
             isOpen={isTriviaModalOpen}
@@ -204,17 +205,20 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
         {/* Conteneur principal */}
 
-        <div className=" grid grid-rows-[70vh_1fr_2fr] grid-flow-col max-h-[90vh]">
+        <div className=" grid min-grid-rows-[70vh_1fr_2fr] grid-flow-col max-h-[70vh] pl-4">
           {/* Section des questions (à gauche) */}
           <div className=" flex flex-col max-h-30 
-           gap-4 overflow-y-auto  scrollbar-thin scrollbar-thumb-gray-500">
-            <div className="flex flex-col gap-4 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-gray-500">
-              <h2 className="text-xl font-semibold">
-                {quizQuestions.length} {quizQuestions.length < 2 ? 'question' : 'questions'}
-              </h2>
-              <div className="flex flex-col gap-4">
+           gap-4 overflow-y-auto  scrollbar-thin scrollbar-thumb-gray-500 ">
+            <div className="flex items-center  flex-col gap-4 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-gray-500 ">
+              {//<h2 className=" text-xl font-semibold">
+                // {quizQuestions.length} {quizQuestions.length < 2 ? 'question' : 'questions'}
+                //</h2>
+                // not in the maquette 
+              }
+              <div className="flex flex-col gap-4 min-w-[10vh] max-w-[30vh]">
                 {quizQuestions.map((question) => (
                   <QuestionInContainer
+
                     key={question.question_id}
                     question_text={question.question_text}
                     question_difficulty={question.question_difficulty}
@@ -232,7 +236,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             </div>
 
           </div>
-          <div className="relative max-h-[5vh] row-span-1 row-start-2 col-end-1">
+          <div className="relative max-h-[5vh] row-span-1 row-start-2 col-end-1 ">
             <button
               onClick={handleSubmitCreateQuestion}
               className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
@@ -248,11 +252,12 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           </div>
           {/* Section CreateQuizQuestionEditing (à droite) */}
 
-          <div className=" flex max-h-[70vh] row-span-2 col-start-2 col-span-2 rounded-lg ">
+          <div className="flex flex-col  row-span-2 col-start-2 col-span-2 rounded-lg pr-10">
             <ProgressBar progress={progress} />
-            <div className="flex  justify-center bg-gradient-to-r from-orange-400 to-green-400 ">
-              <CreateQuizzQuestion
 
+            <div>
+              {/* Cette partie a le dégradé de couleur avec des marges et un padding */}
+              <CreateQuizzQuestion
                 TypeOfScreen={TypeOfScreen}
                 setModalOpen={setModalOpen}
                 quizId={quizId}
@@ -267,8 +272,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
         {/* Boutons d'action (en bas) */}
 
       </div>
-      <div className="flex justify-end gap-4 mt-4">
-      </div>
+
     </div>
   );
 }

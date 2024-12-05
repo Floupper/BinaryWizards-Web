@@ -201,49 +201,57 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
 
 
   return (
-    <div className="min-h-40 p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  ">
-      {/* Editable Question */}
-      <div className="text-center mb-6">
-        {!isEditing ? (
-          <h1
-            className="text-2xl font-bold text-gray-800 cursor-pointer hover:underline"
-            onClick={handleEditClick}
-          >
-            {questionText}
-          </h1>
-        ) : (
-          <input
-            type="text"
-            value={questionText}
-            onChange={(e) => setQuestionText(e.target.value)}
-            onBlur={handleBlur}
-            autoFocus
-            className="text-2xl font-bold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
-          />
-        )}
+    <div>
+      <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg  ">
+        <div className="flex flex-col flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[50vh] ">
+          {/* Editable Question */}
+          <div className="flex items-center items-center justify-center text-center mb-6">
+            {!isEditing ? (
+              <h1
+                className="text-2xl font-bold text-gray-800 cursor-pointer hover:underline "
+                onClick={handleEditClick}
+              >
+                {questionText}
+              </h1>
+            ) : (
+              <input
+                type="text"
+                value={questionText}
+                onChange={(e) => setQuestionText(e.target.value)}
+                onBlur={handleBlur}
+                autoFocus
+                className="text-2xl font-bold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
+              />
+            )}
+          </div>
+
+          {/* Options */}
+          <div className="flex  justify-center">
+            {questionType === "multiple" ? (
+              <MultipleChoiceQuestion
+
+                selectedOptionInput={selectedOptionInput}
+                setSelectedOptionInput={setSelectedOptionInput}
+              />
+            ) : (
+              <BooleanChoiceQuestion
+                selectedOptionInput={selectedOptionInput}
+                setSelectedOptionInput={setSelectedOptionInput}
+              />
+            )}
+          </div>
+          {/* Actions */}
+
+
+
+
+        </div >
       </div>
-
-      {/* Options */}
-      {questionType === "multiple" ? (
-        <MultipleChoiceQuestion
-          selectedOptionInput={selectedOptionInput}
-          setSelectedOptionInput={setSelectedOptionInput}
-        />
-      ) : (
-        <BooleanChoiceQuestion
-          selectedOptionInput={selectedOptionInput}
-          setSelectedOptionInput={setSelectedOptionInput}
-        />
-      )}
-
-      {/* Actions */}
-
-
-      <div className="flex items-center  justify-center space-x-6 mt-6 flex-wrap">
+      <div className="flex items-baseline justify-center space-x-6 mt-6 flex-wrap">
         {/* Question Type */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-baseline space-x-4">
           <span className="text-lg font-medium text-gray-700 whitespace-nowrap">Question Type</span>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-baseline space-x-4">
             <button
               onClick={() => setQuestionType("boolean")}
               className={`px-4 py-2 rounded-md font-medium bg-white border-2 hover:bg-transparent ${questionType === "boolean"
@@ -256,8 +264,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
 
             <button
               onClick={() => setQuestionType("multiple")}
-              className={`px-4 py-2 rounded-md font-medium bg-white border-2 hover:bg-transparent ${questionType === "multiple"
-                ? "border-[#8B2DF1] text-gray-800 shadow-md shadow-[#8B2DF1] focus:ring-0 focus:outline-none"
+              className={`px-4 py-2 rounded-md font-medium bg-white hover:bg-transparent ${questionType === "multiple"
+                ? " text-gray-800 shadow-md shadow-[#8B2DF1] focus:ring-0 focus:outline-none"
                 : "border-gray-300 text-gray-800 hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
                 }`}
             >
@@ -266,10 +274,10 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
           </div>
         </div>
 
-        <span className="text-5xl text-gray-500">|</span>
+        <span className=" text-2xl text-gray-500">|</span>
 
         {/* Difficulty Selection */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-baseline space-x-4">
           <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
             Difficulty question
           </label>
@@ -280,10 +288,10 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
           />
         </div>
 
-        <span className="text-5xl text-gray-500">|</span>
+        <span className="text-2xl text-gray-500">|</span>
 
         {/* Category Selection */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-baseline space-x-4">
           <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
             Category
           </label>
@@ -304,7 +312,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
           </select>
         </div>
 
-        <span className="text-5xl text-gray-500">|</span>
+        <span className="text-2xl text-gray-500">|</span>
 
         {/* Save Button */}
         <div>
@@ -316,8 +324,6 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
           </button>
         </div>
       </div>
-
-    </div >
-
+    </div>
   );
 };

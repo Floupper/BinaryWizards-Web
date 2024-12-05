@@ -60,14 +60,14 @@ export default function CreateQuizNavbar({ handleSubmitSave, quiz, setQuiz }) {
 
 
     return (
-        <nav className=" w-full h-full flex items-baseline justify-between p-5 bg-[#FFFFFF] text-black">
+        <nav className=" w-full h-full flex  items-baseline justify-between p-5 bg-[#FFFFFF] text-black drop-shadow-md pb-8">
             {/* Logo */}
-            <div className="text-[3.09rem] font-bold font-mogula">
+            <div className="flex pl-6 items-baseline  text-[3.09rem] font-bold font-mogula ">
                 <NavLink to="/" className={({ isActive }) => (isActive ? 'text-black' : '')}>
                     Quiz
                 </NavLink>
             </div>
-            <div className="flex items-baseline justify-evenly">
+            <div className="flex items-baseline flex-wrap">
                 {/* Inputs and controls */}
                 <div className="flex items-baseline  space-x-14 flex-wrap">
                     {/* Title */}
@@ -87,7 +87,7 @@ export default function CreateQuizNavbar({ handleSubmitSave, quiz, setQuiz }) {
                     </div>
 
                     {/* Difficulty */}
-                    <div className="flex items-center flex-wrap space-x-2">
+                    <div className="flex items-baseline flex-wrap space-x-2">
                         <span className="text-lg font-medium">Difficulty quiz</span>
                         <DifficultyQuizStars
                             initialDifficulty={quiz.difficulty}
@@ -96,20 +96,21 @@ export default function CreateQuizNavbar({ handleSubmitSave, quiz, setQuiz }) {
                     </div>
 
                     {/* Publish */}
-                    <div className="flex items-center space-x-4">
-                        <label htmlFor="quiz_checkbox" className="text-lg font-medium">Make quiz public</label>
+                    <div className="flex items-baseline space-x-3">
+                        <label htmlFor="quiz_checkbox" className="text-lg items-center font-medium">Make quiz public</label>
                         <input
+
                             type="checkbox"
                             id="quiz_checkbox"
                             name="quiz_checkbox"
                             checked={quiz.isPublic || false}
                             onChange={handleChangeIsPublicQuiz}
-                            className="w-4 h-4"
+                            className="p-2 m-0 w-5 h-4 "
                         />
                     </div>
 
                     {/* Description */}
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-baseline space-x-4">
                         <label htmlFor="quiz_description" className="text-lg font-medium">Description</label>
                         <input
                             id="quiz_description"
@@ -123,35 +124,36 @@ export default function CreateQuizNavbar({ handleSubmitSave, quiz, setQuiz }) {
                 </div>
 
                 {/* Menu Buttons */}
-                <ul className={`flex items-baseline space-x-4`}>
-                    <li>
-                        <button
-                            onClick={() => { navigate('/') }}
-                            className="text-black font-helvetica text-[1.401rem] bg-transparent hover:bg-transparent border-none hover:text-black focus:outline-none"
-                        >
-                            Exit
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            onClick={handleSaveQuiz}
-                            className="text-white bg-black p-2 rounded hover:bg-black hover:text-white focus:outline-none"
-                            style={{ fontFamily: 'Helvetica', fontSize: '1.401rem' }}
-                        >
-                            Save
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            onClick={handleSignout}
-                            className="bg-black text-white p-2 rounded hover:bg-black hover:text-white focus:outline-none"
-                            style={{ fontFamily: 'Helvetica', fontSize: '1.401rem' }}
-                        >
-                            Sign out
-                        </button>
-                    </li>
-                </ul>
+
             </div>
+            <ul className={`flex items-baseline space-x-4`}>
+                <li>
+                    <button
+                        onClick={() => { navigate('/') }}
+                        className="text-black font-helvetica p-2 text-[1.401rem] bg-transparent hover:bg-transparent border-none hover:text-black focus:outline-none"
+                    >
+                        Exit
+                    </button>
+                </li>
+                <li>
+                    <button
+                        onClick={handleSaveQuiz}
+                        className="text-white bg-black p-1.5 rounded-full hover:bg-black hover:text-white focus:outline-none"
+                        style={{ fontFamily: 'Helvetica', fontSize: '1.401rem' }}
+                    >
+                        Save
+                    </button>
+                </li>
+                <li>
+                    <button
+                        onClick={handleSignout}
+                        className="bg-black text-white p-1.5 rounded-full hover:bg-black hover:text-white focus:outline-none"
+                        style={{ fontFamily: 'Helvetica', fontSize: '1.401rem' }}
+                    >
+                        Sign out
+                    </button>
+                </li>
+            </ul>
         </nav>
 
     );

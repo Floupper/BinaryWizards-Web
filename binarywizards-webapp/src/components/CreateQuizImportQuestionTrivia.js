@@ -93,15 +93,24 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md z-50">
+    <div className="fixed  inset-0 flex items-center justify-center backdrop-blur-md z-50">
       {/* Background overlay (optional) */}
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
       {/* Modal container */}
-      <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg z-10">
-        <div className="text-center text-2xl font-bold text-purple-700 mb-4">
-          Import generated questions into your quiz
+      <div className="bg-white w-[50vh] rounded-lg p-6  w-full shadow-lg z-10">
+
+        <div className="flex flex-row-reverse items-center justify-around ">
+          <button
+            onClick={() => setTrivialModalOpen(false)}
+            className="text-black text-l hover:bg-transparent  bg-gray-200 ">
+            <span className="text-3xl">×</span>
+          </button>
+          <div className="text-center text-2xl font-bold text-purple-700 mb-4 pr-4">
+            Import generated questions into your quiz
+          </div>
         </div>
+
         <div className="mb-4">
           <label htmlFor="category" className="block text-lg font-medium text-gray-700">Category</label>
           <select
@@ -150,11 +159,7 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300">
             Import Questions
           </button>
-          <button
-            onClick={() => setTrivialModalOpen(false)}
-            className="text-gray-600 hover:text-gray-800">
-            <span className="text-xl">&times;</span>
-          </button>
+
         </div>
       </div>
     </div>

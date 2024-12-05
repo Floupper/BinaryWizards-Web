@@ -28,14 +28,14 @@ export default function QuestionInContainer({ setTypeOfScreen, question_id, ques
 
   return (
     <div className="flex flex-col items-center gap-2 ">
-      <div className="text-lg font-bold text-gray-800">Question {question_index}</div>
+      <div className="text-lg font-bold text-gray-800">Question {question_index + 1}</div>
       <div className="flex items-start gap-2">
         {/* Conteneur principal */}
         <div
-          className={`flex flex-col items-center justify-center w-full max-w-[320px] h-[150px] bg-gradient-to-r ${backgroundClass} rounded-lg p-2 shadow-lg cursor-pointer border-[#8B2DF1] border-2`}
+          className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center  bg-gradient-to-r ${backgroundClass} rounded-lg p-2 shadow-lg cursor-pointer border-[#8B2DF1] border-2`}
           onClick={handleSubmitEditQuestion}
         >
-          <div className="text-l text-white text-center ">
+          <div className="text-l text-white text-center text-l">
             {question_text || 'Write your question'}
           </div>
           <div className="flex justify-center items-center w-full h-12 overflow-hidden">
@@ -44,15 +44,15 @@ export default function QuestionInContainer({ setTypeOfScreen, question_id, ques
         </div>
 
         {/* Poubelle */}
-        <div className="flex items-center ml-0">
-          <button
-            id={question_id}
-            className="flex items-center m-0 p-0 text-grey-500 text-2xl transition-transform bg-transparent border-none hover:bg-transparent"
-            onClick={handleSubmitDeleteQuestion}
-          >
-            🗑️
-          </button>
-        </div>
+
+        <button
+          id={question_id}
+          className=" flex justify-self-end m-0 p-0 text-grey-500 text-2xl transition-transform bg-transparent border-none hover:bg-transparent"
+          onClick={handleSubmitDeleteQuestion}
+        >
+          🗑️
+        </button>
+
 
       </div>
     </div>
