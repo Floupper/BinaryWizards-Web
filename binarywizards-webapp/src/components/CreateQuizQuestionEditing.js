@@ -241,7 +241,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
               />
             )}
           </div>
-          {/*  */}
+
 
 
 
