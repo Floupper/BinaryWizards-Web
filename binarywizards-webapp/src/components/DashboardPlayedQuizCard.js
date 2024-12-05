@@ -3,7 +3,6 @@ import { FaPlay } from 'react-icons/fa';
 import { MdReplay } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import {createGameWithQuizId} from '../services/JoinQuizService';
-import '../assets/PlayedQuizCard.css';
 import dayjs from 'dayjs';
 export default function PlayedQuizCard({ quiz }) {
   const formattedDate = dayjs(quiz.date_game_creation).format("DD/MM/YYYY");

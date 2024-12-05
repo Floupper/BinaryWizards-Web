@@ -1,14 +1,8 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import '../assets/HomeScreen.css';
-
-import '../assets/JoinQuiz.css';
-
-import { checkGameExists, createGameWithQuizId } from '../services/JoinQuizService';
-import { ToastContainer, toast } from "react-toastify";
+import { createGameWithQuizId } from '../services/JoinQuizService';
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-//Screen when the quiz is created
 
 export default function QuizCreated() {
   const navigate = useNavigate();

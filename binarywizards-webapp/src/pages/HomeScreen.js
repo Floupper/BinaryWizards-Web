@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../assets/HomeScreen.css';
 import Navbar from '../components/Navbar';
 
 export default function HomeScreen() {
