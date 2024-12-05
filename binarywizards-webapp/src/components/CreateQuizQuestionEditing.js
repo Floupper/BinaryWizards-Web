@@ -1,9 +1,7 @@
-
 import CreateQuizService from '../services/CreateQuizService';
 import React, { useEffect, useState } from 'react';
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
-import { MultipleChoiceQuestion, MultipleChoiceQuestion2 } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
+import { toast } from "react-toastify";
+import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
 import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
@@ -203,7 +201,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
 
 
   return (
-    <div className="p-6 bg-gray-50 rounded-lg shadow-md max-w-4xl mx-auto">
+    <div className="min-h-40 p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  ">
       {/* Editable Question */}
       <div className="text-center mb-6">
         {!isEditing ? (
@@ -239,27 +237,18 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
       )}
 
       {/* Actions */}
-      <div className="flex justify-end mt-6 space-x-4">
 
-        <button
-          onClick={handleSubmit}
-          className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-        >
-          Save Question
-        </button>
-      </div>
 
-      {/* Question Type, Difficulty, Category in Horizontal Layout */}
-      <div className="flex space-x-6 mt-6">
+      <div className="flex items-center  justify-center space-x-6 mt-6 flex-wrap">
         {/* Question Type */}
-        <div className="mb-6">
-          <span className="block text-lg font-medium text-gray-700">Question Type</span>
-          <div className="flex items-center mt-2 space-x-4">
+        <div className="flex items-center space-x-4">
+          <span className="text-lg font-medium text-gray-700 whitespace-nowrap">Question Type</span>
+          <div className="flex items-center space-x-4">
             <button
               onClick={() => setQuestionType("boolean")}
-              className={`px-4 py-2 rounded-md font-medium bg-white border-2 ${questionType === "boolean"
+              className={`px-4 py-2 rounded-md font-medium bg-white border-2 hover:bg-transparent ${questionType === "boolean"
                 ? "border-[#8B2DF1] text-gray-800 shadow-md shadow-[#8B2DF1] focus:ring-0 focus:outline-none"
-                : "border-gray-300 text-gray-800 hover:bg-transparent hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
+                : "border-gray-300 text-gray-800 hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
                 }`}
             >
               True/False
@@ -267,44 +256,42 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
 
             <button
               onClick={() => setQuestionType("multiple")}
-              className={`px-4 py-2 rounded-md font-medium bg-white border-2 ${questionType === "multiple"
+              className={`px-4 py-2 rounded-md font-medium bg-white border-2 hover:bg-transparent ${questionType === "multiple"
                 ? "border-[#8B2DF1] text-gray-800 shadow-md shadow-[#8B2DF1] focus:ring-0 focus:outline-none"
-                : "border-gray-300 text-gray-800 hover:bg-transparent hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
+                : "border-gray-300 text-gray-800 hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
                 }`}
             >
               Multiple Choice
             </button>
           </div>
-
         </div>
-        <a>|</a>
+
+        <span className="text-5xl text-gray-500">|</span>
 
         {/* Difficulty Selection */}
-        <div className="flex items-center mb-6 space-x-4">
-          <label
-            htmlFor="difficulty"
-            className="block text-lg font-medium text-gray-700 whitespace-nowrap"
-          >
+        <div className="flex items-center space-x-4">
+          <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
             Difficulty question
           </label>
-
           <DifficultyQuizStars
             className="flex-grow"
             initialDifficulty={quizDifficulty}
             onDifficultyChange={handleOnDifficultyChange}
           />
         </div>
-        <a>|</a>
+
+        <span className="text-5xl text-gray-500">|</span>
+
         {/* Category Selection */}
-        <div className="mb-6">
-          <label htmlFor="category" className="block text-lg font-medium text-gray-700">
+        <div className="flex items-center space-x-4">
+          <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
             Category
           </label>
           <select
             id="category"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            className="p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="" disabled>
               Select a category
@@ -316,7 +303,20 @@ export default function CreateQuizzQuestion({ TypeOfScreen, setModalOpen, questi
             ))}
           </select>
         </div>
-      </div >
+
+        <span className="text-5xl text-gray-500">|</span>
+
+        {/* Save Button */}
+        <div>
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          >
+            Save Question
+          </button>
+        </div>
+      </div>
+
     </div >
 
   );

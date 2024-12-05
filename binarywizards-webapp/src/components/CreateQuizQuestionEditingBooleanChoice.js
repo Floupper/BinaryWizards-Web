@@ -51,8 +51,8 @@ export default function BooleanChoiceQuestion({ selectedOptionInput, setSelected
         />
         <div
           className={`w-full p-3 border rounded-md text-center cursor-pointer ${selectedOptionInput.correctAnswerBoolean === 0
-              ? "border-blue-600 bg-blue-100"
-              : "border-gray-300 bg-white"
+            ? "border-blue-600 bg-blue-100"
+            : "border-gray-300 bg-white"
             }`}
           onClick={() =>
             setSelectedOptionInput({ ...selectedOptionInput, correctAnswerBoolean: 0 })
@@ -75,8 +75,8 @@ export default function BooleanChoiceQuestion({ selectedOptionInput, setSelected
         />
         <div
           className={`w-full p-3 border rounded-md text-center cursor-pointer ${selectedOptionInput.correctAnswerBoolean === 1
-              ? "border-blue-600 bg-blue-100"
-              : "border-gray-300 bg-white"
+            ? "border-blue-600 bg-blue-100"
+            : "border-gray-300 bg-white"
             }`}
           onClick={() =>
             setSelectedOptionInput({ ...selectedOptionInput, correctAnswerBoolean: 1 })

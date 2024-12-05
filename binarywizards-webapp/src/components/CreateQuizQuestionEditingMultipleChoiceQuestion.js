@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 
-
-
-
 export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput }) {
   const [selectedOption, setSelectedOption] = useState(null);
 

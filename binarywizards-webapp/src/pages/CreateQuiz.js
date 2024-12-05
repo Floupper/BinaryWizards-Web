@@ -1,20 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
-import CreateQuizService from '../services/CreateQuizService';
-
 import Modal from 'react-modal';
-import CreateQuizzQuestion from '../components/CreateQuizQuestionEditing';
-
-import Navbar from '../components/Navbar';
-
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import QuestionInContainer from '../components/CreateQuizQuestionInContainer';
-import ImportQuestionTrivia from '../components/CreateQuizImportQuestionTrivia';
-import CreateQuizQuick from './CreateQuizQuick';
+import { toast } from "react-toastify";
 import QuizCreated from './CreateQuizCreated';
-import { MdDescription } from 'react-icons/md';
 import CreateQuizRegisteredPage from '../components/CreateQuizRegistered';
 
 Modal.setAppElement('#root');

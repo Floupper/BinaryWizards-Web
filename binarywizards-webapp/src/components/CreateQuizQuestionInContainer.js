@@ -1,4 +1,4 @@
-import '../assets/CreateQuizQuestionInContainer.css';
+
 
 export default function QuestionInContainer({ setTypeOfScreen, question_id, question_text, question_index, question_difficulty, question_category, setIdQuestionSelected, setModalOpen, handleSubmitDeleteQuestion, handleSelectedQuestionProgressBar }) {
   const handleSubmitEditQuestion = () => {
@@ -27,15 +27,15 @@ export default function QuestionInContainer({ setTypeOfScreen, question_id, ques
 
 
   return (
-    <div className="flex flex-col items-start gap-2 w-full">
+    <div className="flex flex-col items-center gap-2 ">
       <div className="text-lg font-bold text-gray-800">Question {question_index}</div>
-      <div className="flex items-start gap-2 w-full">
+      <div className="flex items-start gap-2">
         {/* Conteneur principal */}
         <div
-          className={`flex flex-col items-center justify-center w-full max-w-[320px] h-[150px] bg-gradient-to-r ${backgroundClass} rounded-lg p-2 shadow-lg cursor-pointer`}
+          className={`flex flex-col items-center justify-center w-full max-w-[320px] h-[150px] bg-gradient-to-r ${backgroundClass} rounded-lg p-2 shadow-lg cursor-pointer border-[#8B2DF1] border-2`}
           onClick={handleSubmitEditQuestion}
         >
-          <div className="text-l text-gray-800 text-center mb-2">
+          <div className="text-l text-white text-center ">
             {question_text || 'Write your question'}
           </div>
           <div className="flex justify-center items-center w-full h-12 overflow-hidden">
@@ -44,15 +44,16 @@ export default function QuestionInContainer({ setTypeOfScreen, question_id, ques
         </div>
 
         {/* Poubelle */}
-        <div className="flex items-end ml-2">
+        <div className="flex items-center ml-0">
           <button
             id={question_id}
-            className="text-red-500 text-lg transition-transform hover:scale-110 bg-transparent border-none"
+            className="flex items-center m-0 p-0 text-grey-500 text-2xl transition-transform bg-transparent border-none hover:bg-transparent"
             onClick={handleSubmitDeleteQuestion}
           >
             🗑️
           </button>
         </div>
+
       </div>
     </div>
   );
