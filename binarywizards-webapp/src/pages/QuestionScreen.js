@@ -102,6 +102,7 @@ export default function QuestionScreen() {
     score: score,
     question_index: questionIndex,
     nb_questions_total: nbQuestionsTotal,
+    difficulty: questionDifficulty,
   };
 
   if (loading) {

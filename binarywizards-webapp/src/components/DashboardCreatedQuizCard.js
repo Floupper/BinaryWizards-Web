@@ -23,7 +23,7 @@ export default function CreatedQuizCard({ quiz, route }) {
       createGameWithQuizId(quiz.quiz_id)
         .then(data => {
           if (data?.game_id) {
-            navigate(`${route}${data.game_id}`); 
+            navigate(`${route}${data.game_id}`);
           } else {
             console.error('Game creation failed.');
           }
