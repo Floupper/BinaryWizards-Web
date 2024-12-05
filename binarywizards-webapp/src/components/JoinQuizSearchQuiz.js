@@ -128,12 +128,12 @@ export default function JoinQuizSearchQuiz() {
                 ))}
 
                 {isFetchingNextPage && (
-                    <div className="text-lg text-gray-600 mt-3">Chargement de plus...</div>
+                    <div className="text-lg text-gray-600 mt-3">Load more...</div>
                 )}
 
                 {!isLoading &&
                     (!data?.pages || data.pages.flatMap((page) => page?.quizzes || []).length === 0) && (
-                        <div className="text-lg text-gray-600 text-center mt-3">Aucun quiz trouvé.</div>
+                        <div className="text-lg text-gray-600 text-center mt-3">No quiz found.</div>
                     )}
             </div>
             
@@ -142,7 +142,7 @@ export default function JoinQuizSearchQuiz() {
                     onClick={() => fetchNextPage()}
                     className="mt-3 px-6 py-2 bg-[#8B2DF1] text-white rounded-md hover:bg-[#7322c3] focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                    Charger Plus
+                    Load more
                 </button>
             )}
         </div>
