@@ -12,6 +12,12 @@ export const createGameWithQuizId = async (quizId) => {
   return response.data;
 };
 
+export const deleteQuiz = async (quizId) => {
+  const response = await axiosInstance.delete(`/quiz/${quizId}/`);
+  return response.data;
+};
+
+
 export const fetchSearchedQuiz = async ({ text = '', difficulty = '', minQuestions, maxQuestions, page = 1 }) => {
   try {
     // Dynamically build query parameters

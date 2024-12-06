@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createGameWithQuizId } from '../services/JoinQuizService';
+import { createGameWithQuizId, deleteQuiz } from '../services/JoinQuizService';
 import { toast } from 'react-toastify';
 
 export const renderDifficultyStars = (difficulty) => {
@@ -37,6 +37,23 @@ export default function CreatedQuizCard({ quiz, route }) {
     }
   };
 
+  const handleSubmitDeleteQuiz = () => {
+    deleteQuiz(quiz.quiz_id)
+      .then(data => {
+        if (data?.message) {
+          toast.success(data.message);
+          window.location.reload();
+        } else {
+          toast.error('Quiz deletion failed.');
+        }
+      })
+      .catch(error => {
+        toast.error('Error deleting quiz:', error);
+      });
+
+  };
+
+
   return (
     <div className="created-quiz-card p-4 bg-white border-2 border-gray-300 rounded-[32px] cursor-pointer hover:bg-gray-100 flex items-end w-[90rem] h-[10.063rem]" onClick={handleCardClick}>
       <div className="quiz-info flex items-end justify-between w-full h-full">
@@ -45,7 +62,10 @@ export default function CreatedQuizCard({ quiz, route }) {
         </div>
         <p className="text-sm">Difficulty: {renderDifficultyStars(quiz.difficulty)}</p>
         <p className="text-sm"> {quiz.total_questions} Questions</p>
+
       </div>
+
     </div>
+
   );
 }
