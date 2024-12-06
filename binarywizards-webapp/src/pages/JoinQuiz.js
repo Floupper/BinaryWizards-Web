@@ -70,7 +70,7 @@ export default function JoinQuiz() {
           ) : (
             <div className="w-full flex flex-col items-center">
               <div className="p-8 rounded-lg max-w-md w-full text-center">
-                <h1 className="text-4xl font-bold mb-6 text-white">Search Quiz</h1>
+                <h1 className="text-4xl font-bold mb-6 text-white">Play Quiz</h1>
                 <div className="form-group mb-4">
                   <input
                     type="text"
@@ -94,7 +94,7 @@ export default function JoinQuiz() {
                 <div className="w-full h-1 bg-[#8B2DF1] mb-4"></div>
                 <button
                   onClick={handleCreateQuiz}
-                  className="flex justify-center w-full bg-white text-black py-4 rounded-2xl hover:bg-gray-100 transition duration-300"
+                  className="flex justify-center w-full bg-black  text-white hover:bg-black hover:text-white py-4 rounded-2xl  transition duration-300"
                 >
                   Create Quiz
                   <EmojiProvider data={emojiData}>

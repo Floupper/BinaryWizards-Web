@@ -34,7 +34,7 @@ export default function Navbar() {
         ☰
       </button>
       <ul
-        className={`md:flex md:items-center md:gap-5 list-none ${isOpen
+        className={`mr-2 md:flex md:items-center md:gap-5 list-none ${isOpen
           ? "flex flex-col items-center justify-center absolute top-full left-0 w-full p-5 bg-white"
           : "hidden md:flex"
           }`}
@@ -115,7 +115,7 @@ export default function Navbar() {
             <li>
               <button
                 onClick={handleSignout}
-                className="bg-black text-white p-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0"
+                className="bg-black text-white p-3 m-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0 "
                 style={{
                   fontFamily: "Helvetica",
                   fontSize: "1.401rem",
@@ -132,8 +132,8 @@ export default function Navbar() {
               to="/signin"
               className={({ isActive }) =>
                 isActive
-                  ? "bg-black text-white p-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0"
-                  : "bg-black text-white p-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0"
+                  ? "bg-black text-white p-4 m-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0"
+                  : "bg-black text-white p-4 m-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0"
               }
               style={{
                 fontFamily: "Helvetica",
