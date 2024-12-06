@@ -1,36 +1,86 @@
-import config from '../config';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from '../utils/axiosInstance';
 
 const CreateQuizService = {
-  fetchCategories: () => {
-    return fetch(`${config.API_BASE_URL}categories`)
-      .then(response => response.json());
-  },
-  
-  fetchDifficulties: () => {
-    return fetch(`${config.API_BASE_URL}difficulties`)
-      .then(response => response.json());
+  fetchCategories: async () => {
+    return axiosInstance.get('/categories').then((response) => response.data);
   },
 
-  createQuiz: (quizData) => {
-    return fetch(`${config.API_BASE_URL}quiz`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(quizData),
-    })
-    .then(async response => {
-      if (!response.ok) {
-        // Recovers response data even in the event of an error
-        const errorData = await response.json();
-        
-        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    });
-  }
+  fetchDifficulties: async () => {
+    return axiosInstance.get('/difficulties').then((response) => response.data);
+  },
+
+  createAnonymeQuiz: async (quizData) => {
+    try {
+      return axiosInstance.post('/quiz', quizData).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error creating the quiz');
+    }
+  },
+
+  createQuiz: async (quizData, quizId) => {
+    try {
+
+      return axiosInstance.post(`/quiz/${quizId}`, quizData).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error creating the quiz');
+    }
+  },
+
+  updateQuestion: (questionData, quizId, questionId) => {
+    try {
+      return axiosInstance.post(`/quiz/${quizId}/${questionId}`, questionData).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error updating the question');
+    }
+  },
+
+  createQuestion: (questionData, quizId) => {
+    try {
+      return axiosInstance.post(`/quiz/${quizId}/create_question`, questionData).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error creating the question');
+    }
+  },
+
+  deleteQuestion: (quizId, questionId) => {
+    try {
+      return axiosInstance.delete(`/quiz/${quizId}/${questionId}`).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error deleting the question');
+    }
+  },
+
+  initQuiz: () => {
+    try {
+      return axiosInstance.post(`/quiz/init`).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error initializing the quiz');
+    }
+  },
+
+  fetchQuizDetails: (quizId) => {
+    try {
+      return axiosInstance.get(`quiz/${quizId}`).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error fetching the quiz details');
+    }
+  },
+
+  fetchQuestionDetails: (quizId, questionId) => {
+    try {
+      return axiosInstance.get(`quiz/${quizId}/${questionId}`).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error fetching the question details');
+    }
+  },
+
+  importQuestionTrivia: (questionData, quizId) => {
+    try {
+      return axiosInstance.post(`quiz/${quizId}/import_questions`, questionData).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error importing the questions');
+    }
+  },
 };
 
 export default CreateQuizService;

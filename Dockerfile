@@ -1,5 +1,5 @@
 # Stage 1: Build the React frontend
-FROM node:18 as build
+FROM node:18 AS build
 WORKDIR /app
 
 # Copy all files to the working directory
@@ -18,11 +18,10 @@ WORKDIR /app
 # Copy the build files from the first stage
 COPY --from=build /app/build ./build
 
-# Installer le package 'serve' pour servir l'application
-RUN npm install -g serve
+COPY ./binarywizards-webapp/server.js /app/server.js
 
-# Exposer le port 33034
-EXPOSE 33034
+# Installer le package 'express' pour servir l'application
+RUN npm install express
 
 # Lancer le serveur avec 'serve'
-CMD ["serve", "-s", "build", "-l", "33034"]
+CMD ["node", "server.js"]

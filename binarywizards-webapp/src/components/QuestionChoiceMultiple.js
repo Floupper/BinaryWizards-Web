@@ -1,37 +1,48 @@
-import '../assets/QuestionChoiceMultiple.css';
-
 export default function QuestionChoiceMultiple({ question_choice, correctOptionIndex, selectedQuestionId, isAnswered, onQuestionSelect }) {
   return (
-    <div className="QuestionChoiceMultiple">
-      {question_choice.map((choice, index) => {
-        // Initialize a variable for the button's class
+    <div className="QuestionChoiceMultiple  place-items-center grid justify-items-center grid-cols-2 gap-4">
+      {question_choice.map((choice) => {
+        const { option_index, option_text } = choice;
+
+
         let buttonClass = '';
 
-        // Apply the 'correct-answer' class to the correct answer
-        if (index === correctOptionIndex) {
-          buttonClass = 'correct-answer'; // Apply the class to the correct answer
+        if (option_index === correctOptionIndex) {
+          buttonClass = 'bg-green-100 border-green-500 text-green-700  ';
         }
 
-        // If the answer is incorrect, apply the 'incorrect-answer' class
-        if (selectedQuestionId !== null && correctOptionIndex !== null && selectedQuestionId === index && selectedQuestionId !== correctOptionIndex) {
-          buttonClass = 'incorrect-answer'; // Apply the 'incorrect-answer' class for an incorrect answer
+        if (
+          selectedQuestionId !== null &&
+          correctOptionIndex !== null &&
+          selectedQuestionId === option_index &&
+          selectedQuestionId !== correctOptionIndex
+        ) {
+          buttonClass = 'bg-red-100 border-red-500 text-red-700';
         }
 
         return (
-          <div key={index} className="choice">
+          <div key={option_index} className="flex items-center place-items-center min-w-[30vh]">
             <button
-              onClick={() => onQuestionSelect(index)}
-              className={`${selectedQuestionId === index ? 'selected-button' : ''} ${buttonClass}`}
+              onClick={() => onQuestionSelect(option_index)}
+              className={`
+                w-full px-6 py-3 text-center rounded-lg 
+                border-2 bg-white text-black 
+                hover:bg-gray-100 
+                transition-all duration-300 
+                ${selectedQuestionId === option_index ? ' font-bold' : ''}
+                ${buttonClass}
+              `}
               style={{
-                cursor: isAnswered ? 'not-allowed' : 'pointer', // Apply 'cursor: not-allowed' if the answer has been submitted
+                cursor: isAnswered ? 'not-allowed' : 'pointer',
               }}
-              disabled={isAnswered} // Disable the button once the answer is submitted
+              disabled={isAnswered}
             >
-              {choice}
+              {option_text}
             </button>
           </div>
         );
       })}
     </div>
   );
+
 }
