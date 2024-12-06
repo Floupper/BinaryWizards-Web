@@ -1,11 +1,12 @@
 import CreateQuizService from '../services/CreateQuizService';
 import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
 import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
-export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, resetCreateQuestionForm }) {
+export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions }) {
 
 
   const [selectedOptionInput, setSelectedOptionInput] = useState({
@@ -34,7 +35,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (resetCreateQuestionForm) {
+    if (refreshQuizQuestionEditing) {
+      setRefreshQuizQuestions(false);
 
       setQuestionText('Write your question');
       setSelectedOptionInput({
@@ -47,8 +49,9 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       setQuestionData();
       setQuizDifficulty('easy');
       setSelectedCategory('');
+
     }
-  }, [resetCreateQuestionForm]);
+  }, [refreshQuizQuestionEditing]);
 
 
   useEffect(() => {
