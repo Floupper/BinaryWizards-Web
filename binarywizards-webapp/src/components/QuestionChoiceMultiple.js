@@ -4,7 +4,7 @@ export default function QuestionChoiceMultiple({ question_choice, correctOptionI
       {question_choice.map((choice) => {
         const { option_index, option_text } = choice;
 
-        // Déterminer la classe du bouton en fonction de l'état
+
         let buttonClass = '';
 
         if (option_index === correctOptionIndex) {
