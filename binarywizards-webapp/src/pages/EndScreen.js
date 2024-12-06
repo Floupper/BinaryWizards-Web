@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createGameWithQuizId } from '../services/JoinQuizService';
 import Navbar from "../components/Navbar";
@@ -47,7 +47,6 @@ export default function EndScreen() {
       <div className="flex flex-col items-center justify-center"
         style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
       >
-        <ToastContainer />
         <div className="EndScreenContainer bg-white p-16 text-center"
           style={{
             borderRadius: "3.125rem", // 50px in rem

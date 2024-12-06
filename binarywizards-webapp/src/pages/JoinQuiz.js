@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from '../components/Navbar';
 import { checkGameExists } from '../services/JoinQuizService';
@@ -46,7 +46,6 @@ export default function JoinQuiz() {
         style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
       >
         <Navbar />
-        <ToastContainer />
         <div className="flex flex-1 items-center justify-center mt-5">
           {token ? (
             <div className="flex flex-col items-center">

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import QuestionHUD from '../components/QuestionHUD';
 import QuestionChoiceMultiple from '../components/QuestionChoiceMultiple';
 import { GetQuestion, PostAnswers } from '../services/QuestionService';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from '../components/Navbar';
 // Function for retrieving API data
@@ -112,9 +112,6 @@ export default function QuestionScreen() {
       <div className="mb-6 w-full">
         <QuestionHUD party_parameters={paramHUD} />
       </div>
-
-      <ToastContainer />
-
 
 
 
