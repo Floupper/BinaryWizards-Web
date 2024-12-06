@@ -22,13 +22,8 @@ export default function CreateQuiz() {
   }, []);
 
   if (quizIdRedicted !== 'any') {
-    if (quizId) {
-      navigate('/dashboard');
-    } else {
-      navigate('/quiz-created/' + quizIdRedicted);
+    navigate('/dashboard');
 
-    }
-    return null;
   }
   return (
     <div className=" min-h-screen bg-cover bg-center bg-[#F4F2EE] ">
