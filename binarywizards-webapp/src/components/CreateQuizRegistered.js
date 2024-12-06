@@ -44,7 +44,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     difficulty: 'easy',
     isPublic: false,
     title: '',
-    description: ''
+    description: '',
+    isPublic: false,
   });
 
 
@@ -91,6 +92,17 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           setQuizTitle(data.quiz.title || '');
           setQuizIsPublic(data.quiz.is_public || false);
           setQuizDifficulty(data.quiz.difficulty || '');
+
+          setQuiz((prevQuiz) => ({
+            ...prevQuiz,
+            description: data.quiz.description,
+            title: data.quiz.title,
+            isPublic: data.quiz.is_public,
+            difficulty: data.quiz.difficulty,
+          }));
+
+
+
         })
         .catch(error => toast.info('Error fetching quiz details:', error));
     }
@@ -155,7 +167,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       title: quiz.title,
       difficulty: quiz.difficulty,
       description: quiz.description,
-      type: isPublicQuiz ? 1 : 0,
+      type: quiz.isPublic ? 1 : 0,
     };
 
     CreateQuizService.createQuiz(quizData, quizId)
@@ -249,7 +261,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           </div>
           {/*  CreateQuizQuestionEditing */}
 
-          <div className="flex flex-col  row-span-2 col-start-2 col-span-2 rounded-lg pr-10">
+          <div className="flex flex-col  row-span-2 col-start-2 col-span-2 rounded-lg pr -10">
             <ProgressBar progress={progress} />
 
             <div>

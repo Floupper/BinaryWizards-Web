@@ -15,9 +15,11 @@ export default function DifficultyQuizStars({ initialDifficulty, onDifficultyCha
         }
     });
     const handleStarClick = (index) => {
-        setDifficultySelected(index + 1);
-        const newDifficulty = index + 1 === 1 ? 'easy' : index + 1 === 2 ? 'medium' : 'hard';
-        onDifficultyChange && onDifficultyChange(newDifficulty);
+        if (onDifficultyChange) {
+            setDifficultySelected(index + 1);
+            const newDifficulty = index + 1 === 1 ? 'easy' : index + 1 === 2 ? 'medium' : 'hard';
+            onDifficultyChange && onDifficultyChange(newDifficulty);
+        }
     };
 
     const totalStars = 3;
@@ -27,7 +29,7 @@ export default function DifficultyQuizStars({ initialDifficulty, onDifficultyCha
             key={index}
             onClick={() => handleStarClick(index)}
             style={{
-                cursor: 'pointer',
+                cursor: onDifficultyChange ? 'pointer' : 'default',
                 color: index < difficultySelected ? 'gold' : 'lightgray',
                 fontSize: '1.5em',
             }}
