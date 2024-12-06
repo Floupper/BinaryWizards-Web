@@ -16,7 +16,7 @@ export default function JoinQuiz() {
   const token = localStorage.getItem('token');
   const [gameCode, setGameCode] = useState('');
   const [isLoadingGame, setIsLoadingGame] = useState(false);
-  const [activeTab, setActiveTab] = useState('search');
+  const [activeTab, setActiveTab] = useState('resume');
   const navigate = useNavigate();
 
   const handleJoinGame = async () => {
@@ -51,17 +51,18 @@ export default function JoinQuiz() {
           {token ? (
             <div className="flex flex-col items-center">
               <div className="flex space-x-8 mb-8">
-                <button
-                  onClick={() => setActiveTab('search')}
-                  className={`text-xl font-bold ${activeTab === 'search' ? 'border-b-4 border-[#8B2DF1]' : ''}`}
-                >
-                  Search Quiz
-                </button>
+
                 <button
                   onClick={() => setActiveTab('resume')}
                   className={`text-xl font-bold ${activeTab === 'resume' ? 'border-b-4 border-[#8B2DF1]' : ''}`}
                 >
                   Resume Game
+                </button>
+                <button
+                  onClick={() => setActiveTab('search')}
+                  className={`text-xl font-bold ${activeTab === 'search' ? 'border-b-4 border-[#8B2DF1]' : ''}`}
+                >
+                  Search Quiz
                 </button>
               </div>
               {activeTab === 'search' ? <JoinQuizSearchQuiz /> : <JoinQuizResumeGame />}
@@ -88,7 +89,7 @@ export default function JoinQuiz() {
                   {isLoadingGame ? 'Playing...' : 'Play'}
                 </button>
               </div>
-              
+
               <div className="p-6 rounded-lg max-w-lg w-[20%] text-center mt-52">
                 <div className="w-full h-1 bg-[#8B2DF1] mb-4"></div>
                 <button
