@@ -8,7 +8,7 @@ import QuestionScreen from './pages/QuestionScreen.js';
 import Dashboard from './pages/Dashboard.js';
 import HistoryGamePlay from './pages/HistoryGamePlay';
 import QuizRecapScreen from './pages/QuizRecapScreen.js';
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EndScreen from './pages/EndScreen';
 import Navbar from './components/Navbar';

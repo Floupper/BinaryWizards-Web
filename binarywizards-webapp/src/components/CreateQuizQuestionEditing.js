@@ -1,6 +1,7 @@
 import CreateQuizService from '../services/CreateQuizService';
 import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
 import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
