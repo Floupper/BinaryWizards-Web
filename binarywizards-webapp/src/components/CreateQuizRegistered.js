@@ -92,6 +92,17 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           setQuizTitle(data.quiz.title || '');
           setQuizIsPublic(data.quiz.is_public || false);
           setQuizDifficulty(data.quiz.difficulty || '');
+
+          setQuiz((prevQuiz) => ({
+            ...prevQuiz,
+            description: data.quiz.description,
+            title: data.quiz.title,
+            isPublic: data.quiz.is_public,
+            difficulty: data.quiz.difficulty,
+          }));
+
+
+
         })
         .catch(error => toast.info('Error fetching quiz details:', error));
     }

@@ -64,10 +64,15 @@ const QuizRecapScreen = () => {
           <EmojiProvider data={emojiData}>
             <button
               className="absolute top-0 right-0 mt-2 mr-2 bg-none border-none"
-              onClick={() => navigate('/')}
+              onClick={() => {
+
+                navigate('/create-quiz', { state: { quizId: quizId } });
+
+              }}
             >
               <Emoji name="paintbrush" width={30} />
             </button>
+
           </EmojiProvider>
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-4">
             <h2 className="text-2xl font-semibold text-black break-words mr-4">{quizDetails.title}</h2>
