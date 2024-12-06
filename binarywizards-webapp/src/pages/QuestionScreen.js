@@ -106,14 +106,6 @@ export default function QuestionScreen() {
     category: questionCategory,
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center">
       <Navbar />
