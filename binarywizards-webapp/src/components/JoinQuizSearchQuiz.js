@@ -150,7 +150,7 @@ export default function JoinQuizSearchQuiz() {
             >
                 {data?.pages?.flatMap((page) => page?.quizzes || []).map((item) => (
                     <JoinQuizCard
-                        key={item.id}
+                        key={item.quiz_id}
                         quiz={item}
                         route={'/question/'}
                         className="mb-4"
