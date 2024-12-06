@@ -5,7 +5,7 @@ import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoic
 import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
-export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, resetCreateQuestionForm }) {
+export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions }) {
 
 
   const [selectedOptionInput, setSelectedOptionInput] = useState({
@@ -34,7 +34,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (resetCreateQuestionForm) {
+    if (refreshQuizQuestionEditing) {
+      setRefreshQuizQuestions(false);
 
       setQuestionText('Write your question');
       setSelectedOptionInput({
@@ -47,8 +48,9 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       setQuestionData();
       setQuizDifficulty('easy');
       setSelectedCategory('');
+
     }
-  }, [resetCreateQuestionForm]);
+  }, [refreshQuizQuestionEditing]);
 
 
   useEffect(() => {

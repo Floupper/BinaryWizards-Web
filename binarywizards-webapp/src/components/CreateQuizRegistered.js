@@ -48,6 +48,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     isPublic: false,
   });
 
+  const [refreshQuizQuestionEditing, setRefreshQuizQuestions] = useState('false');
 
 
   let initialized = false;
@@ -131,12 +132,13 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     setIdQuestionSelectedForProgress(questionId);
   };
   const resetCreateQuestionForm = () => {
+    setRefreshQuizQuestions(false);
     setTypeOfScreen('create');
     setIdQuestionSelected('');
   }
   const handleSubmitCreateQuestion = (event) => {
     setTypeOfScreen('create');
-    resetCreateQuestionForm();
+    setRefreshQuizQuestions(true);
     setIdQuestionSelected('');
   };
   const handleSubmitImportTrivia = (event) => {
@@ -271,7 +273,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                 quizId={quizId}
                 questionId={idQuestionSelected}
                 refreshQuizQuestions={refreshQuizQuestions}
-                resetCreateQuestionForm={resetCreateQuestionForm}
+                refreshQuizQuestionEditing={refreshQuizQuestionEditing}
+                setRefreshQuizQuestions={setRefreshQuizQuestions}
               />
             </div>
           </div>
