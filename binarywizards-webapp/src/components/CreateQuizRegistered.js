@@ -263,7 +263,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           </div>
           {/*  CreateQuizQuestionEditing */}
 
-          <div className="flex flex-col  row-span-2 col-start-2 col-span-2 rounded-lg pr -10">
+          <div className="flex flex-col  row-span-2 col-start-2 col-span-2 rounded-lg pr-10 ">
             <ProgressBar progress={progress} />
 
             <div>
