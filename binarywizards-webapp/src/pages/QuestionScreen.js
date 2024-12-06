@@ -103,6 +103,7 @@ export default function QuestionScreen() {
     question_index: questionIndex,
     nb_questions_total: nbQuestionsTotal,
     difficulty: questionDifficulty,
+    category: questionCategory,
   };
 
   if (loading) {
@@ -114,35 +115,50 @@ export default function QuestionScreen() {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center">
       <Navbar />
+      <div className="mb-6 w-full">
+        <QuestionHUD party_parameters={paramHUD} />
+      </div>
 
-      <div className="QuestionScreen">
-        <ToastContainer />
-        <div className="HUD">
-          <QuestionHUD party_parameters={paramHUD} />
-        </div>
+      <ToastContainer />
 
-        <h1 className="Question">{questionText}</h1>
+      {/* Barre HUD */}
 
-        <div className="Answers">
-          <QuestionChoiceMultiple
-            question_choice={options}
-            correctOptionIndex={idCorrectAnswers}
-            onQuestionSelect={handleQuestionSelect}
-            selectedQuestionId={selectedQuestionId}
-            isAnswered={isAnswered}  // Pass the state of the answer submission
-          />
 
+      {/* Zone de question */}
+      <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg  ">
+        <div className="flex flex-col items-center space-y-6  flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  w-[110vh] h-[50vh] ">
+          <h1 className="Question text-3xl font-bold text-center text-black flex items-center space-x-2">
+            <span>{questionText}</span>
+          </h1>
+
+          {/* Réponses */}
+          <div className="flex justify-center">
+            <div className="  ">
+              <QuestionChoiceMultiple
+                question_choice={options}
+                correctOptionIndex={idCorrectAnswers}
+                onQuestionSelect={handleQuestionSelect}
+                selectedQuestionId={selectedQuestionId}
+                isAnswered={isAnswered} // Pass the state of the answer submission
+              />
+            </div>
+          </div>
+          {/* Bouton suivant */}
           <button
-            className={`validate-button ${!isAnswered ? 'disabled' : ''}`}
+            className={`px-6 py-3 rounded-lg text-white text-lg font-medium ${isAnswered
+              ? 'bg-black hover:bg-gray-800'
+              : 'bg-gray-400 cursor-not-allowed'
+              }`}
             onClick={handleReload}
-            disabled={!isAnswered}  // Disables the button if no answer is selected
+            disabled={!isAnswered} // Désactive le bouton si aucune réponse n'est validée
           >
-            Next
+            {isAnswered ? 'Next question' : 'Next question'}
           </button>
         </div>
+
       </div>
-    </div>
+    </div >
   );
 }

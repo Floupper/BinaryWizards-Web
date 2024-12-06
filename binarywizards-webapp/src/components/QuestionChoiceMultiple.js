@@ -1,32 +1,37 @@
 export default function QuestionChoiceMultiple({ question_choice, correctOptionIndex, selectedQuestionId, isAnswered, onQuestionSelect }) {
   return (
-    <div className="QuestionChoiceMultiple">
+    <div className="QuestionChoiceMultiple  place-items-center grid justify-items-center grid-cols-2 gap-4">
       {question_choice.map((choice) => {
         const { option_index, option_text } = choice;
 
-        // Initialize a variable for the button's class
+        // Déterminer la classe du bouton en fonction de l'état
         let buttonClass = '';
 
-        // Apply the 'correct-answer' class to the correct answer
         if (option_index === correctOptionIndex) {
-          buttonClass = 'correct-answer';
+          buttonClass = 'bg-green-100 border-green-500 text-green-700  ';
         }
 
-        // Apply the 'incorrect-answer' class if the selected answer is wrong
         if (
           selectedQuestionId !== null &&
           correctOptionIndex !== null &&
           selectedQuestionId === option_index &&
           selectedQuestionId !== correctOptionIndex
         ) {
-          buttonClass = 'incorrect-answer';
+          buttonClass = 'bg-red-100 border-red-500 text-red-700';
         }
 
         return (
-          <div key={option_index} className="choice">
+          <div key={option_index} className="flex items-center place-items-center min-w-[30vh]">
             <button
               onClick={() => onQuestionSelect(option_index)}
-              className={`${selectedQuestionId === option_index ? 'selected-button' : ''} ${buttonClass}`}
+              className={`
+                w-full px-6 py-3 text-center rounded-lg 
+                border-2 bg-white text-black 
+                hover:bg-gray-100 
+                transition-all duration-300 
+                ${selectedQuestionId === option_index ? ' font-bold' : ''}
+                ${buttonClass}
+              `}
               style={{
                 cursor: isAnswered ? 'not-allowed' : 'pointer',
               }}
@@ -39,4 +44,5 @@ export default function QuestionChoiceMultiple({ question_choice, correctOptionI
       })}
     </div>
   );
+
 }
