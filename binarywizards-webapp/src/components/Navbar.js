@@ -12,6 +12,9 @@ export default function Navbar() {
     localStorage.removeItem("token");
     navigate("/");
   };
+  const handleSignin = () => {
+    navigate("/signin");
+  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -48,11 +51,13 @@ export default function Navbar() {
                 "flex items-center")
             }
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+            
           >
             <EmojiProvider data={emojiData}>
               <Emoji name="waving-hand" width={20} />
             </EmojiProvider>
-            Play
+            <p className="ml-2">Play</p>
+            
           </NavLink>
         </li>
         <li className="flex items-center">
@@ -65,7 +70,8 @@ export default function Navbar() {
             <EmojiProvider data={emojiData}>
               <Emoji name="mobile-phone-with-arrow" width={20} />
             </EmojiProvider>
-            Download
+            
+            <p className="ml-2">Download</p>
           </a>
         </li>
         <li className="flex items-center">
@@ -80,7 +86,7 @@ export default function Navbar() {
             <EmojiProvider data={emojiData}>
               <Emoji name="paintbrush" width={20} />
             </EmojiProvider>
-            Create Quiz
+            <p className="ml-2">Create Quiz</p>
           </NavLink>
         </li>
 
@@ -98,7 +104,7 @@ export default function Navbar() {
                 }
                 style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
               >
-                Create quick Quiz
+                <p className="ml-2">Create quick Quiz</p>
               </NavLink>
             </li>
             <li>
@@ -115,7 +121,7 @@ export default function Navbar() {
             <li>
               <button
                 onClick={handleSignout}
-                className="bg-black text-white p-3 m-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0 "
+                className="bg-black text-white rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0 w-36 h-16"
                 style={{
                   fontFamily: "Helvetica",
                   fontSize: "1.401rem",
@@ -128,21 +134,19 @@ export default function Navbar() {
           </>
         ) : (
           <li>
-            <NavLink
-              to="/signin"
-              className={({ isActive }) =>
-                isActive
-                  ? "bg-black text-white p-4 m-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0"
-                  : "bg-black text-white p-4 m-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0"
-              }
-              style={{
-                fontFamily: "Helvetica",
-                fontSize: "1.401rem",
-                borderRadius: "1.778rem",
-              }}
-            >
-              Sign in
-            </NavLink>
+            <li>
+              <button
+                onClick={handleSignin}
+                className="bg-black text-white rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0 w-36 h-16"
+                style={{
+                  fontFamily: "Helvetica",
+                  fontSize: "1.401rem",
+                  borderRadius: "1.778rem",
+                }}
+              >
+                sign in
+              </button>
+          </li>
           </li>
         )}
       </ul>
