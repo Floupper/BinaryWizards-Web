@@ -6,7 +6,7 @@ import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoic
 import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
-export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions }) {
+export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
 
 
   const [selectedOptionInput, setSelectedOptionInput] = useState({
@@ -146,20 +146,32 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
         options.push(
           {
-            option_text: "True",
+            option_content: {
+              content: "True",
+              type: 'text'
+            },
             is_correct_answer: selectedOptionInput.correctAnswerBoolean === 1,
+            option_index: 0
           },
           {
-            option_text: "False",
+            option_content: {
+              content: "False",
+              type: 'text'
+            },
             is_correct_answer: selectedOptionInput.correctAnswerBoolean === 0,
+            option_index: 1
           }
         );
       } else if (questionType === 'multiple') {
-
         options.push(
+
           ...selectedOptionInput.choices.map((choice, index) => ({
-            option_text: choice,
+            option_content: {
+              type: 'text',
+              content: choice
+            },
             is_correct_answer: selectedOptionInput.correctAnswerMultiple === index,
+            option_index: index
           }))
         );
       } else {
@@ -181,12 +193,14 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
         : CreateQuizService.createQuestion;
 
 
-      await action(requestBody, quizId, questionId);
+      const data = await action(requestBody, quizId, questionId);
+
 
 
       toast.success(
         `Question successfully ${TypeOfScreen ? "updated" : "created"}!`
       );
+      handleSelectedQuestionAfterCreate(data.question_id);
       refreshQuizQuestions();
     } catch (error) {
 
@@ -206,55 +220,10 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg  ">
-        <div className="flex flex-col flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[50vh] ">
-          {/* Editable Question */}
-          <div className="flex items-center items-center justify-center text-center mb-6">
-            {!isEditing ? (
-              <h1
-                className="text-2xl font-bold text-gray-800 cursor-pointer hover:underline "
-                onClick={handleEditClick}
-              >
-                {questionText}
-              </h1>
-            ) : (
-              <input
-                type="text"
-                value={questionText}
-                onChange={(e) => setQuestionText(e.target.value)}
-                onBlur={handleBlur}
-                autoFocus
-                className="text-2xl font-bold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
-              />
-            )}
-          </div>
-
-          {/* Options */}
-          <div className="flex  justify-center">
-            {questionType === "multiple" ? (
-              <MultipleChoiceQuestion
-
-                selectedOptionInput={selectedOptionInput}
-                setSelectedOptionInput={setSelectedOptionInput}
-              />
-            ) : (
-              <BooleanChoiceQuestion
-                selectedOptionInput={selectedOptionInput}
-                setSelectedOptionInput={setSelectedOptionInput}
-              />
-            )}
-          </div>
-
-
-
-
-
-        </div >
-      </div>
       <div className="flex items-baseline justify-center space-x-6 mt-6 flex-wrap">
         {/* Question Type */}
         <div className="flex items-baseline space-x-4">
-          <span className="text-lg font-medium text-gray-700 whitespace-nowrap">Question Type</span>
+          <span className="text-lg font-medium text-gray-700 whitespace-nowrap mb-[5vh]">Question Type</span>
           <div className="flex items-baseline space-x-4">
             <button
               onClick={() => setQuestionType("boolean")}
@@ -328,6 +297,52 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           </button>
         </div>
       </div>
+      <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg  ">
+        <div className="flex flex-col flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[50vh] ">
+          {/* Editable Question */}
+          <div className="flex items-center items-center justify-center text-center mb-6">
+            {!isEditing ? (
+              <h1
+                className="text-2xl font-bold text-gray-800 cursor-pointer hover:underline "
+                onClick={handleEditClick}
+              >
+                {questionText}
+              </h1>
+            ) : (
+              <input
+                type="text"
+                value={questionText}
+                onChange={(e) => setQuestionText(e.target.value)}
+                onBlur={handleBlur}
+                autoFocus
+                className="text-2xl font-bold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
+              />
+            )}
+          </div>
+
+          {/* Options */}
+          <div className="flex  justify-center">
+            {questionType === "multiple" ? (
+              <MultipleChoiceQuestion
+
+                selectedOptionInput={selectedOptionInput}
+                setSelectedOptionInput={setSelectedOptionInput}
+              />
+            ) : (
+              <BooleanChoiceQuestion
+                selectedOptionInput={selectedOptionInput}
+                setSelectedOptionInput={setSelectedOptionInput}
+              />
+            )}
+          </div>
+
+
+
+
+
+        </div >
+      </div>
+
     </div>
   );
 };
