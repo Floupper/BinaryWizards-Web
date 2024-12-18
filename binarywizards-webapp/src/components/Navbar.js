@@ -27,7 +27,7 @@ export default function Navbar() {
           to="/"
           className={({ isActive }) => (isActive ? "text-black" : "")}
         >
-          Quiz
+          Mogula
         </NavLink>
       </div>
       <button
