@@ -3,7 +3,7 @@ import CreateQuizService from '../services/CreateQuizService';
 import Modal from 'react-modal';
 import CreateQuizzQuestion from './CreateQuizQuestionEditing';
 import { toast } from "react-toastify";
-import QuestionInContainer from './CreateQuizQuestionInContainer';
+import QuestionInContainer, { QuestionInContainerDefault } from './CreateQuizQuestionInContainer';
 import ImportQuestionTrivia from './CreateQuizImportQuestionTrivia';
 import CreateQuizNavbar from './CreateQuizNavbar';
 import ProgressBar from './ProgressBar';
@@ -125,6 +125,10 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     }
   }, [quizIsPublic]);
 
+  const handleSelectedQuestionAfterCreate = (questionId) => {
+    setTypeOfScreen('edit');
+    setIdQuestionSelected(questionId);
+  };
 
 
   const handleSelectedQuestionProgressBar = (questionId) => {
@@ -217,18 +221,21 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
         <div className=" grid min-grid-rows-[70vh_1fr_2fr] grid-flow-col max-h-[70vh] pl-4">
 
-          <div className=" flex flex-col max-h-30 
-           gap-4 overflow-y-auto  scrollbar-thin scrollbar-thumb-gray-500 mr-5 ">
-            <div className="flex items-center  flex-col gap-4  scrollbar-thin scrollbar-thumb-gray-500 p-0">
+          <div
+            className="flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 mr-5 bg-white rounded-md p-4 shadow-lg h-[60vh]"
 
-              <div className="flex flex-col gap-4 w-[35vh]">
+          >
+            <div
+              className="flex items-center flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-500 p-0"
+
+            >
+
+              <div className="flex flex-col gap-4 w-[35vh] ">
                 {quizQuestions.map((question) => (
                   <QuestionInContainer
 
                     key={question.question_id}
                     question_text={question.question_text}
-                    question_difficulty={question.question_difficulty}
-                    question_category={question.question_category}
                     question_id={question.question_id}
                     question_index={question.question_index || 0}
                     setIdQuestionSelected={setIdQuestionSelected}
@@ -238,12 +245,18 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                     handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}
                   />
                 ))}
+                {TypeOfScreen === 'create' ?
+                  <QuestionInContainerDefault />
+
+
+                  : <div></div>}
+
               </div>
             </div>
 
           </div>
           <div className="size-full flex justify-center items-center pr-4 mr-5 ">
-            <div className="flex flex-col justify-center  w-[30vh] row-span-1 row-start-2 col-end-1 ">
+            <div className="flex flex-col justify-center  w-[30vh] row-span-1 row-start-2 col-end-1 bg-white rounded-md m-2 p-4 shadow-lg">
 
 
               <button
@@ -275,6 +288,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                 refreshQuizQuestions={refreshQuizQuestions}
                 refreshQuizQuestionEditing={refreshQuizQuestionEditing}
                 setRefreshQuizQuestions={setRefreshQuizQuestions}
+                handleSelectedQuestionAfterCreate={handleSelectedQuestionAfterCreate}
               />
             </div>
           </div>
