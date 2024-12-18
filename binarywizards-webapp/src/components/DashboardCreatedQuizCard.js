@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createGameWithQuizId, deleteQuiz } from '../services/JoinQuizService';
+import { createGameWithQuizId } from '../services/JoinQuizService';
 import { toast } from 'react-toastify';
 
 export const renderDifficultyStars = (difficulty) => {
@@ -37,35 +37,16 @@ export default function CreatedQuizCard({ quiz, route }) {
     }
   };
 
-  const handleSubmitDeleteQuiz = () => {
-    deleteQuiz(quiz.quiz_id)
-      .then(data => {
-        if (data?.message) {
-          toast.success(data.message);
-          window.location.reload();
-        } else {
-          toast.error('Quiz deletion failed.');
-        }
-      })
-      .catch(error => {
-        toast.error('Error deleting quiz:', error);
-      });
-
-  };
-
-
   return (
-    <div className="created-quiz-card p-4 bg-white border-2 border-gray-300 rounded-[32px] cursor-pointer hover:bg-gray-100 flex items-end w-[90rem] h-[10.063rem]" onClick={handleCardClick}>
-      <div className="quiz-info flex items-end justify-between w-full h-full">
-        <div className="flex quiz-title bg-white/50 rounded-[32px] p-2 border-2 border-black w-[25%] h-full items-center justify-center">
-          <h3 className="text-lg font-bold text-black text-center break-all">Title: {quiz.title}</h3>
-        </div>
-        <p className="text-sm">Difficulty: {renderDifficultyStars(quiz.difficulty)}</p>
-        <p className="text-sm"> {quiz.total_questions} Questions</p>
-
+    <div className="created-quiz-card p-6 bg-white rounded-3xl border-2 border-[#000000] cursor-pointer hover:bg-gray-100 flex flex-col items-center justify-between w-[24rem] h-[28rem] m-3" onClick={handleCardClick}>
+      <div className="quiz-title bg-white text-[#8B2DF1] border-2 border-[#8B2DF1] rounded-lg px-4 py-2 mb-3 text-center w-full">
+        <h3 className="text-2xl font-bold truncate">{quiz.title}</h3>
       </div>
-
+      <p className="text-lg mb-2">Difficulty: {renderDifficultyStars(quiz.difficulty)}</p>
+      <p className="text-lg mb-2">{quiz.total_questions} Questions</p>
+      <div className="flex justify-end items-center w-full">
+        <span className="text-yellow-500 text-2xl">⭐</span>
+      </div>
     </div>
-
   );
 }
