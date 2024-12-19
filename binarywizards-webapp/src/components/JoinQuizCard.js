@@ -20,8 +20,24 @@ export default function JoinQuizCard({ quiz, route }) {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
+<<<<<<< b6c68c27e9c6e44accea48823c4a1eb74ff7401f
     if (route === "/question/") {
       setIsModalOpen(true);
+=======
+    if (route === `/question/`) {
+      console.log('quiz:', quiz);
+      createGameWithQuizId(quiz.quiz_id)
+        .then(data => {
+          if (data?.game_id) {
+            navigate(`${route}${data.game_id}`); 
+          } else {
+            console.error('Game creation failed.');
+          }
+        })
+        .catch(error => {
+          console.error('Error creating game:', error);
+        });
+>>>>>>> a90d49203f1efbac25faab2ef7b2a56e19614344
     } else {
       navigate(route);
     }
