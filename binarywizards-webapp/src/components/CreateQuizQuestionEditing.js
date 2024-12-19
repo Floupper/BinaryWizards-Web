@@ -77,7 +77,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           setQuestionText(data.question.question_text);
           setQuizDifficulty(data.question.question_difficulty);
           setSelectedCategory(data.question.question_category);
-          console.log(questionOptions.option_content);
+
           if (questionOptions.option_content === undefined) {
             toast.error('Error :(');
             return;
@@ -168,7 +168,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           }
         );
       } else if (questionType === 'multiple') {
-        console.log("VERIF", selectedOptionInput);
+
         options.push(
 
           ...selectedOptionInput.choices.map((choice, index) => ({

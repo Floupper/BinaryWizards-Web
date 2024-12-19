@@ -2,7 +2,7 @@ import React from "react";
 
 export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput }) {
   // Initialisation si aucune réponse n'existe
-  console.log(selectedOptionInput);
+
   if (!selectedOptionInput.choices || selectedOptionInput.choices.length === 0) {
     setSelectedOptionInput((prevState) => ({
       ...prevState,
