@@ -37,13 +37,13 @@ export default function Navbar() {
         ☰
       </button>
       <ul
-        className={`mr-2 md:flex md:items-center md:gap-5 list-none ${isOpen
+        className={`mr-2 md:flex md:items-center md:gap-5 list-none  ${isOpen
           ? "flex flex-col items-center justify-center absolute top-full left-0 w-full p-5 bg-white"
           : "hidden md:flex"
           }`}
       >
 
-        <li className="flex items-center">
+        <li className="flex items-center mr-5">
           <NavLink
             to="/"
             className={
@@ -60,7 +60,7 @@ export default function Navbar() {
             
           </NavLink>
         </li>
-        <li className="flex items-center">
+        <li className="flex items-center mr-5">
           <a
             href="https://expo.dev/artifacts/eas/5gEMQTEd1ZfvhicxFnmkjT.apk"
             download
@@ -74,7 +74,7 @@ export default function Navbar() {
             <p className="ml-2">Download</p>
           </a>
         </li>
-        <li className="flex items-center">
+        <li className="flex items-center mr-5">
           <NavLink
             to="/create-quiz"
             className={
@@ -93,7 +93,7 @@ export default function Navbar() {
 
         {token ? (
           <>
-            <li className="flex items-center">
+            <li className="flex items-center mr-5">
               <EmojiProvider data={emojiData}>
                 <Emoji name="paintbrush" width={20} />
               </EmojiProvider>
@@ -107,7 +107,7 @@ export default function Navbar() {
                 <p className="ml-2">Create quick Quiz</p>
               </NavLink>
             </li>
-            <li>
+            <li className="flex items-center mr-5">
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) =>
@@ -118,7 +118,7 @@ export default function Navbar() {
                 Dashboard
               </NavLink>
             </li>
-            <li>
+            <li className="flex items-center mr-5">
               <button
                 onClick={handleSignout}
                 className="bg-black text-white rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0 w-36 h-16"
@@ -133,8 +133,8 @@ export default function Navbar() {
             </li>
           </>
         ) : (
-          <li>
-            <li>
+          
+            <li className="flex items-center">
               <button
                 onClick={handleSignin}
                 className="bg-black text-white rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0 w-36 h-16"
@@ -147,7 +147,7 @@ export default function Navbar() {
                 sign in
               </button>
           </li>
-          </li>
+          
         )}
       </ul>
     </nav>
