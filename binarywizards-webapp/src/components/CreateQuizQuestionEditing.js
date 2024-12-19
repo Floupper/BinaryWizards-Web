@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
 import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
+import QuestionInContainer from './CreateQuizQuestionInContainer';
 
 export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
 
@@ -77,17 +78,21 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           setQuizDifficulty(data.question.question_difficulty);
           setSelectedCategory(data.question.question_category);
 
+          if (questionOptions.option_content === undefined) {
+            toast.error('Error :(');
+            return;
+          }
           setSelectedOptionInput((prevState) => {
             const isMultiple = data.question.question_type === 'multiple';
 
 
             const choices = isMultiple
-              ? data.question.options.map((option) => option.option_text)
+              ? data.question.options.map((option) => option.option_content.content)
               : ['', '', '', ''];
 
 
             const correctAnswerBoolean = !isMultiple
-              ? data.question.options.find((option) => option.is_correct_answer)?.option_text === 'True'
+              ? data.question.options.find((option) => option.is_correct_answer)?.option_content.content === 'True'
                 ? 1
                 : 0
               : null;
@@ -163,6 +168,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           }
         );
       } else if (questionType === 'multiple') {
+
         options.push(
 
           ...selectedOptionInput.choices.map((choice, index) => ({
