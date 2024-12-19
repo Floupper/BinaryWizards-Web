@@ -1,19 +1,18 @@
 import React from "react";
 
 export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput }) {
-  // Initialisation si aucune réponse n'existe
+
 
   if (!selectedOptionInput.choices || selectedOptionInput.choices.length === 0) {
     setSelectedOptionInput((prevState) => ({
       ...prevState,
-      choices: ["", ""], // Commencer avec deux réponses vides
-      correctAnswerMultiple: 0, // Sélectionner automatiquement la première option
+      choices: ["", ""],
+      correctAnswerMultiple: 0,
     }));
   }
 
-  // Gérer le changement de texte des réponses
   const handleChangeAnswerText = (event, index) => {
-    const value = event.target.value || ""; // Toujours une valeur définie
+    const value = event.target.value || "";
 
     setSelectedOptionInput((prevState) => ({
       ...prevState,
@@ -23,30 +22,30 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
     }));
   };
 
-  // Ajouter une nouvelle réponse (max 8)
+
   const handleAddOption = () => {
     if (selectedOptionInput.choices.length < 8) {
       setSelectedOptionInput((prevState) => ({
         ...prevState,
-        choices: [...prevState.choices, ""], // Nouvelle option par défaut vide
+        choices: [...prevState.choices, ""],
       }));
     }
   };
 
-  // Supprimer une réponse (min 2)
+
   const handleRemoveOption = (index) => {
     if (selectedOptionInput.choices.length > 2) {
       setSelectedOptionInput((prevState) => {
         const updatedChoices = prevState.choices.filter((_, i) => i !== index);
 
-        // Ajuster la bonne réponse si nécessaire
+
         let updatedCorrectAnswer = prevState.correctAnswerMultiple;
 
         if (prevState.correctAnswerMultiple === index) {
-          // Si l'option sélectionnée est supprimée, choisir une autre option
+
           updatedCorrectAnswer = Math.max(0, index - 1);
         } else if (prevState.correctAnswerMultiple > index) {
-          // Ajuster l'index si une réponse précédente est supprimée
+
           updatedCorrectAnswer -= 1;
         }
 
@@ -64,7 +63,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
       <div className="grid justify-items-center grid-cols-2 gap-4 ">
         {selectedOptionInput.choices.map((choice, id) => (
           <div key={id} className="flex items-center">
-            {/* Radio button pour sélectionner la bonne réponse */}
+
             <input
               type="radio"
               name="multipleChoice"
@@ -75,10 +74,10 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
               }
             />
 
-            {/* Input pour le texte de la réponse */}
+
             <input
               type="text"
-              value={choice || ""} // Toujours une valeur définie
+              value={choice || ""}
               onChange={(e) => handleChangeAnswerText(e, id)}
               placeholder={`Option ${id + 1}`}
               className={`p-3 ml-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${selectedOptionInput.correctAnswerMultiple === id
@@ -87,11 +86,11 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
                 }`}
             />
 
-            {/* Bouton pour supprimer une réponse */}
+
             <button
               onClick={() => handleRemoveOption(id)}
               className="ml-2 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
-              disabled={selectedOptionInput.choices.length <= 2} // Désactiver si 2 réponses
+              disabled={selectedOptionInput.choices.length <= 2}
             >
               X
             </button>
@@ -99,7 +98,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
         ))}
       </div>
 
-      {/* Bouton pour ajouter une nouvelle option */}
+
       <div className="mt-4">
         <button
           onClick={handleAddOption}
@@ -107,7 +106,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
             ? "bg-gray-400 cursor-not-allowed"
             : "bg-blue-500 hover:bg-blue-600"
             }`}
-          disabled={selectedOptionInput.choices.length >= 8} // Désactiver si 8 réponses
+          disabled={selectedOptionInput.choices.length >= 8}
         >
           Add Option
         </button>
