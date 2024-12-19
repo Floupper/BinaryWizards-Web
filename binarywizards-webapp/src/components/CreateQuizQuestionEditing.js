@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
 import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
+import QuestionInContainer from './CreateQuizQuestionInContainer';
 
 export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
 
@@ -76,7 +77,11 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           setQuestionText(data.question.question_text);
           setQuizDifficulty(data.question.question_difficulty);
           setSelectedCategory(data.question.question_category);
-
+          console.log(questionOptions.option_content);
+          if (questionOptions.option_content === undefined) {
+            toast.error('Error :(');
+            return;
+          }
           setSelectedOptionInput((prevState) => {
             const isMultiple = data.question.question_type === 'multiple';
 
