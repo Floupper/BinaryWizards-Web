@@ -97,7 +97,6 @@ export default function QuestionScreen() {
       setIsAnswered(false);
       setSkiped(false);
       setIdCorrectAnswers(null);
-      console.log(data.time_available)
 
       chronoRef.current?.resetTimer(data.time_available);
     } catch (error) {

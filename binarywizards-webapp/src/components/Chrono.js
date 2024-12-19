@@ -32,7 +32,6 @@ const Chrono = forwardRef(({ sendResponse }, ref) => {
 
   // Function to reset the timer with a new available time
   const resetTimer = (timeAvailable) => {
-    console.log(timeAvailable)
     stopTimer();
     startTimer(timeAvailable); // Restart the timer with the available time
   };
