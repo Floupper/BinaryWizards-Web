@@ -23,9 +23,9 @@ export default function Dashboard() {
   }, [userId]);
 
   return (
-    <div className="bg-[#F4F2EE] min-h-screen ">
+    <div className="bg-[#F4F2EE] min-h-screen w-screen">
       <Navbar />
-      <div className="p-6">
+      <div className="p-6 w-full">
         <div className="flex space-x-4 mb-4">
           <button
             className={`px-4 py-2 rounded-md font-semibold font-helvetica hover:bg-black hover:text-white ${activeTab === 'created' ? 'bg-black text-white' : 'bg-white text-black'}`}
@@ -42,16 +42,16 @@ export default function Dashboard() {
             Your Played Quizzes
           </button>
         </div>
-        <div className="quiz-list max-h-[43.75rem] max-w-[100rem] overflow-y-auto">
+        <div className="quiz-list max-h-[43.75rem] w-full overflow-y-auto">
           {activeTab === 'created' && (
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {userQuizzes.map((quiz) => (
                 <CreatedQuizCard key={quiz.id} quiz={quiz} route={`/dashboard/detail-create-quiz/${quiz.id}`} />
               ))}
             </div>
           )}
           {activeTab === 'played' && (
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {playedQuizzes.map((quiz) => (
                 <PlayedQuizCard key={quiz.game_id} quiz={quiz} />
               ))}
