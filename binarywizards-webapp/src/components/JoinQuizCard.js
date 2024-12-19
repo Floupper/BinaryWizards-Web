@@ -20,6 +20,7 @@ export default function JoinQuizCard({ quiz, route }) {
 
   const handleCardClick = () => {
     if (route === `/question/`) {
+      console.log('quiz:', quiz);
       createGameWithQuizId(quiz.quiz_id)
         .then(data => {
           if (data?.game_id) {

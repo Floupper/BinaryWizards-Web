@@ -13,31 +13,39 @@ export default function PlayedQuizCard({ quiz }) {
   const handleCardClick = () => {
     if (quiz.nb_questions_total === quiz.current_question_index) {
       createGameWithQuizId(quiz.quiz_id)
-        .then(data => navigate(`/question/${data.game_id}`))
-        .catch(error => toast.error('Error creating game:', error));
+        .then(data => {
+          if (data?.game_id) {
+            navigate(`/question/${data.game_id}`);
+          } else {
+            toast.error('Game creation failed.');
+          }
+        })
+        .catch(error => {
+          toast.error('Error creating game:', error);
+        });
     } else {
-      return navigate(`/question/${quiz.game_id}`);
+      navigate(`/question/${quiz.game_id}`);
     }
   };
 
   return (
     <div
-      className="bg-white shadow-md rounded-lg p-4 cursor-pointer hover:shadow-lg transition duration-300"
+      className="played-quiz-card p-6 bg-white rounded-3xl border-2 border-[#000000] cursor-pointer hover:bg-gray-100 flex flex-col items-center justify-between w-[24rem] h-[28rem] m-3"
       onClick={handleCardClick}
     >
-      <div className="flex flex-col items-start">
-        <h3 className="text-lg font-semibold mb-2">Title: {quiz.quiz_title}</h3>
-        <p className="text-sm text-gray-700 mb-1">
-          {quiz.current_question_index}/{quiz.nb_questions_total}
-        </p>
-        <p className="text-sm text-gray-600 mb-4">Date: {formattedDate}</p>
-        <p className="text-xl text-gray-800">
-          {quiz.nb_questions_total === quiz.current_question_index ? (
-            <MdReplay className="inline-block text-blue-500" />
-          ) : (
-            <FaPlay className="inline-block text-green-500" />
-          )}
-        </p>
+      <div className="quiz-title bg-white text-[#8B2DF1] border-2 border-[#8B2DF1] rounded-lg px-4 py-2 mb-3 text-center w-full">
+        <h3 className="text-2xl font-bold truncate">{quiz.quiz_title}</h3>
+      </div>
+      <p className="text-lg mb-2 font-bold">
+        Progress: {quiz.current_question_index}/{quiz.nb_questions_total}
+      </p>
+      <p className="text-lg mb-2 font-bold">Date: {formattedDate}</p>
+      <div className="flex justify-end items-center w-full">
+        {quiz.nb_questions_total === quiz.current_question_index ? (
+          <MdReplay className="text-blue-500 text-2xl" />
+        ) : (
+          <FaPlay className="text-green-500 text-2xl" />
+        )}
       </div>
     </div>
   );
