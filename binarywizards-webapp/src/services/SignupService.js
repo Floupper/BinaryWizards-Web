@@ -16,7 +16,7 @@ export async function SignupUser(username, password) {
 
 export async function checkUsernameAvailability(username) {
   try {
-    const response = await axiosInstance.post('/user/username_avaible', {
+    const response = await axiosInstance.post('/user/username_available', {
       username,
     });
     return response.data.is_available;

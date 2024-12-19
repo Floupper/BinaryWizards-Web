@@ -1,17 +1,23 @@
-export default function QuestionChoiceMultiple({ question_choice, correctOptionIndex, selectedQuestionId, isAnswered, onQuestionSelect }) {
+export default function QuestionChoiceMultiple({
+  question_choice,
+  correctOptionIndex,
+  selectedQuestionId,
+  isAnswered,
+  onQuestionSelect,
+  skiped,
+}) {
   return (
-    <div className="QuestionChoiceMultiple  place-items-center grid justify-items-center grid-cols-2 gap-4">
+    <div className="QuestionChoiceMultiple place-items-center grid justify-items-center grid-cols-2 gap-4">
       {question_choice.map((choice) => {
-        const { option_index, option_text } = choice;
-
-
+        const { option_index, option_content } = choice;
+        const { type, content } = option_content;
         let buttonClass = '';
 
         if (option_index === correctOptionIndex) {
-          buttonClass = 'bg-green-100 border-green-500 text-green-700  ';
-        }
-
-        if (
+          buttonClass = 'bg-green-100 border-green-500 text-green-700';
+        } else if (skiped && option_index !== correctOptionIndex) {
+          buttonClass = 'bg-red-100 border-red-500 text-red-700';
+        } else if (
           selectedQuestionId !== null &&
           correctOptionIndex !== null &&
           selectedQuestionId === option_index &&
@@ -19,6 +25,25 @@ export default function QuestionChoiceMultiple({ question_choice, correctOptionI
         ) {
           buttonClass = 'bg-red-100 border-red-500 text-red-700';
         }
+
+        // Render different types of content
+        const renderOptionContent = () => {
+          switch (type) {
+            case 'text':
+              return <span className="text-center">{content}</span>;
+            case 'image':
+              return <img src={content} alt={`Option ${option_index}`} className="w-full h-auto max-h-24 object-contain" />;
+            case 'audio':
+              return (
+                <audio controls>
+                  <source src={content} type="audio/mpeg" />
+                  Your browser does not support the audio element.
+                </audio>
+              );
+            default:
+              return <span className="text-center">Unsupported content</span>;
+          }
+        };
 
         return (
           <div key={option_index} className="flex items-center place-items-center min-w-[30vh]">
@@ -29,7 +54,7 @@ export default function QuestionChoiceMultiple({ question_choice, correctOptionI
                 border-2 bg-white text-black 
                 hover:bg-gray-100 
                 transition-all duration-300 
-                ${selectedQuestionId === option_index ? ' font-bold' : ''}
+                ${selectedQuestionId === option_index ? 'font-bold' : ''}
                 ${buttonClass}
               `}
               style={{
@@ -37,12 +62,11 @@ export default function QuestionChoiceMultiple({ question_choice, correctOptionI
               }}
               disabled={isAnswered}
             >
-              {option_text}
+              {renderOptionContent()}
             </button>
           </div>
         );
       })}
     </div>
   );
-
 }
