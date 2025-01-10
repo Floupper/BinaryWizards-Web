@@ -44,12 +44,10 @@ export default function PlayersList({ game_mode }) {
       });
 
       newSocket.on("connect", () => {
-        console.log("Connected to WebSocket server.");
         newSocket.emit("getGameInformations", { game_id: gameId });
       });
 
       newSocket.on("gameInformations", (data) => {
-        console.log("Game informations received:", data);
         setIsGameOwner(data.is_game_owner || false);
         setTeams(data.teams || []);
         setQuizDetails(data.quizzes || null);
@@ -76,7 +74,6 @@ export default function PlayersList({ game_mode }) {
       });
 
       newSocket.on("gameStarted", () => {
-        console.log("The game has started!");
         navigate(`/team-question/${gameId}`);
       });
 
@@ -133,9 +130,7 @@ export default function PlayersList({ game_mode }) {
       alert("Game code copied!");
     });
   };
-  useEffect(() => {
-    console.log("isGameOwner updated:", isGameOwner);
-  }, [isGameOwner]);
+
   
   return (
     <div className="p-8">

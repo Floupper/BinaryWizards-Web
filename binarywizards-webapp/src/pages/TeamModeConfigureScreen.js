@@ -33,7 +33,6 @@ export default function TeamModeConfigureScreen() {
         selectedQuiz.quiz_id,
         gameData
       );
-      console.log("Game initialized:", response);
       navigate(`/team-mode-join-team/${response.game_id}`);
     } catch (error) {
       console.error("Error initializing game:", error.message);

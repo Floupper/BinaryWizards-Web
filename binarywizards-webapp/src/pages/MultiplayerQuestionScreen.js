@@ -44,7 +44,6 @@ export default function MultiplayerQuestionScreen() {
     });
 
     newSocket.on("connect", () => {
-      console.log("Connecté au serveur WebSocket.");
       newSocket.emit("getQuestionInformations", { game_id: gameId });
     });
 
@@ -87,7 +86,6 @@ export default function MultiplayerQuestionScreen() {
   }, [timeAvailable]);
 
   const handleNewQuestion = (data) => {
-    console.log("Nouvelle question reçue:", data);
 
     const answeredQuestions = JSON.parse(localStorage.getItem(`answeredQuestions_${gameId}`)) || {};
     if (answeredQuestions[data.question_index] !== undefined) {
