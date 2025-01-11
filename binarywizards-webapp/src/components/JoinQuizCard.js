@@ -15,47 +15,44 @@ const renderDifficultyStars = (difficulty) => {
   }
 };
 
-export default function JoinQuizCard({ quiz, route }) {
+export default function JoinQuizCard({ quiz, route, enableModal = true, onQuizSelect }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    if (route === "/question/") {
-      setIsModalOpen(true);
-
-    } else {
-      navigate(route);
-    }
+      if (enableModal && route === "/question/") {
+          setIsModalOpen(true);
+      } else if (onQuizSelect) {
+          onQuizSelect(quiz);
+      } else {
+          navigate(route);
+      }
   };
+
   const closeModal = () => {
-    setIsModalOpen(false);
+      setIsModalOpen(false);
   };
 
   return (
-    <div>
-      <button
-        onClick={handleCardClick}
-        className="join-quiz-card p-2 bg-white border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 flex items-center w-[40rem] h-[4rem] mb-5"
-        tabIndex="0"
-      >
-        <div className="quiz-info flex justify-between items-center w-full">
-          <h3 className="text-sm font-semibold text-black text-center break-all">
-            {quiz.title}
-          </h3>
-          <p className="text-xs text-center">
-            Difficulty: {renderDifficultyStars(quiz.difficulty)}
-          </p>
-          <p className="text-xs text-center">{quiz.nb_questions} Questions</p>
-        </div>
-        
-      </button>
-      {isModalOpen && (
-        <TimeModal
-          closeModal={closeModal}
-          route={route}
-          quiz={quiz}
-        />
-      )}
-    </div>
+      <div>
+          <button
+              onClick={handleCardClick}
+              className="join-quiz-card p-2 bg-white border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 flex items-center w-[40rem] h-[4rem] mb-5"
+              tabIndex="0"
+          >
+              <div className="quiz-info flex justify-between items-center w-full">
+                  <h3 className="text-sm font-semibold text-black text-center break-all">
+                      {quiz.title}
+                  </h3>
+                  <p className="text-xs text-center">
+                      Difficulty: {renderDifficultyStars(quiz.difficulty)}
+                  </p>
+                  <p className="text-xs text-center">{quiz.nb_questions} Questions</p>
+              </div>
+          </button>
+          {isModalOpen && enableModal && (
+              <TimeModal closeModal={closeModal} route={route} quiz={quiz} />
+          )}
+      </div>
   );
 }

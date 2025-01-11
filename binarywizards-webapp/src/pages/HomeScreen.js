@@ -29,7 +29,7 @@ export default function HomeScreen() {
                         Scrum
                     </button>
                     <button
-                        onClick={() => (token ? navigate('/team') : navigate('/signin'))}
+                        onClick={() => (token ? navigate('/team-mode-configure') : navigate('/signin'))}
                         className="flex justify-center w-full bg-purple-600 text-white hover:bg-purple-700 py-4 rounded-lg transition duration-300"
                     >
                         Team

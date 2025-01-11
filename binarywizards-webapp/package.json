@@ -12,6 +12,7 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
+    "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
     "react-apple-emojis": "^2.2.2",
     "react-dom": "^18.3.1",
@@ -21,6 +22,7 @@
     "react-scripts": "^5.0.1",
     "react-select": "^5.8.3",
     "react-toastify": "^10.0.6",
+    "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"
   },
   "jest": {

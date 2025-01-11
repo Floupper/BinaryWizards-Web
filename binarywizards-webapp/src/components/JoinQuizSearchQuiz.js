@@ -7,7 +7,9 @@ import DashboardCreatedQuizCard from './DashboardCreatedQuizCard';
 
 import JoinQuizCard from './JoinQuizCard';
 
-export default function JoinQuizSearchQuiz() {
+export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal = false }) {
+
+
     const [text, setText] = useState('');
     const [selectedDifficulty, setSelectedDifficulty] = useState("all");
     const [difficulties, setDifficulties] = useState([]);
@@ -153,7 +155,8 @@ export default function JoinQuizSearchQuiz() {
                         key={item.quiz_id}
                         quiz={item}
                         route={'/question/'}
-                        className="mb-4"
+                        enableModal={enableModal} 
+                        onQuizSelect={onQuizSelect}
                     />
                 ))}
 
