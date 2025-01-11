@@ -57,8 +57,6 @@ export default function MultiplayerQuestionScreen() {
 
     newSocket.on("gameFinished", (data) => {
       const { ranking } = data;
-      console.log("rank",ranking);
-      console.log("data",data);
       navigate("/team-end", {
         state: {
           ranking,
