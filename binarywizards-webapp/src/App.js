@@ -11,9 +11,9 @@ import QuizRecapScreen from './pages/QuizRecapScreen.js';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EndScreen from './pages/EndScreen';
-import Navbar from './components/Navbar';
 import QuizCreated from './pages/CreateQuizCreated.js';
 import CreateQuizQuick from './pages/CreateQuizQuick.js';
+import HomeScreen from './pages/HomeScreen.js';
 
 
 function App() {
@@ -23,7 +23,8 @@ function App() {
       <Router>
 
         <Routes>
-          <Route path="/" element={<JoinQuiz />} />
+          <Route path="/" element={<HomeScreen />} />
+          <Route path="/join-quiz" element={<JoinQuiz />} />
           <Route path="/create-quiz" element={<CreateQuiz />} />
           <Route path="/edit-quiz" element={<CreateQuiz />} />
           <Route path="/signin" element={<ConnectScreen />} />

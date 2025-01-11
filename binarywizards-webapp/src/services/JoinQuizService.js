@@ -1,4 +1,3 @@
-import { toFormData } from 'axios';
 import axiosInstance from '../utils/axiosInstance';
 import { toast } from "react-toastify";
 
@@ -7,8 +6,12 @@ export const checkGameExists = async (gameCode) => {
   return response.data;
 };
 
-export const createGameWithQuizId = async (quizId) => {
-  const response = await axiosInstance.get(`/game/${quizId}/create`);
+export const createGameWithQuizId = async (quizId, difficulty) => {
+  const mode = difficulty === 'none' ? 'standard' : 'time';
+  const body = {
+    ...(difficulty !== 'none' && { difficulty_level: difficulty }),
+    mode: mode
+  };  const response = await axiosInstance.post(`/game/${quizId}/init`, body);
   return response.data;
 };
 

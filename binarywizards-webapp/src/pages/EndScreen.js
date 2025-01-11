@@ -10,7 +10,7 @@ import emojiData from "react-apple-emojis/src/data.json";
 export default function EndScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { correct_answers_nb, nb_questions_total, quizId } = location.state || {
+  const { difficulty_level, correct_answers_nb, nb_questions_total, quizId } = location.state || {
     correct_answers_nb: null,
     nb_questions_total: null,
     quizId: null,
@@ -27,7 +27,7 @@ export default function EndScreen() {
     if (quizId) {
       setIsLoading(true);
       try {
-        const data = await createGameWithQuizId(quizId);
+        const data = await createGameWithQuizId(quizId, difficulty_level);
         navigate(`/question/${data.game_id}`);
       } catch (error) {
         console.error('Error restarting quiz:', error);

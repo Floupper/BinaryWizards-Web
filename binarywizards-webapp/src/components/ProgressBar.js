@@ -2,7 +2,7 @@ import React from 'react';
 
 function ProgressBar({ progress }) {
     return (
-        <div className="relative pt-3 w-full" >
+        <div className="relative pt-5 w-11/12 self-center" >
             <div className="flex mb-0 items-center justify-between" >
 
             </div>
