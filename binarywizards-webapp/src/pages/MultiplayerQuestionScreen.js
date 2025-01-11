@@ -56,11 +56,12 @@ export default function MultiplayerQuestionScreen() {
     });
 
     newSocket.on("gameFinished", (data) => {
+      const { ranking } = data;
+      console.log("rank",ranking);
+      console.log("data",data);
       navigate("/team-end", {
         state: {
-          correctAnswersNb: data.correct_answers_nb,
-          totalQuestions: data.nb_questions_total,
-          quizId: data.quiz_id,
+          ranking,
         },
       });
     });
@@ -86,7 +87,6 @@ export default function MultiplayerQuestionScreen() {
   }, [timeAvailable]);
 
   const handleNewQuestion = (data) => {
-
     const answeredQuestions = JSON.parse(localStorage.getItem(`answeredQuestions_${gameId}`)) || {};
     if (answeredQuestions[data.question_index] !== undefined) {
       setIsAnswered(true);

@@ -8,9 +8,9 @@ export default function TeamEndScreen() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { correctAnswersNb, totalQuestions, quizId } = location.state || {};
+  const { ranking } = location.state || {};
 
-  if (!quizId) {
+  if (!ranking) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold">Données manquantes</h1>
@@ -31,23 +31,18 @@ export default function TeamEndScreen() {
     >
       <Navbar />
 
-      <div
-        className="flex flex-col items-center justify-center"
-        style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
-      >
+      <div className="flex flex-col items-center justify-center px-4 py-8">
         <div
-          className="EndScreenContainer bg-white p-16 text-center"
+          className="EndScreenContainer bg-white p-8 text-center w-full max-w-4xl"
           style={{
-            borderRadius: "3.125rem", // 50px in rem
-            width: "60.5625rem", // 969px in rem
-            height: "27.5625rem", // 441px in rem
+            borderRadius: "2rem", // 32px
           }}
         >
           <EmojiProvider data={emojiData}>
-            <div className="flex items-baseline justify-center mb-8">
-              <Emoji name="party-popper" width={80} />
+            <div className="flex items-center justify-center mb-8">
+              <Emoji name="party-popper" width={60} />
               <h1
-                className="text-5xl font-bold mx-4"
+                className="text-4xl font-bold mx-4"
                 style={{
                   color: "#7A00FF",
                   fontFamily: "Sifonn, sans-serif",
@@ -55,31 +50,49 @@ export default function TeamEndScreen() {
               >
                 Quiz Completed!
               </h1>
-              <Emoji name="party-popper" width={80} />
+              <Emoji name="party-popper" width={60} />
             </div>
           </EmojiProvider>
           <h2
-            className="text-5xl mb-10"
+            className="text-2xl mb-6"
             style={{
               color: "#000000",
               fontFamily: "Helvetica, Arial, sans-serif",
               textAlign: "center",
             }}
           >
-            Score: {correctAnswersNb}/{totalQuestions}
+            Résultats par équipe :
           </h2>
-          <div className="flex gap-8 justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {Object.entries(ranking).map(([teamName, teamData]) => (
+              <div key={teamName} className="bg-gray-100 p-4 rounded-lg shadow">
+                <h3 className="text-lg font-bold mb-2" style={{ color: "#7A00FF" }}>
+                  {teamName}
+                </h3>
+                <p className="text-base mb-2">Score total : {teamData.total_score}</p>
+                <p className="text-base mb-2">
+                  Score moyen : {teamData.average_score !== null ? teamData.average_score.toFixed(2) : "N/A"}
+                </p>
+                <ul className="list-disc list-inside">
+                  {teamData.members.length > 0 ? (
+                    teamData.members.map((member) => (
+                      <li key={member.username} className="text-sm">
+                        {member.username} : {member.score} points
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-sm">Aucun membre dans cette équipe</li>
+                  )}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-center mt-8">
             <button
-              className="text-white font-bold py-4 px-8"
-              style={{
-                backgroundColor: "#000000",
-                borderRadius: "1.09875rem", // 17.58px in rem
-                fontFamily: "Helvetica, Arial, sans-serif",
-                fontSize: "1.5rem",
-              }}
+              className="text-white font-bold py-3 px-6 bg-black rounded-lg text-lg"
               onClick={() => navigate("/")}
             >
-              Back to home page
+              Retour à l'accueil
             </button>
           </div>
         </div>
