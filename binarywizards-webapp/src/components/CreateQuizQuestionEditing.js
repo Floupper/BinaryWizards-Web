@@ -371,14 +371,18 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
               />
             )}
           </div>
-          <div className="display:flex text-center justify-center">
-            <button
-              onClick={() => handleOnTypeQuestionChange("text")}>Texte</button>
-            <button
-              onClick={() => handleOnTypeQuestionChange("image")}>Image</button>
-            <button
-              onClick={() => handleOnTypeQuestionChange("audio")}>Audio</button>
-          </div>
+          {questionType === "multiple" ? (
+            <div className="display:flex text-center justify-center">
+              <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
+                onClick={() => handleOnTypeQuestionChange("text")}>Texte</button>
+
+              <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
+                onClick={() => handleOnTypeQuestionChange("image")}>Image</button>
+
+              <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
+                onClick={() => handleOnTypeQuestionChange("audio")}>Audio</button>
+            </div>
+          ) : (<></>)}
           {/* Question Type */}
           {/* Options */}
           <div className="flex  justify-center">
