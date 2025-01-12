@@ -26,6 +26,23 @@ const CreateQuizService = {
     }
   },
 
+  updateImage: async (image) => {
+    try {
+      return axiosInstance.post(`/upload/image`, image, { headers: { 'Content-Type': 'multipart/form-data', }, }).then((response) => response.data);
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error updating image');
+    }
+  },
+
+
+  updateAudio: async (audio) => {
+    try {
+      return axiosInstance.post(`/upload/audio`, audio, { headers: { 'Content-Type': 'multipart/form-data', }, }).then((response) => response.data);
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error updating audio');
+    }
+  },
+
   updateQuestion: (questionData, quizId, questionId) => {
     try {
       return axiosInstance.post(`/quiz/${quizId}/${questionId}`, questionData).then((response) => response.data);
@@ -33,6 +50,8 @@ const CreateQuizService = {
       throw new Error('Error updating the question');
     }
   },
+
+
 
   createQuestion: (questionData, quizId) => {
     try {
