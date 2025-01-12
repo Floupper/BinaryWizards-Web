@@ -7,6 +7,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
     setSelectedOptionInput((prevState) => ({
       ...prevState,
       choices: [{ type: "text", content: "" }, { type: "text", content: "" }],
+      type_of_question: "text",
       correctAnswerMultiple: 0,
     }));
   }
@@ -79,7 +80,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
             />
 
 
-            {choice.type === "text" ? (
+            {selectedOptionInput.type_of_question === "text" ? (
               <input
                 type="text"
                 value={choice.content || ""}

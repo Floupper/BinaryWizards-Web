@@ -13,6 +13,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   const [selectedOptionInput, setSelectedOptionInput] = useState({
     type: 'boolean',
     choices: [{ type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }],
+    type_of_question: 'text',
     correctAnswerBoolean: 0,
     correctAnswerMultiple: 0
   });
@@ -256,11 +257,19 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
   };
 
+  const handleOnTypeQuestionChange = (newType) => {
+    setSelectedOptionInput((prevState) => ({
+      ...prevState,
+      type_of_question: newType,
+    }));
+  };
+
+
 
   return (
     <div>
       <div className="flex items-baseline justify-center space-x-6 mt-6 flex-wrap">
-        {/* Question Type */}
+
         <div className="flex items-baseline space-x-4">
           <span className="text-lg font-medium text-gray-700 whitespace-nowrap mb-[5vh]">Question Type</span>
           <div className="flex items-baseline space-x-4">
@@ -303,6 +312,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
         <span className="text-2xl text-gray-500">|</span>
 
         {/* Category Selection */}
+
         <div className="flex items-baseline space-x-4">
           <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
             Category
@@ -358,9 +368,18 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
               />
             )}
           </div>
-
+          <div className="display:flex text-center justify-center">
+            <button
+              onChange={() => handleOnTypeQuestionChange("text")}>Texte</button>
+            <button
+              onChange={() => handleOnTypeQuestionChange("image")}>Image</button>
+            <button
+              onChange={() => handleOnTypeQuestionChange("audio")}>Audio</button>
+          </div>
+          {/* Question Type */}
           {/* Options */}
           <div className="flex  justify-center">
+
             {questionType === "multiple" ? (
               <MultipleChoiceQuestion
 
@@ -383,6 +402,6 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
         </div >
       </div>
 
-    </div>
+    </div >
   );
 };
