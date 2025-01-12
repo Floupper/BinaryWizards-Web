@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ConnectService } from '../services/ConnectService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 export default function ConnectScreen() {
@@ -9,6 +9,7 @@ export default function ConnectScreen() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -26,7 +27,9 @@ export default function ConnectScreen() {
       const token = await ConnectService(username, password);
       if (token) {
         localStorage.setItem('token', token);
-        navigate('/dashboard');
+        console.log('token:', token);
+        const redirectPath = searchParams.get('redirect') || '/dashboard';
+        navigate(redirectPath);
       }
     } catch (error) {
       console.error('Error during submission:', error);
@@ -37,7 +40,7 @@ export default function ConnectScreen() {
   };
 
   return (
-    <div className='bg-gradient-to-b from-[rgba(228,187,145,0.5)] via-[rgba(138,43,242,0.5)] to-[rgba(41,96,240,0.5)] min-h-screen overflow-hidden'>
+    <div className="bg-gradient-to-b from-[rgba(228,187,145,0.5)] via-[rgba(138,43,242,0.5)] to-[rgba(41,96,240,0.5)] min-h-screen overflow-hidden">
       <Navbar />
       <div className="min-h-screen flex items-center justify-center">
         <form className="bg-white p-8 rounded-lg shadow-md w-full max-w-md" onSubmit={handleSubmit}>
@@ -66,8 +69,9 @@ export default function ConnectScreen() {
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <button
             type="submit"
-            className={`w-full bg-black text-white py-3 rounded-lg mb-4 transition ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
-              }`}
+            className={`w-full bg-black text-white py-3 rounded-lg mb-4 transition ${
+              isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+            }`}
             disabled={isLoading}
           >
             {isLoading ? (

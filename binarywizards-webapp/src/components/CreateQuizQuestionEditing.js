@@ -78,25 +78,26 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           setQuizDifficulty(data.question.question_difficulty);
           setSelectedCategory(data.question.question_category);
 
-          if (questionOptions.option_content === undefined) {
-            toast.error('Error :(');
+          if (data.question.options === undefined) {
+            toast.error('Error :-(');
             return;
           }
           setSelectedOptionInput((prevState) => {
             const isMultiple = data.question.question_type === 'multiple';
 
 
+
             const choices = isMultiple
-              ? data.question.options.map((option) => option.option_content.content)
+              ? data.question.options.map((option) => option.option_content?.content || '')
               : ['', '', '', ''];
 
 
-            const correctAnswerBoolean = !isMultiple
-              ? data.question.options.find((option) => option.is_correct_answer)?.option_content.content === 'True'
-                ? 1
-                : 0
-              : null;
 
+            const correctAnswerBoolean = !isMultiple
+              ? (data.question.options.find((option) => option.is_correct_answer)?.option_content?.content === 'True'
+                ? 1
+                : 0)
+              : null;
             return {
               ...prevState,
               type: data.question.question_type,

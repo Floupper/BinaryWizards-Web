@@ -14,6 +14,14 @@ import EndScreen from './pages/EndScreen';
 import QuizCreated from './pages/CreateQuizCreated.js';
 import CreateQuizQuick from './pages/CreateQuizQuick.js';
 import HomeScreen from './pages/HomeScreen.js';
+import TeamModeConfigureScreen from './pages/TeamModeConfigureScreen.js';
+import TeamModeJoinTeam from './pages/TeamModeJoinTeam.js';
+import MultiplayerQuestionScreen from './pages/MultiplayerQuestionScreen.js';
+import TeamEndScreen from './pages/TeamEndScreen.js';
+import ScrumModeConfigureScreen from './pages/ScrumModeConfigureScreen.js';
+import ScrumModeJoinGame from './pages/ScrumModeJoinGame.js';
+import ScrumModeQuestionScreen from './pages/ScrumModeQuestionScreen.js';
+import ScrumEndScreen from './pages/ScrumEndScreen.js';
 
 
 function App() {
@@ -37,6 +45,15 @@ function App() {
           <Route path="/end" element={<EndScreen />} />
           <Route path="/quiz-created/:quizId" element={<QuizCreated />} />
           <Route path="/quick-quiz" element={< CreateQuizQuick />} />
+          <Route path="/team-mode-configure" element={<TeamModeConfigureScreen />} />
+          <Route path="/team-mode-join-team/:gameId" element={<TeamModeJoinTeam />} />
+          <Route path="/team-question/:gameId" element={<MultiplayerQuestionScreen />} /> 
+          <Route path="/team-end" element={<TeamEndScreen />} />
+          <Route path="/scrum-mode-configure" element={<ScrumModeConfigureScreen />} />
+          <Route path="/scrum-mode-lobby/:gameId" element={<ScrumModeJoinGame />} />
+          <Route path="/scrum-mode-question/:gameId" element={<ScrumModeQuestionScreen />} />
+          <Route path="/scrum-end" element={<ScrumEndScreen />} />
+
         </Routes>
 
       </Router>

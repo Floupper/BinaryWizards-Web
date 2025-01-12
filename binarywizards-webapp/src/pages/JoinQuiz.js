@@ -64,7 +64,12 @@ export default function JoinQuiz() {
                   Search Quiz
                 </button>
               </div>
-              {activeTab === 'search' ? <JoinQuizSearchQuiz /> : <JoinQuizResumeGame />}
+              {activeTab === 'search' ?(
+                <JoinQuizSearchQuiz
+                  timer={false}
+                  enableModal={true}
+                /> )
+                : (<JoinQuizResumeGame />)}
             </div>
           ) : (
             <div className="w-full flex flex-col items-center">

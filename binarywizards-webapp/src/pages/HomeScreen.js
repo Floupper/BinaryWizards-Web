@@ -23,13 +23,13 @@ export default function HomeScreen() {
                     </button>
                     <div className="w-full h-[2px] bg-purple-500 mb-6"></div>
                     <button
-                        onClick={() => (token ? navigate('/scrum') : navigate('/signin'))}
+                        onClick={() => (token ? navigate('/scrum-mode-configure') : navigate('/signin'))}
                         className="flex justify-center w-full bg-purple-600 text-white hover:bg-purple-700 py-4 rounded-lg mb-4 transition duration-300"
                     >
                         Scrum
                     </button>
                     <button
-                        onClick={() => (token ? navigate('/team') : navigate('/signin'))}
+                        onClick={() => (token ? navigate('/team-mode-configure') : navigate('/signin'))}
                         className="flex justify-center w-full bg-purple-600 text-white hover:bg-purple-700 py-4 rounded-lg transition duration-300"
                     >
                         Team
