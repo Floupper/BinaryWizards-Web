@@ -258,8 +258,10 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   };
 
   const handleOnTypeQuestionChange = (newType) => {
+    console.log("jsuis bougge0");
     setSelectedOptionInput((prevState) => ({
       ...prevState,
+      choices: prevState.choices.map(() => ({ type: newType, content: "" })),
       type_of_question: newType,
     }));
   };
@@ -370,11 +372,11 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           </div>
           <div className="display:flex text-center justify-center">
             <button
-              onChange={() => handleOnTypeQuestionChange("text")}>Texte</button>
+              onClick={() => handleOnTypeQuestionChange("text")}>Texte</button>
             <button
-              onChange={() => handleOnTypeQuestionChange("image")}>Image</button>
+              onClick={() => handleOnTypeQuestionChange("image")}>Image</button>
             <button
-              onChange={() => handleOnTypeQuestionChange("audio")}>Audio</button>
+              onClick={() => handleOnTypeQuestionChange("audio")}>Audio</button>
           </div>
           {/* Question Type */}
           {/* Options */}
