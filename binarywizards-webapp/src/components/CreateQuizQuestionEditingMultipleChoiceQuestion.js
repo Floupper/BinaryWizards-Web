@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import CreateQuizService from '../services/CreateQuizService';
+
 export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput }) {
-  const [image, setImage] = useState(null);
+  const [file, setFile] = useState(null);
 
   if (!selectedOptionInput.choices || selectedOptionInput.choices.length === 0) {
     setSelectedOptionInput((prevState) => ({
@@ -14,19 +15,14 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
   }
 
   const handleChangeAnswerText = (event, index) => {
-
     const value = event.target.value || { type: "text", content: "" };
-
     setSelectedOptionInput((prevState) => ({
       ...prevState,
       choices: prevState.choices.map((choice, i) =>
         i === index ? { ...choice, content: value } : choice
       ),
-
-    }
-    ));
+    }));
   };
-
 
   const handleAddOption = () => {
     if (selectedOptionInput.choices.length < 8) {
@@ -37,20 +33,15 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
     }
   };
 
-
   const handleRemoveOption = (index) => {
     if (selectedOptionInput.choices.length > 2) {
       setSelectedOptionInput((prevState) => {
         const updatedChoices = prevState.choices.filter((_, i) => i !== index);
 
-
         let updatedCorrectAnswer = prevState.correctAnswerMultiple;
-
         if (prevState.correctAnswerMultiple === index) {
-
           updatedCorrectAnswer = Math.max(0, index - 1);
         } else if (prevState.correctAnswerMultiple > index) {
-
           updatedCorrectAnswer -= 1;
         }
 
@@ -63,49 +54,48 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
     }
   };
 
-
-  // Gestion de la sélection de fichier
-  const handleFileChange = (event) => {
-    const file = event.target.files[0]; // Récupérer le premier fichier sélectionné
-    setImage(file); // Stocker l'image dans l'état
-  };
-
-  // Fonction pour envoyer l'image
-  const handleUpload = async (id, file) => {
+  const handleUpload = async (id, file, type) => {
     if (!file) {
-      alert('Veuillez sélectionner une image avant de continuer.');
+      alert(`Veuillez sélectionner un fichier ${type === "audio" ? "audio" : "image"} avant de continuer.`);
       return;
     }
 
     const formData = new FormData();
-    formData.append('image', file); // Ajouter l'image au FormData
+    formData.append(type, file);
 
     try {
-      const data = await CreateQuizService.updateImage(formData); // Envoyer la requête et attendre la réponse
+      let data;
+      if (type === "audio") {
+        data = await CreateQuizService.updateAudio(formData); // Utilisation de updateAudio pour les fichiers audio
+      } else {
+        data = await CreateQuizService.updateImage(formData); // Utilisation de updateImage pour les fichiers image
+      }
 
       setSelectedOptionInput((prevState) => {
-        const updatedChoices = [...prevState.choices]; // Créer une copie des choix
-        updatedChoices[id].content = data.url; // Mettre à jour le `content` du choix ciblé
+        const updatedChoices = [...prevState.choices];
+        updatedChoices[id].content = data.url;
 
         return {
           ...prevState,
-          choices: updatedChoices, // Remplacer par les choix mis à jour
+          choices: updatedChoices,
         };
       });
 
-      toast.success('Image uploadée avec succès !');
+      console.log(setSelectedOptionInput);
+      toast.success(`${type === "audio" ? "Audio" : "Image"} uploadé avec succès !`);
     } catch (error) {
-      toast.error('Erreur lors de l\'upload de l\'image.');
+      toast.error(`Erreur lors de l'upload du fichier ${type}.`);
       console.error(error);
     }
   };
 
+
+
   return (
     <div>
-      <div className="grid justify-items-center grid-cols-2 gap-4 ">
+      <div className="grid justify-items-center grid-cols-2 gap-4">
         {selectedOptionInput.choices.map((choice, id) => (
-          <div key={id} className="flex items-center">
-
+          <div key={id} className="flex items-center gap-4">
             <input
               type="radio"
               name="multipleChoice"
@@ -116,42 +106,36 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
               }
             />
 
-
             {choice.type === "text" ? (
               <input
                 type="text"
                 value={choice.content || ""}
                 onChange={(e) => handleChangeAnswerText(e, id)}
                 placeholder={`Option ${id + 1}`}
-                className={`p-3 ml-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${selectedOptionInput.correctAnswerMultiple === id
+                className={`p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${selectedOptionInput.correctAnswerMultiple === id
                   ? "border-4 border-[#417336] bg-white"
                   : "border-2 border-gray-300"
                   }`}
               />
             ) : choice.type === "image" ? (
               <div className="flex items-center gap-4">
-                {/* Input file caché */}
                 <input
                   type="file"
-                  id={`imageInput-${id}`}
+                  id={`fileInput-${id}`}
                   accept="image/*"
                   onChange={(e) => {
                     const file = e.target.files[0];
                     if (!file) return;
-                    handleUpload(id, file); // Passer directement le fichier à la fonction handleUpload
+                    handleUpload(id, file, "image");
                   }}
-                  className="hidden" // Cache complètement l'input natif
+                  className="hidden"
                 />
-
-                {/* Bouton stylisé */}
                 <label
-                  htmlFor={`imageInput-${id}`} // Associe le label à l'input caché
-                  className="ml-2 px-2 py-1 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
+                  htmlFor={`fileInput-${id}`}
+                  className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
                 >
                   Importer une image
                 </label>
-
-                {/* Aperçu de l'image */}
                 {choice.content && (
                   <img
                     src={choice.content}
@@ -161,22 +145,36 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
                 )}
               </div>
             ) : choice.type === "audio" ? (
-              <div>
-                {/* Votre script pour le type "audio" */}
-                <audio controls>
-                  <source src={choice.audioUrl} type="audio/mpeg" />
-                  Your browser does not support the audio element.
-                </audio>
+              <div className="flex items-center gap-4">
+                <input
+                  type="file"
+                  id={`audioInput-${id}`}
+                  accept="audio/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    handleUpload(id, file, "audio");
+                  }}
+                  className="hidden"
+                />
+                <label
+                  htmlFor={`audioInput-${id}`}
+                  className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
+                >
+                  Importer un fichier audio
+                </label>
+                {choice.content && (
+                  <audio controls className="w-full">
+                    <source src={choice.content} type="audio/mpeg" />
+                    Votre navigateur ne supporte pas l'élément audio.
+                  </audio>
+                )}
               </div>
             ) : (
               <div>
                 <p>ERREUR {choice.type}</p>
               </div>
             )}
-
-
-
-
 
             <button
               onClick={() => handleRemoveOption(id)}
@@ -188,7 +186,6 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
           </div>
         ))}
       </div>
-
 
       <div className="mt-4">
         <button
