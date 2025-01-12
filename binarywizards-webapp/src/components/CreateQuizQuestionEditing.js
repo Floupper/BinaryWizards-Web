@@ -133,6 +133,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
             ...prevState,
             type: question.question_type,
             choices,
+            type_of_question: choices[0].type || 'text',
             correctAnswerMultiple,
             correctAnswerBoolean,
           };

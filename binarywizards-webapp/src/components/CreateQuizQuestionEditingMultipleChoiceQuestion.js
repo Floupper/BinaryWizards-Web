@@ -129,22 +129,36 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
                   }`}
               />
             ) : choice.type === "image" ? (
-              <div>
+              <div className="flex items-center gap-4">
+                {/* Input file caché */}
                 <input
                   type="file"
-                  id="imageInput"
+                  id={`imageInput-${id}`}
                   accept="image/*"
                   onChange={(e) => {
-                    const file = e.target.files[0]; // Récupérer directement le fichier
-                    if (!file) return; // Si aucun fichier n'est sélectionné, ne rien faire
-
-                    // Appeler directement handleUpload avec le fichier
-                    handleUpload(id, file);
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    handleUpload(id, file); // Passer directement le fichier à la fonction handleUpload
                   }}
-                  style={{ display: "block", cursor: "pointer" }}
+                  className="hidden" // Cache complètement l'input natif
                 />
 
-                <img src={choice.content} alt="Aperçu de l'image" />
+                {/* Bouton stylisé */}
+                <label
+                  htmlFor={`imageInput-${id}`} // Associe le label à l'input caché
+                  className="ml-2 px-2 py-1 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
+                >
+                  Importer une image
+                </label>
+
+                {/* Aperçu de l'image */}
+                {choice.content && (
+                  <img
+                    src={choice.content}
+                    alt="Aperçu de l'image"
+                    className="w-20 h-20 object-cover rounded border"
+                  />
+                )}
               </div>
             ) : choice.type === "audio" ? (
               <div>
