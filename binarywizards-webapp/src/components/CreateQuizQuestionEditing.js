@@ -12,7 +12,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
   const [selectedOptionInput, setSelectedOptionInput] = useState({
     type: 'boolean',
-    choices: ['', '', '', ''],
+    choices: [{ type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }],
     correctAnswerBoolean: 0,
     correctAnswerMultiple: 0
   });
@@ -42,7 +42,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       setQuestionText('Write your question');
       setSelectedOptionInput({
         type: 'boolean',
-        choices: ['', '', '', ''],
+        choices: [{ type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }],
         correctAnswerBoolean: 0,
         correctAnswerMultiple: 0
       });
@@ -68,51 +68,81 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   }, []);
 
   useEffect(() => {
-    if (questionId) {
-      CreateQuizService.fetchQuestionDetails(quizId, questionId)
-        .then(data => {
-          setQuestionData(data.question);
-          setQuestionOptions(data.question.options);
-          setQuestionType(data.question.question_type);
-          setQuestionText(data.question.question_text);
-          setQuizDifficulty(data.question.question_difficulty);
-          setSelectedCategory(data.question.question_category);
+    if (!questionId) return;
 
-          if (data.question.options === undefined) {
-            toast.error('Error :-(');
-            return;
-          }
-          setSelectedOptionInput((prevState) => {
-            const isMultiple = data.question.question_type === 'multiple';
+    CreateQuizService.fetchQuestionDetails(quizId, questionId)
+      .then((data) => {
+        const question = data.question;
 
+        // Vérifier si la question et ses options sont valides
+        if (!question) {
+          toast.error('Error: Question not found.');
+          return;
+        }
 
+        if (!question.options || !Array.isArray(question.options)) {
+          toast.error('Error: Question options are missing or invalid.');
+          return;
+        }
 
-            const choices = isMultiple
-              ? data.question.options.map((option) => option.option_content?.content || '')
-              : ['', '', '', ''];
+        // Mettre à jour les états avec les données récupérées
+        setQuestionData(question);
+        setQuestionOptions(question.options);
+        setQuestionType(question.question_type);
+        setQuestionText(question.question_text);
+        setQuizDifficulty(question.question_difficulty);
+        setSelectedCategory(question.question_category);
 
+        setSelectedOptionInput((prevState) => {
+          const isMultiple = question.question_type === 'multiple';
 
+          // Construire la liste des choix
+          const choices = isMultiple
+            ? question.options.map((option) => ({
+              type: option.option_content?.type || 'text',
+              content: option.option_content?.content || '',
+            }))
+            : [
+              { type: 'text', content: '' },
+              { type: 'text', content: '' },
+              { type: 'text', content: '' },
+              { type: 'text', content: '' },
+            ]; // Valeurs par défaut pour les questions non multiples
 
-            const correctAnswerBoolean = !isMultiple
-              ? (data.question.options.find((option) => option.is_correct_answer)?.option_content?.content === 'True'
-                ? 1
-                : 0)
-              : null;
-            return {
-              ...prevState,
-              type: data.question.question_type,
-              choices: choices,
-              correctAnswerMultiple: isMultiple
-                ? data.question.options.findIndex((option) => option.is_correct_answer)
-                : null,
-              correctAnswerBoolean,
-            };
-          });
-        })
+          // Identifier les bonnes réponses
+          const correctAnswerBoolean = !isMultiple
+            ? question.options.find((option) => option.is_correct_answer)?.option_content?.content === 'True'
+              ? 1
+              : 0
+            : null;
 
-        .catch(error => toast.info('Error fetching question details:', error));
-    }
+          const correctAnswerMultiple = isMultiple
+            ? question.options.findIndex((option) => option.is_correct_answer)
+            : null;
+
+          console.log(
+            'correctAnswerMultiple',
+            question.question_type,
+            choices,
+            correctAnswerMultiple,
+            correctAnswerBoolean
+          );
+
+          return {
+            ...prevState,
+            type: question.question_type,
+            choices,
+            correctAnswerMultiple,
+            correctAnswerBoolean,
+          };
+        });
+      })
+      .catch((error) => {
+        console.error('Error fetching question details:', error);
+        toast.error('An error occurred while fetching question details.');
+      });
   }, [questionId]);
+
 
   const handleEditClick = () => setIsEditing(true);
 
@@ -139,11 +169,13 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       toast.error("Please select a difficulty.");
       return;
     }
-    if (questionType === "multiple" && selectedOptionInput.choices.some(choice => !choice.trim())) {
+    if (
+      questionType === "multiple" &&
+      selectedOptionInput.choices.some(choice => !choice.content || !choice.content.trim())
+    ) {
       toast.error("Please ensure all choices are filled out.");
       return;
     }
-
     try {
 
       const options = [];
@@ -174,8 +206,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
           ...selectedOptionInput.choices.map((choice, index) => ({
             option_content: {
-              type: 'text',
-              content: choice
+              type: choice.type,
+              content: choice.content
             },
             is_correct_answer: selectedOptionInput.correctAnswerMultiple === index,
             option_index: index
@@ -335,12 +367,13 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
                 selectedOptionInput={selectedOptionInput}
                 setSelectedOptionInput={setSelectedOptionInput}
               />
-            ) : (
-              <BooleanChoiceQuestion
-                selectedOptionInput={selectedOptionInput}
-                setSelectedOptionInput={setSelectedOptionInput}
-              />
-            )}
+            )
+              : (
+                <BooleanChoiceQuestion
+                  selectedOptionInput={selectedOptionInput}
+                  setSelectedOptionInput={setSelectedOptionInput}
+                />
+              )}
           </div>
 
 

@@ -34,6 +34,19 @@ const CreateQuizService = {
     }
   },
 
+  updateImage: (image) => {
+    try {
+      const response = axiosInstance.post(`/upload/image`, image, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error updating image');
+    }
+  },
+
   createQuestion: (questionData, quizId) => {
     try {
       return axiosInstance.post(`/quiz/${quizId}/create_question`, questionData).then((response) => response.data);

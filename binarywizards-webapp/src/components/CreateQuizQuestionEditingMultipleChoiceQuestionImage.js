@@ -1,29 +1,33 @@
 import React from "react";
+import { updateImage } from "../services/CreateQuizService";
+export function MultipleChoiceQuestionQuestionImage({ selectedOptionInput, setSelectedOptionInput }) {
+  const [image, setImage] = useState(null);
 
-export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput }) {
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Récupérer le premier fichier sélectionné
+    setImage(file); // Stocker l'image dans l'état
+  };
 
-  console.log(selectedOptionInput);
+
+
   if (!selectedOptionInput.choices || selectedOptionInput.choices.length === 0) {
     setSelectedOptionInput((prevState) => ({
       ...prevState,
-      choices: [{ type: "text", content: "" }, { type: "text", content: "" }],
+      choices: ["", ""],
       correctAnswerMultiple: 0,
     }));
   }
 
-  const handleChangeAnswerText = (event, index) => {
 
-    const value = event.target.value || { type: "text", content: "" };
+  const handleChangeAnswerText = (event, index) => {
+    const value = event.target.value || "";
 
     setSelectedOptionInput((prevState) => ({
       ...prevState,
       choices: prevState.choices.map((choice, i) =>
-        i === index ? { ...choice, content: value } : choice
+        i === index ? value : choice
       ),
-
-    }
-    ));
-    console.log("d", selectedOptionInput);
+    }));
   };
 
 
@@ -31,7 +35,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
     if (selectedOptionInput.choices.length < 8) {
       setSelectedOptionInput((prevState) => ({
         ...prevState,
-        choices: [...prevState.choices, { type: "text", content: "" }],
+        choices: [...prevState.choices, ""],
       }));
     }
   };
@@ -69,48 +73,24 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
           <div key={id} className="flex items-center">
 
             <input
-              type="radio"
+              type="file"
               name="multipleChoice"
               className="text-green-600 focus:ring-green-500"
               checked={selectedOptionInput.correctAnswerMultiple === id}
-              onChange={() =>
-                setSelectedOptionInput({ ...selectedOptionInput, correctAnswerMultiple: id })
-              }
+              id="imageInput" accept="image/*" onChange={handleFileChange}
             />
 
 
-            {choice.type === "text" ? (
-              <input
-                type="text"
-                value={choice.content || ""}
-                onChange={(e) => handleChangeAnswerText(e, id)}
-                placeholder={`Option ${id + 1}`}
-                className={`p-3 ml-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${selectedOptionInput.correctAnswerMultiple === id
-                  ? "border-4 border-[#417336] bg-white"
-                  : "border-2 border-gray-300"
-                  }`}
-              />
-            ) : choice.type === "image" ? (
-              <div>
-                {/* Votre script pour le type "text" */}
-                <p>{choice.text}</p>
-              </div>
-            ) : choice.type === "audio" ? (
-              <div>
-                {/* Votre script pour le type "audio" */}
-                <audio controls>
-                  <source src={choice.audioUrl} type="audio/mpeg" />
-                  Your browser does not support the audio element.
-                </audio>
-              </div>
-            ) : (
-              <div>
-                <p>ERREUR {choice.type}</p>
-              </div>
-            )}
-
-
-
+            <input
+              type="text"
+              value={choice || ""}
+              onChange={(e) => handleChangeAnswerText(e, id)}
+              placeholder={`Option ${id + 1}`}
+              className={`p-3 ml-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${selectedOptionInput.correctAnswerMultiple === id
+                ? "border-4 border-[#417336] bg-white"
+                : "border-2 border-gray-300"
+                }`}
+            />
 
 
             <button
