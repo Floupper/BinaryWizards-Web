@@ -1,7 +1,7 @@
 import axiosInstance from "../utils/axiosInstance";
 
-const TeamModeService = {
-  // Initialiser une partie
+const ScrumModeService = {
+  // Initialiser une partie Scrum
   initializeGame: async (quizId, gameData) => {
     try {
       const response = await axiosInstance.post(`/game/${quizId}/init`, gameData);
@@ -12,7 +12,6 @@ const TeamModeService = {
     }
   },
 
- 
 };
 
-export default TeamModeService;
+export default ScrumModeService;

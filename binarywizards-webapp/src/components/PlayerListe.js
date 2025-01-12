@@ -88,6 +88,7 @@ export default function PlayersList({ game_mode }) {
 
     return () => {
       if (socket) {
+        console.log("Disconnecting from WebSocket server...");
         socket.disconnect();
       }
     };
