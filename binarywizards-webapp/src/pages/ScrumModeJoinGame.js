@@ -110,7 +110,7 @@ export default function ScrumModeJoinGame() {
               Copy
             </button>
           </div>
-          <QRCodeCanvas value={`${window.location.origin}/scrum-mode-join-game/${gameId}`} size={128} />
+          <QRCodeCanvas value={`${window.location.origin}/scrum-mode-lobby/${gameId}`} size={128} />
         </div>
 
         {/* Quiz Details */}
