@@ -14,7 +14,6 @@ export default function QuestionScreen() {
 
   const [difficultyLevel, setDifficultyLevel] = useState(null);
   const [questionText, setQuestionText] = useState("");
-  const [skiped, setSkiped] = useState(false);
   const [options, setOptions] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(null);
   const [nbQuestionsTotal, setNbQuestionsTotal] = useState(null);
@@ -40,20 +39,25 @@ export default function QuestionScreen() {
 
   const handleQuestionSelect = async (selectedId) => {
     if (isAnswered) return;
-    if (selectedId === -1) setSkiped(true);
-    chronoRef.current?.stopTimer();
+    if (mode === "time") chronoRef.current?.stopTimer();
+
     setSelectedQuestionId(selectedId);
     setIsAnswered(true);
-
     try {
-      const result = await PostAnswers(id, questionIndex, selectedId);
+      let result;
+      if((mode === "standard" && selectedId != -1) || mode === "time") {
+        result = await PostAnswers(id, questionIndex, selectedId);
+      }    
       setIdCorrectAnswers(result.correct_option_index);
     } catch (error) {
       if (error.message === "Question's index invalid") {
         toast.success("Updating the current question...");
         await handleFetchQuiz();
       } else {
-        toast.error("Error sending answer.");
+        if(selectedId != -1){
+          toast.error("Error sending answer.");
+        }
+        setIsAnswered(false);
       }
     }
   };
@@ -95,10 +99,11 @@ export default function QuestionScreen() {
       setTimeAvailable(data.time_available);
       setSelectedQuestionId(null);
       setIsAnswered(false);
-      setSkiped(false);
       setIdCorrectAnswers(null);
 
-      chronoRef.current?.resetTimer(data.time_available);
+      if (difficultyLevel !== "none") {
+        chronoRef.current?.resetTimer(data.time_available);
+      }
     } catch (error) {
       setError(error.message);
       toast.error(error.message);
@@ -109,7 +114,6 @@ export default function QuestionScreen() {
 
   const handleReload = () => {
     if (!isAnswered) return;
-
     handleFetchQuiz();
   };
 
@@ -147,7 +151,6 @@ export default function QuestionScreen() {
               onQuestionSelect={handleQuestionSelect}
               selectedQuestionId={selectedQuestionId}
               isAnswered={isAnswered}
-              skiped={skiped}
             />
           </div>
           <button

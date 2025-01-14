@@ -65,8 +65,7 @@ export default function JoinQuiz() {
               </div>
               {activeTab === 'search' ?(
                 <JoinQuizSearchQuiz
-                  timer={false}
-                  enableModal={true}
+                    enableModal={true}
                 /> )
                 : (<JoinQuizResumeGame />)}
             </div>

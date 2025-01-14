@@ -4,7 +4,6 @@ export default function QuestionChoiceMultiple({
   selectedQuestionId,
   isAnswered,
   onQuestionSelect,
-  skiped,
 }) {
   return (
     <div className="QuestionChoiceMultiple place-items-center grid justify-items-center grid-cols-2 gap-4">
@@ -15,8 +14,6 @@ export default function QuestionChoiceMultiple({
 
         if (option_index === correctOptionIndex) {
           buttonClass = 'bg-green-100 border-green-500 text-green-700';
-        } else if (skiped && option_index !== correctOptionIndex) {
-          buttonClass = 'bg-red-100 border-red-500 text-red-700';
         } else if (
           selectedQuestionId !== null &&
           correctOptionIndex !== null &&

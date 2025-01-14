@@ -12,7 +12,6 @@ export default function PlayedQuizCard({ quiz }) {
   };
 
   const handlePlayClick = () => { 
-    console.log(quiz)
     setIsModalOpen(true);
   };
 

@@ -24,7 +24,7 @@ export default function Navbar() {
   return (
     <nav className="relative w-full flex justify-between items-center p-5 text-black">
       {/* Logo */}
-      <div className="text-[3.09rem] font-bold font-mogula">
+      <div className="text-[3.3rem] font-semibold font-mogula">
         <NavLink to="/" className="text-black">
           Mogula
         </NavLink>
