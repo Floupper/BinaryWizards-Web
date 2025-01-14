@@ -96,21 +96,27 @@ export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal }) {
 
     return (
         <div className="flex flex-col items-center p-8 mx-auto">
+            <label
+                htmlFor="title"
+                className="mb-2 font-medium"
+            >
+                Title or Description 
+            </label>
             <input
                 type="text"
-                className="p-4 text-lg border-2 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-[30rem] transition-all duration-200"
+                className="p-4 text-lg border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-[30rem] transition-all duration-200"
                 placeholder="Enter the text to search for a quiz"
                 value={text}
                 onChange={(e) => handleTextChange(e.target.value)}
             />
-            <div className='flex flex-row gap-x-4'>
+            <div className='flex flex-row gap-x-4 mt-2'>
                 <div className="flex flex-col w-1/2">
                     <div className="flex flex-col w-full">
                         <label
                             htmlFor="minQuestions"
-                            className="mb-2 font-medium text-white"
+                            className="ml-2 mb-2 font-medium"
                         >
-                            Min
+                            Min Questions
                         </label>
                         <input
                             id="minQuestions"
@@ -124,9 +130,9 @@ export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal }) {
                     <div className="flex flex-col w-full mt-4 sm:mt-0">
                         <label
                             htmlFor="maxQuestions"
-                            className="mb-2 font-medium text-white"
+                            className="ml-2 mb-2 font-medium"
                         >
-                            Max
+                            Max Questions
                         </label>
                         <input
                             id="maxQuestions"
@@ -138,11 +144,17 @@ export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal }) {
                         />
                     </div>
                 </div>
-                <div className='w-1/2 flex justify center items-center'>
+                <div className='w-1/2 flex flex-col justify-center'>
+                    <label
+                         htmlFor="difficulty"
+                        className="text-center mb-2 font-medium"
+                    >
+                        Difficulty
+                    </label>
                     <select
                         value={selectedDifficulty}
                         onChange={(e) => setSelectedDifficulty(e.target.value)}
-                        className="mt-6 p-3 text-lg border-2 border-gray-300 rounded-lg focus:ring-indigo-500  transition-all duration-200 text-black"
+                        className="p-3 text-lg border-2 border-gray-300 rounded-lg focus:ring-indigo-500  transition-all duration-200 text-black"
                     >
                         <option value="" disabled>
                             Select difficulty
@@ -165,7 +177,7 @@ export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal }) {
     
             {/* Quiz List */}
             <div
-                className="p-4 rounded-lg overflow-y-auto max-h-80 mt-6"
+                className="rounded-lg overflow-y-auto max-h-60 my-6 bg-gray-100 p-6 border-4 border-[#8B2DF1]"
                 ref={quizListRef}
             >
                 {data?.pages?.flatMap((page) => page?.quizzes || []).map((item) => (
@@ -191,7 +203,6 @@ export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal }) {
                         </div>
                     )}
             </div>
-            <button className="bg-black text-white hover:bg-white hover:text-black p-4 rounded-lg" onClick={fetchNextPage}>Load More</button>
         </div>
     );
 }

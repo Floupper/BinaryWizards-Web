@@ -24,13 +24,18 @@ export default function CreateQuizQuick() {
   ];
 
   useEffect(() => {
-    CreateQuizService.fetchCategories()
-      .then(data => setCategories(data))
-      .catch(error => toast.info('Error fetching categories:', error));
+    async function fetchData() {
+      try {
+        const categories = await CreateQuizService.fetchCategories();
+        setCategories(categories);
 
-    CreateQuizService.fetchDifficulties()
-      .then(data => setDifficulties(data))
-      .catch(error => toast.info('Error fetching difficulties:', error));
+        const difficulties = await CreateQuizService.fetchDifficulties();
+        setDifficulties(difficulties);
+      } catch (error) {
+        toast.error("Error fetching data. Please try again.");
+      }
+    }
+    fetchData();
   }, []);
 
   const handleSubmit = async () => {
@@ -50,10 +55,8 @@ export default function CreateQuizQuick() {
     setIsLoading(true);
 
     try {
-      const selectedCat = selectedCategory || categories[Math.floor(Math.random() * categories.length)].id;
-
       const quizData = {
-        category: Number(selectedCat),
+        category: Number(selectedCategory),
         amount: Number(amount),
         difficulty,
       };
@@ -64,7 +67,7 @@ export default function CreateQuizQuick() {
       const gameId = gameData.game_id;
       navigate(`/question/${gameId}`);
     } catch (error) {
-      toast.info(error.message);
+      toast.error("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -75,69 +78,76 @@ export default function CreateQuizQuick() {
     setAmount(value);
   };
 
-  const handleKeyDown = (e) => {
-    if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Delete') {
-      e.preventDefault();
-    }
-  };
-
   const handleSetTimer = (value) => {
     setSelectedTimer(value);
-  };  
+  };
 
   return (
-    <div className="min-h-screen bg-cover bg-center"
+    <div
+      className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/backgrounds/CreateQuizCuickBackground.svg')" }}
     >
       <Navbar />
-      <div className="flex flex-col items-center justify-center"
-        style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+      <div
+        className="flex flex-col items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
         <div className="bg-white bg-opacity-0 rounded-lg p-8 space-y-6 text-center">
-          <h1 className="text-4xl font-bold text-white font-mixed">Create a Quiz</h1>
+          <h1 className="text-4xl font-bold text-white font-mixed">Quick Quiz</h1>
           <form className="space-y-4">
-            <div className="form-group">
-              <label htmlFor="category" className="block text-sm font-medium text-white">Category</label>
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium text-white">
+                Category
+              </label>
               <select
                 id="category"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black"
               >
-                <option value="" disabled>Select a category</option>
+                <option value="" disabled>
+                  Select a category
+                </option>
                 {categories.map((category) => (
-                  <option key={category.id} value={category.id}>{category.name}</option>
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
                 ))}
               </select>
             </div>
-            <div className="form-group">
-              <label htmlFor="number" className="block text-sm font-medium text-white">Number of questions</label>
+            <div>
+              <label htmlFor="number" className="block text-sm font-medium text-white">
+                Number of questions
+              </label>
               <input
                 type="number"
                 id="number"
                 value={amount}
                 onInput={handleAmountInput}
-                onKeyDown={handleKeyDown}
                 placeholder="Enter the number of questions"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black"
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="difficulty" className="block text-sm font-medium text-white">Difficulty</label>
+            <div>
+              <label htmlFor="difficulty" className="block text-sm font-medium text-white">
+                Difficulty
+              </label>
               <select
                 id="difficulty"
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black"
               >
-                <option value="" disabled>Select a difficulty</option>
+                <option value="" disabled>
+                  Select a difficulty
+                </option>
                 {difficulties.map((level) => (
                   <option key={level} value={level}>
                     {level.charAt(0).toUpperCase() + level.slice(1)}
                   </option>
                 ))}
               </select>
-              <label htmlFor="mode" className="block text-sm font-medium text-white">Mode</label>
+            </div>
+            <div>
               <div
                 onClick={() => setIsTimeCheck(!isTimeCheck)}
                 className={`flex items-center cursor-pointer space-x-2 px-4 py-2 rounded-xl border-2 transition-all duration-200 ease-in-out ${
@@ -169,13 +179,13 @@ export default function CreateQuizQuick() {
                 <span>Time</span>
               </div>
               {isTimeCheck && (
-                <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                <div className="bg-white p-6 rounded-lg shadow-lg w-96 mt-4">
                   <h2 className="font-bold mb-4 text-center">Select a Timer</h2>
                   <div className="flex justify-around items-center mb-6">
-                    {timers.map((timer, index) => (
+                    {timers.map((timer) => (
                       <button
-                      type='button'
-                        key={index}
+                        key={timer.value}
+                        type="button"
                         onClick={() => handleSetTimer(timer.value)}
                         className={`w-20 h-20 rounded-lg flex items-center justify-center text-lg font-medium ${timer.color} ${
                           selectedTimer === timer.value
@@ -193,7 +203,9 @@ export default function CreateQuizQuick() {
             <button
               type="button"
               onClick={handleSubmit}
-              className={`w-full bg-black text-white py-2 rounded-md transition duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'}`}
+              className={`w-full bg-black text-white py-2 rounded-md transition duration-300 ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+              }`}
               disabled={isLoading}
             >
               {isLoading ? (
