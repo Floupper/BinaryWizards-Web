@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createGameWithQuizId } from "../services/JoinQuizService";
 
-const TimeModal = ({ closeModal, quiz, route }) => {
+const TimeModal = ({ closeModal, quiz, quiz_id }) => {
   const [selectedTimer, setSelectedTimer] = useState("none");
   const navigate = useNavigate();
-
+  
   const timers = [
     { value: "none", label: "None", color: "bg-gray-200" },
     { value: "easy", label: "30s", color: "bg-green-200" },
@@ -15,9 +15,15 @@ const TimeModal = ({ closeModal, quiz, route }) => {
 
   const handleCreateGame = async () => {
     try {
-      const data = await createGameWithQuizId(quiz.quiz_id, selectedTimer);
+      let data;
+      if(quiz) {
+        data = await createGameWithQuizId(quiz.quiz_id, selectedTimer);
+      }
+      else {
+        data = await createGameWithQuizId(quiz_id, selectedTimer);
+      }
       if (data?.game_id) {
-        navigate(`${route}${data.game_id}`);
+        navigate(`/question/${data.game_id}`);
       } else {
         console.error("Failed to create the game. No game ID returned.");
       }

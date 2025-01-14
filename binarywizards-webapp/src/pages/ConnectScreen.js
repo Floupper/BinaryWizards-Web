@@ -27,7 +27,6 @@ export default function ConnectScreen() {
       const token = await ConnectService(username, password);
       if (token) {
         localStorage.setItem('token', token);
-        console.log('token:', token);
         const redirectPath = searchParams.get('redirect') || '/dashboard';
         navigate(redirectPath);
       }

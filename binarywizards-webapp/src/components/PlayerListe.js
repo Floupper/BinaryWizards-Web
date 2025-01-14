@@ -172,7 +172,7 @@ export default function PlayersList({ game_mode }) {
           </div>
 
           <div className="mb-4">
-            <QRCodeCanvas value={`${window.location.origin}/game/${gameId}`} size={128} />
+            <QRCodeCanvas value={`${window.location.origin}/team-mode-join-team/${gameId}`} size={128} />
           </div>
 
           {quizDetails && (

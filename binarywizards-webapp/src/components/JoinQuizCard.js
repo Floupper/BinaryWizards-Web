@@ -15,17 +15,15 @@ const renderDifficultyStars = (difficulty) => {
   }
 };
 
-export default function JoinQuizCard({ quiz, route, enableModal = true, onQuizSelect }) {
+export default function JoinQuizCard({ quiz, enableModal, onQuizSelect }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-      if (enableModal && route === "/question/") {
+      if (enableModal) {
           setIsModalOpen(true);
       } else if (onQuizSelect) {
           onQuizSelect(quiz);
-      } else {
-          navigate(route);
       }
   };
 
@@ -37,7 +35,7 @@ export default function JoinQuizCard({ quiz, route, enableModal = true, onQuizSe
       <div>
           <button
               onClick={handleCardClick}
-              className="join-quiz-card p-2 bg-white border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 flex items-center w-[40rem] h-[4rem] mb-5"
+              className="join-quiz-card p-2 bg-white border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 flex items-center w-[30rem] h-[4rem] mb-5"
               tabIndex="0"
           >
               <div className="quiz-info flex justify-between items-center w-full">
@@ -51,7 +49,7 @@ export default function JoinQuizCard({ quiz, route, enableModal = true, onQuizSe
               </div>
           </button>
           {isModalOpen && enableModal && (
-              <TimeModal closeModal={closeModal} route={route} quiz={quiz} />
+              <TimeModal closeModal={closeModal} quiz={quiz} />
           )}
       </div>
   );
