@@ -1,5 +1,6 @@
 import CustomAudioPlayer from './CustomAudioPlayer';
 import { useState } from 'react';
+
 export default function QuestionChoiceMultiple({
   question_choice,
   correctOptionIndex,
@@ -11,7 +12,7 @@ export default function QuestionChoiceMultiple({
   const [audioOnSelected, setAudioOnSelected] = useState(false);
 
   return (
-    <div className="QuestionChoiceMultiple place-items-center grid justify-items-center grid-cols-2 gap-4">
+    <div className="QuestionChoiceMultiple place-items-center grid justify-items-center grid-cols-1 sm:grid-cols-2 gap-4">
       {question_choice.map((choice) => {
         const { option_index, option_content } = choice;
         const { type, content } = option_content;
@@ -45,9 +46,9 @@ export default function QuestionChoiceMultiple({
         };
 
         return (
-          <div key={option_index} className="flex items-center place-items-center min-w-[30vh]">
+          <div key={option_index} className="flex items-center justify-center min-w-[30vh]">
             <button
-              onClick={() => { (type != "audio" && (onQuestionSelect(option_index))) }}
+              onClick={() => { (type !== "audio" && (onQuestionSelect(option_index))) }}
               className={`
                 w-full px-6 py-3 text-center rounded-lg 
                 border-2 bg-white text-black 

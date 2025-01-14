@@ -4,11 +4,11 @@ export default function QuestionChoiceMultipleTeamMode({
   selectedQuestionId,
   isAnswered,
   onQuestionSelect,
-  teamSelections = {}, // Objet qui contient les sélections par équipe
+  teamSelections = {}, // Object that contains team selections
   skiped,
 }) {
   return (
-    <div className="QuestionChoiceMultipleTeamMode place-items-center grid justify-items-center grid-cols-2 gap-4">
+    <div className="QuestionChoiceMultipleTeamMode place-items-center grid justify-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {question_choice.map((choice) => {
         const { option_index, option_content } = choice;
         const { type, content } = option_content || {};
@@ -27,13 +27,13 @@ export default function QuestionChoiceMultipleTeamMode({
           buttonClass = "bg-red-100 border-red-500 text-red-700";
         }
 
-        // Ajouter une classe pour désactiver visuellement l'option sélectionnée
+        // Add a class to visually disable the selected option
         const isDisabled = isAnswered && selectedQuestionId === option_index;
         if (isDisabled) {
-          buttonClass += " opacity-50"; // Rend l'option sélectionnée semi-transparente
+          buttonClass += " opacity-50"; // Make the selected option semi-transparent
         }
 
-        // Rendu du contenu de l'option (texte, image, audio)
+        // Render option content (text, image, audio)
         const renderOptionContent = () => {
           switch (type) {
             case "text":
@@ -58,7 +58,7 @@ export default function QuestionChoiceMultipleTeamMode({
           }
         };
 
-        // Affichage des sélections des équipes
+        // Render team selections
         const renderTeamSelections = () => {
           if (teamSelections[option_index]) {
             return (
@@ -71,7 +71,7 @@ export default function QuestionChoiceMultipleTeamMode({
         };
 
         return (
-          <div key={option_index} className="flex items-center place-items-center min-w-[30vh]">
+          <div key={option_index} className="flex flex-col items-center justify-center min-w-[30vh]">
             <button
               onClick={() => onQuestionSelect(option_index)}
               className={`
