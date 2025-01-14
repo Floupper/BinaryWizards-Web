@@ -13,29 +13,53 @@ export default function HomeScreen() {
             style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
         >
             <Navbar />
-            <div className="flex flex-col items-center justify-center flex-grow w-full px-6">
-                <h1 className="text-3xl font-bold mb-20">Play Game</h1>
-                <div className="flex px-20 w-full text-center h-[20rem] gap-x-10">
+            <h1 className="text-3xl font-bold mt-[5rem] mb-[6rem]">Play Game</h1>
+            <div className="flex flex-col items-center justify-center w-full px-6">
+                <div className="flex px-20 w-8/12 text-center h-[24rem] gap-x-10">
                     <button
                         onClick={() => navigate('/join-quiz')}
-                        className="flex flex-col items-center justify-between w-8/12 bg-white py-4 rounded-lg mb-4 transition duration-300 pt-20"
+                        className="flex flex-col items-center w-full justify-between bg-white py-4 rounded-lg mb-4 transition duration-300 pt-[8rem] hover:border-[0.5rem] hover:border-[#FDD05C]"
                     >
-                        <EmojiProvider data={EmojiData}>
-                            <Emoji name='smiling-face-with-halo' width={60} />
-                        </EmojiProvider>
-                        <h1 className="mt-auto text-center text-xl">Singleplayer</h1>
+                        <div className='p-3'>
+                            <EmojiProvider data={EmojiData}>
+                                <Emoji name='beaming-face-with-smiling-eyes' width={50} />
+                            </EmojiProvider>
+                        </div>
+                        <h1 className="mt-auto text-center text-xl mb-5">Singleplayer</h1>
                     </button>
                     <button
                         onClick={() => (token ? navigate('/scrum-mode-configure') : navigate('/signin'))}
-                        className="flex justify-center w-full bg-purple-600 text-white hover:bg-purple-700 py-4 rounded-lg mb-4 transition duration-300"
-                    >
-                        Scrum
+                        className="flex flex-col items-center w-full justify-between bg-white py-4 rounded-lg mb-4 transition duration-300 pt-[8rem] hover:border-[0.5rem] hover:border-[#417336]"                    >
+                        <div className='flex'>
+                            <div className='p-3'>
+                                <EmojiProvider data={EmojiData}>
+                                    <Emoji name='beaming-face-with-smiling-eyes' width={50} />
+                                </EmojiProvider>
+                            </div>
+                            <div className='p-3'>
+                                <EmojiProvider data={EmojiData}>
+                                    <Emoji name='grinning-squinting-face' width={50} />
+                                </EmojiProvider>
+                            </div>
+                        </div>
+                        <h1 className="mt-auto text-center text-xl mb-5">Scrum</h1>
                     </button>
                     <button
                         onClick={() => (token ? navigate('/team-mode-configure') : navigate('/signin'))}
-                        className="flex justify-center w-full bg-purple-600 text-white hover:bg-purple-700 py-4 rounded-lg transition duration-300"
-                    >
-                        Team
+                        className="flex flex-col items-center w-full justify-between bg-white py-4 rounded-lg mb-4 transition duration-300 pt-[8rem] hover:border-[0.5rem] hover:border-[#F22828B2]"                    >
+                        <div className='flex gap-x-2'>
+                            <div className='bg-[#F8766D] p-3 rounded-full'>
+                                <EmojiProvider data={EmojiData}>
+                                    <Emoji name='beaming-face-with-smiling-eyes' width={50} />
+                                </EmojiProvider>
+                            </div>
+                            <div className='bg-[#597DDC] p-3 rounded-full'>
+                                <EmojiProvider data={EmojiData}>
+                                    <Emoji name='grinning-squinting-face' width={50} />
+                                </EmojiProvider>
+                            </div>
+                        </div>
+                        <h1 className="mt-auto text-center text-xl mb-5">Team</h1>
                     </button>
                 </div>
             </div>

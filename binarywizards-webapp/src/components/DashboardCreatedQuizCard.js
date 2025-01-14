@@ -25,7 +25,6 @@ export default function CreatedQuizCard({ quiz, route }) {
   };
 
   const handlePlayClick = () => {
-    console.log(quiz.id);
     setIsModalOpen(true);
   };
 

@@ -7,7 +7,7 @@ import DashboardCreatedQuizCard from './DashboardCreatedQuizCard';
 
 import JoinQuizCard from './JoinQuizCard';
 
-export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal = false }) {
+export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal }) {
 
 
     const [text, setText] = useState('');
@@ -98,62 +98,64 @@ export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal = false }
         <div className="flex flex-col items-center p-8 mx-auto">
             <input
                 type="text"
-                className="p-4 text-lg border-2 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full max-w-lg transition-all duration-200"
+                className="p-4 text-lg border-2 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-[30rem] transition-all duration-200"
                 placeholder="Enter the text to search for a quiz"
                 value={text}
                 onChange={(e) => handleTextChange(e.target.value)}
             />
-            <div className="flex flex-col sm:flex-row sm:space-x-4 w-full max-w-lg">
-                <div className="flex flex-col w-full">
-                    <label
-                        htmlFor="minQuestions"
-                        className="mb-2 font-medium text-white"
-                    >
-                        Min
-                    </label>
-                    <input
-                        id="minQuestions"
-                        type="number"
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
-                        value={minQuestions}
-                        onChange={(e) => handleMinChange(e.target.value)}
-                        placeholder="Min"
-                    />
+            <div className='flex flex-row gap-x-4'>
+                <div className="flex flex-col w-1/2">
+                    <div className="flex flex-col w-full">
+                        <label
+                            htmlFor="minQuestions"
+                            className="mb-2 font-medium text-white"
+                        >
+                            Min
+                        </label>
+                        <input
+                            id="minQuestions"
+                            type="number"
+                            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                            value={minQuestions}
+                            onChange={(e) => handleMinChange(e.target.value)}
+                            placeholder="Min"
+                        />
+                    </div>
+                    <div className="flex flex-col w-full mt-4 sm:mt-0">
+                        <label
+                            htmlFor="maxQuestions"
+                            className="mb-2 font-medium text-white"
+                        >
+                            Max
+                        </label>
+                        <input
+                            id="maxQuestions"
+                            type="number"
+                            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                            value={maxQuestions}
+                            onChange={(e) => handleMaxChange(e.target.value)}
+                            placeholder="Max"
+                        />
+                    </div>
                 </div>
-                <div className="flex flex-col w-full mt-4 sm:mt-0">
-                    <label
-                        htmlFor="maxQuestions"
-                        className="mb-2 font-medium text-white"
+                <div className='w-1/2 flex justify center items-center'>
+                    <select
+                        value={selectedDifficulty}
+                        onChange={(e) => setSelectedDifficulty(e.target.value)}
+                        className="mt-6 p-3 text-lg border-2 border-gray-300 rounded-lg focus:ring-indigo-500  transition-all duration-200 text-black"
                     >
-                        Max
-                    </label>
-                    <input
-                        id="maxQuestions"
-                        type="number"
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
-                        value={maxQuestions}
-                        onChange={(e) => handleMaxChange(e.target.value)}
-                        placeholder="Max"
-                    />
+                        <option value="" disabled>
+                            Select difficulty
+                        </option>
+                        {difficulties.map((difficulty) => (
+                            <option key={difficulty} value={difficulty} className="text-gray-700">
+                                {difficulty}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </div>
-    
-            {/* Difficulty Selector */}
-            <select
-                value={selectedDifficulty}
-                onChange={(e) => setSelectedDifficulty(e.target.value)}
-                className="mt-6 p-3 text-lg border-2 border-gray-300 rounded-lg focus:ring-indigo-500 w-full max-w-lg transition-all duration-200 text-black"
-            >
-                <option value="" disabled>
-                    Select difficulty
-                </option>
-                {difficulties.map((difficulty) => (
-                    <option key={difficulty} value={difficulty} className="text-gray-700">
-                        {difficulty}
-                    </option>
-                ))}
-            </select>
-    
+        
             {/* Loading Indicator */}
             {isLoading && (
                 <div className="text-lg text-gray-400 my-6 animate-pulse">
@@ -168,8 +170,10 @@ export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal = false }
             >
                 {data?.pages?.flatMap((page) => page?.quizzes || []).map((item) => (
                     <JoinQuizCard
+                        enableModal={enableModal}
                         key={item.quiz_id}
                         quiz={item}
+                        onQuizSelect={onQuizSelect}
                     />
                 ))}
     
