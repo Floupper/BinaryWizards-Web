@@ -4,16 +4,16 @@ const Chrono = forwardRef(({ sendResponse }, ref) => {
   const [time, setTime] = useState(0);
   const intervalIdRef = useRef(null);
 
-  // Function to start the timer
   const startTimer = (timeAvailable) => {
-    clearInterval(intervalIdRef.current); // Clear any previous interval
-    setTime(timeAvailable); // Set the initial time state
+    stopTimer(); 
+    setTime(timeAvailable);
 
     if (timeAvailable > 0) {
       intervalIdRef.current = setInterval(() => {
         setTime((prevTime) => {
           if (prevTime <= 1) {
-            clearInterval(intervalIdRef.current); // Stop the timer when time is 0
+            clearInterval(intervalIdRef.current);
+            intervalIdRef.current = null; 
             onTimerEnd();
             return 0;
           }
@@ -21,34 +21,32 @@ const Chrono = forwardRef(({ sendResponse }, ref) => {
         });
       }, 1000);
     } else {
-      onTimerEnd(); // If the time is already expired, call the timer end function
+      onTimerEnd();
     }
   };
 
-  // Function to manually stop the timer
   const stopTimer = () => {
-    clearInterval(intervalIdRef.current);
+    if (intervalIdRef.current) {
+      clearInterval(intervalIdRef.current);
+      intervalIdRef.current = null;
+    }
   };
 
-  // Function to reset the timer with a new available time
   const resetTimer = (timeAvailable) => {
     stopTimer();
-    startTimer(timeAvailable); // Restart the timer with the available time
+    startTimer(timeAvailable);
   };
 
-  // Function called when the timer ends
   const onTimerEnd = () => {
-    sendResponse(-1); // Send a response indicating the time is up
+    sendResponse(-1); 
   };
 
-  // Function to format the time in minutes and seconds
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  // Expose stop and reset methods to the parent component
   useImperativeHandle(ref, () => ({
     stopTimer,
     resetTimer,
