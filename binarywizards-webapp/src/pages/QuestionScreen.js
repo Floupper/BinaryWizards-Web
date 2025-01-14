@@ -38,6 +38,7 @@ export default function QuestionScreen() {
   }, []);
 
   const handleQuestionSelect = async (selectedId) => {
+
     if (isAnswered) return;
     if (mode === "time") chronoRef.current?.stopTimer();
 
@@ -45,16 +46,16 @@ export default function QuestionScreen() {
     setIsAnswered(true);
     try {
       let result;
-      if((mode === "standard" && selectedId != -1) || mode === "time") {
+      if ((mode === "standard" && selectedId != -1) || mode === "time") {
         result = await PostAnswers(id, questionIndex, selectedId);
-      }    
+      }
       setIdCorrectAnswers(result.correct_option_index);
     } catch (error) {
       if (error.message === "Question's index invalid") {
         toast.success("Updating the current question...");
         await handleFetchQuiz();
       } else {
-        if(selectedId != -1){
+        if (selectedId != -1) {
           toast.error("Error sending answer.");
         }
         setIsAnswered(false);
@@ -154,9 +155,8 @@ export default function QuestionScreen() {
             />
           </div>
           <button
-            className={`px-6 py-3 rounded-lg text-white text-lg font-medium ${
-              isAnswered ? "bg-black hover:bg-gray-800" : "bg-gray-400 cursor-not-allowed"
-            }`}
+            className={`px-6 py-3 rounded-lg text-white text-lg font-medium ${isAnswered ? "bg-black hover:bg-gray-800" : "bg-gray-400 cursor-not-allowed"
+              }`}
             onClick={handleReload}
             disabled={!isAnswered}
           >

@@ -40,11 +40,10 @@ export default function Navbar() {
 
       {/* Navigation Links */}
       <ul
-        className={`md:flex md:items-center md:gap-5 list-none ${
-          isOpen
-            ? "flex flex-col items-center absolute top-full left-0 w-full p-5 bg-white"
-            : "hidden md:flex"
-        }`}
+        className={`md:flex md:items-center md:gap-5 list-none ${isOpen
+          ? "flex flex-col items-center absolute top-full left-0 w-full p-5 bg-white"
+          : "hidden md:flex"
+          }`}
       >
         {/* Play */}
         <li className="flex items-center mr-5">
@@ -120,7 +119,7 @@ export default function Navbar() {
             <li className="flex items-center mr-5">
               <button
                 onClick={handleSignout}
-                className="bg-black text-white rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
+                className=" border-2 border-black text-black rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
                 style={{
                   fontFamily: "Helvetica",
                   fontSize: "1.401rem",
@@ -136,7 +135,7 @@ export default function Navbar() {
           <li className="flex items-center">
             <button
               onClick={handleSignin}
-              className="bg-black text-white rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
+              className="border-2 border-black text-black rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
               style={{
                 fontFamily: "Helvetica",
                 fontSize: "1.401rem",
