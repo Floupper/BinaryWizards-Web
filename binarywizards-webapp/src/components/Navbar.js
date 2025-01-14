@@ -40,26 +40,12 @@ export default function Navbar() {
 
       {/* Navigation Links */}
       <ul
-        className={`md:flex md:items-center md:gap-5 list-none ${
+        className={`md:flex justify-center md:items-center md:gap-5 list-none ${
           isOpen
             ? "flex flex-col items-center absolute top-full left-0 w-full p-5 bg-white"
             : "hidden md:flex"
         }`}
       >
-        {/* Play */}
-        <li className="flex items-center mr-5">
-          <NavLink
-            to="/"
-            className="flex items-center text-black"
-            style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
-          >
-            <EmojiProvider data={emojiData}>
-              <Emoji name="waving-hand" width={20} />
-            </EmojiProvider>
-            <span className="ml-2">Play</span>
-          </NavLink>
-        </li>
-
         {/* Download */}
         <li className="flex items-center mr-5">
           <a
@@ -74,6 +60,19 @@ export default function Navbar() {
             <span className="ml-2">Download</span>
           </a>
         </li>
+        {/* Play */}
+        <li className="flex items-center mr-5">
+          <NavLink
+            to="/"
+            className="flex items-center text-black"
+            style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+          >
+            <EmojiProvider data={emojiData}>
+              <Emoji name="waving-hand" width={20} />
+            </EmojiProvider>
+            <span className="ml-2">Play</span>
+          </NavLink>
+        </li>
 
         {/* Create Quiz */}
         <li className="flex items-center mr-5">
@@ -82,10 +81,21 @@ export default function Navbar() {
             className="flex items-center text-black"
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
-            <EmojiProvider data={emojiData}>
-              <Emoji name="paintbrush" width={20} />
-            </EmojiProvider>
-            <span className="ml-2">Create Quiz</span>
+              {token ? (
+                <>
+                  <EmojiProvider data={emojiData}>
+                    <Emoji name="paintbrush" width={20} />
+                  </EmojiProvider>
+                  <span className="ml-2">Create Quiz</span>
+                </>
+              ) : (
+                <>
+                  <EmojiProvider data={emojiData}>
+                    <Emoji name="dashing-away" width={20} />
+                  </EmojiProvider>
+                  <span className="ml-2">Quick Quiz</span>
+                </>
+              )}
           </NavLink>
         </li>
 
@@ -99,9 +109,9 @@ export default function Navbar() {
                 style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
               >
                 <EmojiProvider data={emojiData}>
-                  <Emoji name="paintbrush" width={20} />
+                  <Emoji name="dashing-away" width={20} />
                 </EmojiProvider>
-                <span className="ml-2">Create Quick Quiz</span>
+                <span className="ml-2">Quick Quiz</span>
               </NavLink>
             </li>
 
@@ -109,10 +119,13 @@ export default function Navbar() {
             <li className="flex items-center mr-5">
               <NavLink
                 to="/dashboard"
-                className="text-black"
+                className="flex items-center text-black"
                 style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
               >
-                Dashboard
+                <EmojiProvider data={emojiData}>
+                  <Emoji name="bust-in-silhouette" width={20} />
+                </EmojiProvider>
+                <span className="ml-2">Dashboard</span>
               </NavLink>
             </li>
 
