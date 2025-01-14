@@ -7,11 +7,9 @@ import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
 export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
   const [selectedOptionInput, setSelectedOptionInput] = useState({
-    type: 'boolean',
-    choices: [{ type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }],
-    type_of_question: 'text',
-    correctAnswerBoolean: 0,
-    correctAnswerMultiple: 0
+    choices: [{ content: "" }, { content: "" }, { content: "" }, { content: "" }],
+    type: 'text',
+    correctAnswer: 0,
   });
 
   const [categories, setCategories] = useState([]);
@@ -19,7 +17,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   const [quizDifficulty, setQuizDifficulty] = useState('easy');
   const [difficulties, setDifficulties] = useState([]);
   const [questionData, setQuestionData] = useState();
-  const questionType = 'multiple';
+  const questionType = 'text';
   const [questionOptions, setQuestionOptions] = useState();
   const [questionText, setQuestionText] = useState('Write your question');
   const [isEditing, setIsEditing] = useState(false);
@@ -30,10 +28,9 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
       setQuestionText('Write your question');
       setSelectedOptionInput({
-        type: 'boolean',
-        choices: [{ type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }],
-        correctAnswerBoolean: 0,
-        correctAnswerMultiple: 0
+        choices: [{ content: "" }, { content: "" }, { content: "" }, { content: "" }],
+        type: 'text',
+        correctAnswer: 0,
       });
       setIsEditing(false);
       setQuestionData();
@@ -80,45 +77,21 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
         setSelectedCategory(question.question_category);
 
         setSelectedOptionInput((prevState) => {
-          const isMultiple = question.question_type === 'multiple';
 
-          const choices = isMultiple
-            ? question.options.map((option) => ({
-              type: option.option_content?.type || 'text',
-              content: option.option_content?.content || '',
-            }))
-            : [
-              { type: 'text', content: '' },
-              { type: 'text', content: '' },
-              { type: 'text', content: '' },
-              { type: 'text', content: '' },
-            ];
 
-          const correctAnswerBoolean = !isMultiple
-            ? question.options.find((option) => option.is_correct_answer)?.option_content?.content === 'True'
-              ? 1
-              : 0
-            : null;
+          const choices = question.options.map((option) => ({
+            content: option.option_content?.content || "",
+          })) || [{ content: '' }, { content: '' }];
 
-          const correctAnswerMultiple = isMultiple
-            ? question.options.findIndex((option) => option.is_correct_answer)
-            : null;
+          const correctAnswer = question.options.findIndex((option) => option.is_correct_answer) || 0;
 
-          console.log(
-            'correctAnswerMultiple',
-            question.question_type,
-            choices,
-            correctAnswerMultiple,
-            correctAnswerBoolean
-          );
+
 
           return {
             ...prevState,
-            type: question.question_type,
+            type: question.question_type || 'text',
             choices,
-            type_of_question: choices[0].type || 'text',
-            correctAnswerMultiple,
-            correctAnswerBoolean,
+            correctAnswer,
           };
         });
       })
@@ -154,32 +127,29 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       toast.error("Please select a difficulty.");
       return;
     }
-    if (
-      questionType === "multiple" &&
-      selectedOptionInput.choices.some(choice => !choice.content || !choice.content.trim())
-    ) {
+    if (selectedOptionInput.choices.some(choice => !choice.content || !choice.content.trim())) {
       toast.error("Please ensure all choices are filled out.");
       return;
     }
+
     try {
       const options = [];
-        options.push(
+      options.push(
+        ...selectedOptionInput.choices.map((choice, index) => ({
+          option_content: {
+            content: choice.content
+          },
+          is_correct_answer: selectedOptionInput.correctAnswerMultiple === index,
+          option_index: index,
 
-          ...selectedOptionInput.choices.map((choice, index) => ({
-            option_content: {
-              type: choice.type,
-              content: choice.content
-            },
-            is_correct_answer: selectedOptionInput.correctAnswerMultiple === index,
-            option_index: index
-          }))
-        );
+        }))
+      );
 
       const requestBody = {
         question_text: questionText,
         question_difficulty: quizDifficulty,
         question_category: selectedCategory,
-        question_type: questionType,
+        question_type: selectedOptionInput.type,
         options: options,
       };
 
@@ -211,8 +181,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   const handleOnTypeQuestionChange = (newType) => {
     setSelectedOptionInput((prevState) => ({
       ...prevState,
-      choices: prevState.choices.map(() => ({ type: newType, content: "" })),
-      type_of_question: newType,
+      choices: prevState.choices.map(() => ({ content: "" })),
+      type: newType,
     }));
   };
 
@@ -286,24 +256,22 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
               />
             )}
           </div>
-          {questionType === "multiple" ? (
-            <div className="display:flex text-center justify-center">
-              <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
-                onClick={() => handleOnTypeQuestionChange("text")}>Texte</button>
 
-              <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
-                onClick={() => handleOnTypeQuestionChange("image")}>Image</button>
+          <div className="display:flex text-center justify-center">
+            <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
+              onClick={() => handleOnTypeQuestionChange("text")}>Texte</button>
 
-              <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
-                onClick={() => handleOnTypeQuestionChange("audio")}>Audio</button>
-            </div>
-          ) : (<></>)}
-          {/* Options */}
+            <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
+              onClick={() => handleOnTypeQuestionChange("image")}>Image</button>
+
+            <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
+              onClick={() => handleOnTypeQuestionChange("audio")}>Audio</button>
+          </div>
           <div className="flex  justify-center">
-              <MultipleChoiceQuestion
-                selectedOptionInput={selectedOptionInput}
-                setSelectedOptionInput={setSelectedOptionInput}
-              />
+            <MultipleChoiceQuestion
+              selectedOptionInput={selectedOptionInput}
+              setSelectedOptionInput={setSelectedOptionInput}
+            />
           </div>
         </div >
       </div>

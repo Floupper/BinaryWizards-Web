@@ -9,14 +9,14 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
   if (!selectedOptionInput.choices || selectedOptionInput.choices.length === 0) {
     setSelectedOptionInput((prevState) => ({
       ...prevState,
-      choices: [{ type: "text", content: "" }, { type: "text", content: "" }],
-      type_of_question: "text",
+      choices: [{ content: "" }, { content: "" }],
+      type: "text",
       correctAnswerMultiple: 0,
     }));
   }
 
   const handleChangeAnswerText = (event, index) => {
-    const value = event.target.value || { type: "text", content: "" };
+    const value = event.target.value || { content: "" };
     setSelectedOptionInput((prevState) => ({
       ...prevState,
       choices: prevState.choices.map((choice, i) =>
@@ -29,7 +29,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
     if (selectedOptionInput.choices.length < 8) {
       setSelectedOptionInput((prevState) => ({
         ...prevState,
-        choices: [...prevState.choices, { type: selectedOptionInput.type_of_question, content: "" }],
+        choices: [...prevState.choices, { content: "" }],
       }));
     }
   };
@@ -116,7 +116,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
               }
             />
 
-            {choice.type === "text" ? (
+            {selectedOptionInput.type === "text" ? (
               <input
                 type="text"
                 value={choice.content || ""}
@@ -127,7 +127,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
                   : "border-2 border-gray-300"
                   }`}
               />
-            ) : choice.type === "image" ? (
+            ) : selectedOptionInput.type === "image" ? (
               <div className="flex items-center gap-4">
                 {!choice.content ? (
                   <>
@@ -159,7 +159,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
 
                 )}
               </div>
-            ) : choice.type === "audio" ? (
+            ) : selectedOptionInput.type === "audio" ? (
               <div className="flex items-center gap-4">
                 {!choice.content ? (
                   <>
