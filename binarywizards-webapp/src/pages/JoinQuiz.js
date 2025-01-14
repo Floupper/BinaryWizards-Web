@@ -72,7 +72,7 @@ export default function JoinQuiz() {
           ) : (
             <div className="flex flex-col items-center w-full">
               <div className="p-8 rounded-lg w-full text-center">
-                <h1 className="text-4xl sm:text-3xl font-bold mb-6 text-white">Play Quiz</h1>
+                <h1 className="text-4xl sm:text-3xl font-semibold mb-6 text-white">Play Quiz</h1>
                 <div className="form-group mb-4">
                   <input
                     type="text"

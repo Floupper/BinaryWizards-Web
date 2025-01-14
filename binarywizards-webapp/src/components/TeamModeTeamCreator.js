@@ -23,7 +23,7 @@ const TeamCreator = ({ onTeamsChange }) => {
 
   return (
     <div className="p-6 rounded-lg shadow-lg w-full max-w-lg bg-white">
-      <h2 className="text-lg font-bold mb-4 text-center">Teams</h2>
+      <h2 className="text-lg font-semibold mb-4 text-center">Teams</h2>
       <div className="mb-4">
         <input
           type="text"

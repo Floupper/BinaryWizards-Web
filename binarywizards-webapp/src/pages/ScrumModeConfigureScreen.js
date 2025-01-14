@@ -45,7 +45,7 @@ export default function ScrumModeConfigureScreen() {
       <div className="flex flex-col items-center flex-grow">
         <div className="w-full max-w-lg p-4 bg-white rounded-lg shadow-md">
           <div className="mb-4">
-            <label className="block mb-2 font-bold">Max Players</label>
+            <label className="block mb-2 font-semibold">Max Players</label>
             <input
               type="number"
               min="2"

@@ -51,7 +51,7 @@ export default function QuestionChoiceMultiple({
                 border-2 bg-white text-black 
                 hover:bg-gray-100 
                 transition-all duration-300 
-                ${selectedQuestionId === option_index ? 'font-bold' : ''}
+                ${selectedQuestionId === option_index ? 'font-semibold' : ''}
                 ${buttonClass}
               `}
               style={{

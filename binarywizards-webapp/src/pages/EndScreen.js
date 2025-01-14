@@ -62,7 +62,7 @@ export default function EndScreen() {
                 <div className="flex items-baseline justify-center mb-8">
                   <Emoji name="party-popper" width={80} />
                   <h1
-                    className="text-5xl font-bold mx-4"
+                    className="text-5xl font-semibold mx-4"
                     style={{
                       color: "#7A00FF",
                       fontFamily: "Sifonn, sans-serif",
@@ -85,7 +85,7 @@ export default function EndScreen() {
               </h2>
               <div className="flex gap-8 justify-center">
                 <button
-                  className="text-white font-bold py-4 px-8 transition hover:bg-gray-800"
+                  className="text-white font-semibold py-4 px-8 transition hover:bg-gray-800"
                   style={{
                     backgroundColor: "#000000",
                     borderRadius: "1.09875rem",
@@ -97,7 +97,7 @@ export default function EndScreen() {
                   Back to home page
                 </button>
                 <button
-                  className={`text-white font-bold py-4 px-8 flex items-center justify-center transition ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"}`}
+                  className={`text-white font-semibold py-4 px-8 flex items-center justify-center transition ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"}`}
                   style={{
                     backgroundColor: "#000000",
                     borderRadius: "1.09875rem",

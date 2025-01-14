@@ -92,7 +92,7 @@ export default function CreateQuizQuick() {
         className="flex flex-col items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-1 lg:px-4"
       >
         <div className="bg-white rounded-lg p-8 space-y-6 text-center w-[150%] lg:w-full">
-          <h1 className="text-3xl sm:text-4xl font-bold text-black">Quick Quiz</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-black">Quick Quiz</h1>
           <form className="space-y-4">
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-black">
@@ -180,7 +180,7 @@ export default function CreateQuizQuick() {
               </div>
               {isTimeCheck && (
                 <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-96 mt-4">
-                  <h2 className="font-bold mb-4 text-center">Select a Timer</h2>
+                  <h2 className="font-semibold mb-4 text-center">Select a Timer</h2>
                   <div className="flex justify-around items-center mb-6">
                     {timers.map((timer) => (
                       <button

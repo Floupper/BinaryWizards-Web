@@ -18,7 +18,7 @@ export default function PlayedQuizCard({ quiz }) {
   return (
     <div className="created-quiz-card bg-white shadow-lg rounded-3xl border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col items-center justify-between w-[16rem] h-[18rem] p-6 m-3">
       <div className="quiz-title bg-[#8B2DF1] text-white font-semibold rounded-lg px-4 py-2 mb-4 text-center w-full">
-        <h3 className="text-2xl font-bold">{quiz.quiz_title}</h3>
+        <h3 className="text-2xl font-semibold">{quiz.quiz_title}</h3>
       </div>
       <div className='flex flex-col h-full justify-center'>
         <p className="text-lg mb-4 text-gray-700">

@@ -14,7 +14,7 @@ export default function HomeScreen() {
       style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
     >
       <Navbar />
-      <h1 className="text-3xl font-bold mt-20 mb-24 text-white">Play Game</h1>
+      <h1 className="text-3xl font-semibold mt-20 mb-24 text-white">Play Game</h1>
       <div className="flex flex-col items-center justify-center w-full md:w-10/12 px-6">
         <div className="flex flex-wrap justify-center gap-8 w-full h-[22rem] xl:h-[28rem] h-max">
           {/* Singleplayer Button */}

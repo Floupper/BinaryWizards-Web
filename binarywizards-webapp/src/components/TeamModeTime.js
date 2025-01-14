@@ -11,7 +11,7 @@ const TimeSelector = ({ onTimerSelect }) => {
 
   return (
     <div className="p-6 rounded-lg shadow-lg w-full max-w-lg bg-white">
-      <h2 className="text-lg font-bold mb-4 text-center">Select a Timer</h2>
+      <h2 className="text-lg font-semibold mb-4 text-center">Select a Timer</h2>
       <div className="flex justify-around items-center mb-6">
         {timers.map((timer, index) => (
           <button

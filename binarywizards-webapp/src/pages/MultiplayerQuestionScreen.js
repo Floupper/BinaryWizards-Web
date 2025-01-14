@@ -166,7 +166,7 @@ export default function MultiplayerQuestionScreen() {
 
       <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg">
         <div className="flex flex-col items-center space-y-6 p-6 bg-[#F4F2EE] rounded-lg shadow-md w-[110vh] h-[60vh]">
-          <h1 className="Question text-3xl font-bold text-center text-black">{questionText}</h1>
+          <h1 className="Question text-3xl font-semibold text-center text-black">{questionText}</h1>
           <div className="flex justify-center">
             <QuestionChoiceMultipleTeamMode
               question_choice={options}
@@ -177,7 +177,7 @@ export default function MultiplayerQuestionScreen() {
             />
           </div>
           {remainingTime !== null && (
-            <div className={`text-xl font-bold ${getChronoColor()}`}> {remainingTime}s</div>
+            <div className={`text-xl font-semibold ${getChronoColor()}`}> {remainingTime}s</div>
           )}
         </div>
       </div>
