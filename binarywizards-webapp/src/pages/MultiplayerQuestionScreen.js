@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import QuestionHUD from "../components/QuestionHUD";
 import QuestionChoiceMultipleTeamMode from "../components/QuestionChoiceMultipleTeamMode";
-import Chrono from "../components/Chrono";
 import Navbar from "../components/Navbar";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -27,7 +26,8 @@ export default function MultiplayerQuestionScreen() {
   const [isAnswered, setIsAnswered] = useState(false);
   const [idCorrectAnswers, setIdCorrectAnswers] = useState(null);
   const [timeAvailable, setTimeAvailable] = useState(null);
-  const chronoRef = useRef();
+  const [remainingTime, setRemainingTime] = useState(null);
+  const chronoInterval = useRef(null);
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -75,16 +75,35 @@ export default function MultiplayerQuestionScreen() {
       if (newSocket) {
         newSocket.disconnect();
       }
+      clearInterval(chronoInterval.current);
     };
   }, [gameId, navigate]);
 
   useEffect(() => {
-    if (timeAvailable !== null && chronoRef.current) {
-      chronoRef.current.resetTimer(timeAvailable);
+    if (timeAvailable !== null) {
+      const now = Date.now();
+      const endTime = now + timeAvailable * 1000;
+      const savedEndTime = localStorage.getItem(`endTime_${gameId}`);
+
+      // Use saved end time if it exists and is valid
+      const finalEndTime = savedEndTime && parseInt(savedEndTime, 10) > now ? parseInt(savedEndTime, 10) : endTime;
+      localStorage.setItem(`endTime_${gameId}`, finalEndTime);
+
+      setRemainingTime(Math.max(0, Math.floor((finalEndTime - now) / 1000)));
+
+      clearInterval(chronoInterval.current);
+      chronoInterval.current = setInterval(() => {
+        const timeLeft = Math.max(0, Math.floor((finalEndTime - Date.now()) / 1000));
+        setRemainingTime(timeLeft);
+        if (timeLeft <= 0) {
+          clearInterval(chronoInterval.current);
+        }
+      }, 1000);
     }
-  }, [timeAvailable]);
+  }, [timeAvailable, questionIndex]);
 
   const handleNewQuestion = (data) => {
+    console.log("data",data);
     const answeredQuestions = JSON.parse(localStorage.getItem(`answeredQuestions_${gameId}`)) || {};
     if (answeredQuestions[data.question_index] !== undefined) {
       setIsAnswered(true);
@@ -134,6 +153,10 @@ export default function MultiplayerQuestionScreen() {
     category: questionCategory,
   };
 
+  const getChronoColor = () => {
+    return remainingTime <= 5 ? "text-red-600" : "text-[#8B2DF1]";
+  };
+
   return (
     <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center">
       <Navbar />
@@ -153,8 +176,8 @@ export default function MultiplayerQuestionScreen() {
               isAnswered={isAnswered}
             />
           </div>
-          {timeAvailable !== null && (
-            <Chrono ref={chronoRef} sendResponse={handleQuestionSelect} id_quiz={quizId} />
+          {remainingTime !== null && (
+            <div className={`text-xl font-bold ${getChronoColor()}`}> {remainingTime}s</div>
           )}
         </div>
       </div>

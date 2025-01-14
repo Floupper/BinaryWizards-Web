@@ -1,11 +1,15 @@
+import CustomAudioPlayer from './CustomAudioPlayer';
+import { useState } from 'react';
 export default function QuestionChoiceMultiple({
   question_choice,
   correctOptionIndex,
   selectedQuestionId,
   isAnswered,
   onQuestionSelect,
-  skiped,
 }) {
+
+  const [audioOnSelected, setAudioOnSelected] = useState(false);
+
   return (
     <div className="QuestionChoiceMultiple place-items-center grid justify-items-center grid-cols-2 gap-4">
       {question_choice.map((choice) => {
@@ -15,8 +19,6 @@ export default function QuestionChoiceMultiple({
 
         if (option_index === correctOptionIndex) {
           buttonClass = 'bg-green-100 border-green-500 text-green-700';
-        } else if (skiped && option_index !== correctOptionIndex) {
-          buttonClass = 'bg-red-100 border-red-500 text-red-700';
         } else if (
           selectedQuestionId !== null &&
           correctOptionIndex !== null &&
@@ -35,10 +37,7 @@ export default function QuestionChoiceMultiple({
               return <img src={content} alt={`Option ${option_index}`} className="w-full h-auto max-h-24 object-contain" />;
             case 'audio':
               return (
-                <audio controls>
-                  <source src={content} type="audio/mpeg" />
-                  Your browser does not support the audio element.
-                </audio>
+                <CustomAudioPlayer src={content} isAnswered={isAnswered} option_id={option_index} setOnSelected={onQuestionSelect} />
               );
             default:
               return <span className="text-center">Unsupported content</span>;
@@ -48,7 +47,7 @@ export default function QuestionChoiceMultiple({
         return (
           <div key={option_index} className="flex items-center place-items-center min-w-[30vh]">
             <button
-              onClick={() => onQuestionSelect(option_index)}
+              onClick={() => { (type != "audio" && (onQuestionSelect(option_index))) }}
               className={`
                 w-full px-6 py-3 text-center rounded-lg 
                 border-2 bg-white text-black 
