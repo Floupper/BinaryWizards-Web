@@ -46,20 +46,19 @@ export default function JoinQuiz() {
         style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
       >
         <Navbar />
-        <div className="flex flex-1 items-center justify-center mt-5">
+        <div className="flex items-center justify-center mt-5">
           {token ? (
             <div className="flex flex-col items-center">
               <div className="flex space-x-8 mb-8">
-
                 <button
                   onClick={() => setActiveTab('resume')}
-                  className={`text-xl font-bold ${activeTab === 'resume' ? 'border-b-4 border-[#8B2DF1]' : ''}`}
+                  className={`text-3xl font-bold ${activeTab === 'resume' ? 'border-b-4 border-[#8B2DF1]' : ''}`}
                 >
                   Resume Game
                 </button>
                 <button
                   onClick={() => setActiveTab('search')}
-                  className={`text-xl font-bold ${activeTab === 'search' ? 'border-b-4 border-[#8B2DF1]' : ''}`}
+                  className={`text-3xl font-bold ${activeTab === 'search' ? 'border-b-4 border-[#8B2DF1]' : ''}`}
                 >
                   Search Quiz
                 </button>
@@ -72,8 +71,8 @@ export default function JoinQuiz() {
                 : (<JoinQuizResumeGame />)}
             </div>
           ) : (
-            <div className="w-full flex flex-col items-center">
-              <div className="p-8 rounded-lg max-w-md w-full text-center">
+            <div className="flex flex-col items-center">
+              <div className="p-8 rounded-lg w-full text-center">
                 <h1 className="text-4xl font-bold mb-6 text-white">Play Quiz</h1>
                 <div className="form-group mb-4">
                   <input
@@ -82,7 +81,7 @@ export default function JoinQuiz() {
                     value={gameCode}
                     onChange={(e) => setGameCode(e.target.value)}
                     placeholder="Enter the quiz id"
-                    className="w-full p-2 rounded-lg border border-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+                    className="p-2 rounded-lg border border-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
                   />
                 </div>
                 <button

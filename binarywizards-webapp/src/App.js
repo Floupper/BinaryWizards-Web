@@ -23,13 +23,10 @@ import ScrumModeJoinGame from './pages/ScrumModeJoinGame.js';
 import ScrumModeQuestionScreen from './pages/ScrumModeQuestionScreen.js';
 import ScrumEndScreen from './pages/ScrumEndScreen.js';
 
-
 function App() {
-
   return (
     <>
       <Router>
-
         <Routes>
           <Route path="/" element={<HomeScreen />} />
           <Route path="/join-quiz" element={<JoinQuiz />} />
@@ -53,9 +50,7 @@ function App() {
           <Route path="/scrum-mode-lobby/:gameId" element={<ScrumModeJoinGame />} />
           <Route path="/scrum-mode-question/:gameId" element={<ScrumModeQuestionScreen />} />
           <Route path="/scrum-end" element={<ScrumEndScreen />} />
-
         </Routes>
-
       </Router>
       <ToastContainer />
     </>

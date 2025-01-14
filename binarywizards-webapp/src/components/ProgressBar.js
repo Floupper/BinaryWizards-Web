@@ -4,7 +4,6 @@ function ProgressBar({ progress }) {
     return (
         <div className="relative pt-5 w-11/12 self-center" >
             <div className="flex mb-0 items-center justify-between" >
-
             </div>
             < div className="flex mb-2" >
                 <div className="w-full bg-gray-200 rounded-full h-4" >
