@@ -23,14 +23,11 @@ export default function CreateQuiz() {
 
   if (quizIdRedicted !== 'any') {
     navigate('/dashboard');
-
   }
   return (
     <div className=" min-h-screen bg-cover bg-center bg-[#F4F2EE] ">
       {quizIdRedicted === 'any' ? (
-
         <CreateQuizRegisteredPage quizIdParameter={quizId} setQuizIdRedicted={setQuizIdRedicted} />
-
       )
         : (
           <div>
@@ -40,6 +37,3 @@ export default function CreateQuiz() {
     </div>
   );
 }
-
-
-
