@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import CreateQuizService from '../services/CreateQuizService';
-
+import CustomAudioPlayer from './CustomAudioPlayer';
 export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput }) {
   const [file, setFile] = useState(null);
+
 
   if (!selectedOptionInput.choices || selectedOptionInput.choices.length === 0) {
     setSelectedOptionInput((prevState) => ({
@@ -54,6 +55,15 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
     }
   };
 
+  const handleDeleteImageAudio = (id) => {
+    console.log('actif');
+    setSelectedOptionInput((prevState) => ({
+      ...prevState,
+      choices: prevState.choices.map((item, index) =>
+        index === id ? { ...item, content: "" } : item
+      ),
+    }));
+  }
   const handleUpload = async (id, file, type) => {
     if (!file) {
       alert(`Veuillez sélectionner un fichier ${type === "audio" ? "audio" : "image"} avant de continuer.`);
@@ -119,55 +129,63 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
               />
             ) : choice.type === "image" ? (
               <div className="flex items-center gap-4">
-                <input
-                  type="file"
-                  id={`fileInput-${id}`}
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    handleUpload(id, file, "image");
-                  }}
-                  className="hidden"
-                />
-                <label
-                  htmlFor={`fileInput-${id}`}
-                  className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
-                >
-                  Importer une image
-                </label>
-                {choice.content && (
+                {!choice.content ? (
+                  <>
+                    <input
+                      type="file"
+                      id={`fileInput-${id}`}
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        handleUpload(id, file, "image");
+                      }}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor={`fileInput-${id}`}
+                      className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
+                    >
+                      Importer une image
+                    </label>
+                  </>
+                ) : (
                   <img
                     src={choice.content}
                     alt="Aperçu de l'image"
                     className="w-20 h-20 object-cover rounded border"
+                    onClick={() => { handleDeleteImageAudio(id) }}
                   />
+
                 )}
               </div>
             ) : choice.type === "audio" ? (
               <div className="flex items-center gap-4">
-                <input
-                  type="file"
-                  id={`audioInput-${id}`}
-                  accept="audio/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    handleUpload(id, file, "audio");
-                  }}
-                  className="hidden"
-                />
-                <label
-                  htmlFor={`audioInput-${id}`}
-                  className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
-                >
-                  Importer un fichier audio
-                </label>
-                {choice.content && (
-                  <audio controls className="w-full">
-                    <source src={choice.content} type="audio/mpeg" />
-                    Votre navigateur ne supporte pas l'élément audio.
-                  </audio>
+                {!choice.content ? (
+                  <>
+                    <input
+                      type="file"
+                      id={`audioInput-${id}`}
+                      accept="audio/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        handleUpload(id, file, "audio");
+                      }}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor={`audioInput-${id}`}
+                      className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
+                    >
+                      Importer un fichier audio
+                    </label>
+                  </>
+                ) : (
+                  <CustomAudioPlayer src={choice.content} deleteAudio={() => handleDeleteImageAudio(id)} />
+
+
+
                 )}
               </div>
             ) : (
@@ -178,10 +196,10 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
 
             <button
               onClick={() => handleRemoveOption(id)}
-              className="ml-2 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+              className="font-bold ml-2 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
               disabled={selectedOptionInput.choices.length <= 2}
             >
-              X
+              ⨯
             </button>
           </div>
         ))}
@@ -196,7 +214,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
             }`}
           disabled={selectedOptionInput.choices.length >= 8}
         >
-          Add Option
+          Add choice
         </button>
       </div>
     </div>

@@ -40,26 +40,11 @@ export default function Navbar() {
 
       {/* Navigation Links */}
       <ul
-        className={`md:flex justify-center md:items-center md:gap-5 list-none ${
-          isOpen
-            ? "flex flex-col items-center absolute top-full left-0 w-full p-5 bg-white"
-            : "hidden md:flex"
-        }`}
+        className={`md:flex md:items-center md:gap-5 list-none ${isOpen
+          ? "flex flex-col items-center absolute top-full left-0 w-full p-5 bg-white"
+          : "hidden md:flex"
+          }`}
       >
-        {/* Download */}
-        <li className="flex items-center mr-5">
-          <a
-            href="https://expo.dev/artifacts/eas/5gEMQTEd1ZfvhicxFnmkjT.apk"
-            download
-            className="flex items-center text-black"
-            style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
-          >
-            <EmojiProvider data={emojiData}>
-              <Emoji name="mobile-phone-with-arrow" width={20} />
-            </EmojiProvider>
-            <span className="ml-2">Download</span>
-          </a>
-        </li>
         {/* Play */}
         <li className="flex items-center mr-5">
           <NavLink
@@ -74,6 +59,21 @@ export default function Navbar() {
           </NavLink>
         </li>
 
+        {/* Download */}
+        <li className="flex items-center mr-5">
+          <a
+            href="https://expo.dev/artifacts/eas/5gEMQTEd1ZfvhicxFnmkjT.apk"
+            download
+            className="flex items-center text-black"
+            style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+          >
+            <EmojiProvider data={emojiData}>
+              <Emoji name="mobile-phone-with-arrow" width={20} />
+            </EmojiProvider>
+            <span className="ml-2">Download</span>
+          </a>
+        </li>
+
         {/* Create Quiz */}
         <li className="flex items-center mr-5">
           <NavLink
@@ -81,21 +81,10 @@ export default function Navbar() {
             className="flex items-center text-black"
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
-              {token ? (
-                <>
-                  <EmojiProvider data={emojiData}>
-                    <Emoji name="paintbrush" width={20} />
-                  </EmojiProvider>
-                  <span className="ml-2">Create Quiz</span>
-                </>
-              ) : (
-                <>
-                  <EmojiProvider data={emojiData}>
-                    <Emoji name="bomb" width={20} />
-                  </EmojiProvider>
-                  <span className="ml-2">Quick Quiz</span>
-                </>
-              )}
+            <EmojiProvider data={emojiData}>
+              <Emoji name="paintbrush" width={20} />
+            </EmojiProvider>
+            <span className="ml-2">Create Quiz</span>
           </NavLink>
         </li>
 
@@ -109,9 +98,9 @@ export default function Navbar() {
                 style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
               >
                 <EmojiProvider data={emojiData}>
-                  <Emoji name="bomb" width={20} />
+                  <Emoji name="paintbrush" width={20} />
                 </EmojiProvider>
-                <span className="ml-2">Quick Quiz</span>
+                <span className="ml-2">Create Quick Quiz</span>
               </NavLink>
             </li>
 
@@ -119,13 +108,10 @@ export default function Navbar() {
             <li className="flex items-center mr-5">
               <NavLink
                 to="/dashboard"
-                className="flex items-center text-black"
+                className="text-black"
                 style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
               >
-                <EmojiProvider data={emojiData}>
-                  <Emoji name="bust-in-silhouette" width={20} />
-                </EmojiProvider>
-                <span className="ml-2">Dashboard</span>
+                Dashboard
               </NavLink>
             </li>
 
@@ -133,7 +119,7 @@ export default function Navbar() {
             <li className="flex items-center mr-5">
               <button
                 onClick={handleSignout}
-                className="bg-black text-white rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
+                className=" border-2 border-black text-black rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
                 style={{
                   fontFamily: "Helvetica",
                   fontSize: "1.401rem",
@@ -149,7 +135,7 @@ export default function Navbar() {
           <li className="flex items-center">
             <button
               onClick={handleSignin}
-              className="bg-black text-white rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
+              className="border-2 border-black text-black rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
               style={{
                 fontFamily: "Helvetica",
                 fontSize: "1.401rem",
