@@ -89,13 +89,13 @@ export default function CreateQuizQuick() {
     >
       <Navbar />
       <div
-        className="flex flex-col items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        className="flex flex-col items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-1 lg:px-4"
       >
-        <div className="bg-white bg-opacity-0 rounded-lg p-8 space-y-6 text-center">
-          <h1 className="text-4xl font-bold text-white font-mixed">Quick Quiz</h1>
+        <div className="bg-white rounded-lg p-8 space-y-6 text-center w-[150%] lg:w-full">
+          <h1 className="text-3xl sm:text-4xl font-bold text-black">Quick Quiz</h1>
           <form className="space-y-4">
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-white">
+              <label htmlFor="category" className="block text-sm font-medium text-black">
                 Category
               </label>
               <select
@@ -115,7 +115,7 @@ export default function CreateQuizQuick() {
               </select>
             </div>
             <div>
-              <label htmlFor="number" className="block text-sm font-medium text-white">
+              <label htmlFor="number" className="block text-sm font-medium text-black">
                 Number of questions
               </label>
               <input
@@ -128,7 +128,7 @@ export default function CreateQuizQuick() {
               />
             </div>
             <div>
-              <label htmlFor="difficulty" className="block text-sm font-medium text-white">
+              <label htmlFor="difficulty" className="block text-sm font-medium text-black">
                 Difficulty
               </label>
               <select
@@ -151,7 +151,7 @@ export default function CreateQuizQuick() {
               <div
                 onClick={() => setIsTimeCheck(!isTimeCheck)}
                 className={`flex items-center cursor-pointer space-x-2 px-4 py-2 rounded-xl border-2 transition-all duration-200 ease-in-out ${
-                  isTimeCheck ? "bg-blue-500 border-blue-500 text-black" : "bg-gray-200 border-gray-300"
+                  isTimeCheck ? "bg-blue-500 border-blue-500 text-white" : "bg-gray-200 border-gray-300"
                 }`}
               >
                 <div
@@ -179,7 +179,7 @@ export default function CreateQuizQuick() {
                 <span>Time</span>
               </div>
               {isTimeCheck && (
-                <div className="bg-white p-6 rounded-lg shadow-lg w-96 mt-4">
+                <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-96 mt-4">
                   <h2 className="font-bold mb-4 text-center">Select a Timer</h2>
                   <div className="flex justify-around items-center mb-6">
                     {timers.map((timer) => (

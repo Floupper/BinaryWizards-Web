@@ -50,9 +50,13 @@ const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
 
   return (
     <div className="p-4 mb-6">
-      <div className="Question-header flex justify-between items-center">
-        <h3 className="text-black font-sifonn text-xl">Question {questionNumber}: {questionText}</h3>
-        <NavLink to="#" onClick={toggleShowAnswers} className="text-black font-medium text-lg ml-4">
+      <div className="Question-header flex justify-between items-center flex-wrap">
+        <h3 className="text-black font-sifonn text-xl sm:text-2xl md:text-3xl lg:text-4xl">{`Question ${questionNumber}: ${questionText}`}</h3>
+        <NavLink
+          to="#"
+          onClick={toggleShowAnswers}
+          className="text-black font-medium text-lg ml-4 sm:text-xl"
+        >
           {showAnswers ? 'Hide Answers' : 'Show Answers'}
         </NavLink>
       </div>
@@ -64,9 +68,9 @@ const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
                 key={option.option_id}
                 className={`p-3 border-[0.125rem] rounded-lg ${
                   option.is_correct_answer ? 'border-green-500' : 'border-red-500'
-                } flex justify-between items-center`}
+                } flex justify-between items-center space-x-2`}
               >
-                <div className="flex flex-col">
+                <div className="flex flex-col space-y-1">
                   {renderOptionContent(option)}
                   <span className="text-gray-500">{option.selection_percentage}%</span>
                 </div>

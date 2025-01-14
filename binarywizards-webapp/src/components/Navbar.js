@@ -91,7 +91,7 @@ export default function Navbar() {
               ) : (
                 <>
                   <EmojiProvider data={emojiData}>
-                    <Emoji name="dashing-away" width={20} />
+                    <Emoji name="bomb" width={20} />
                   </EmojiProvider>
                   <span className="ml-2">Quick Quiz</span>
                 </>
@@ -109,7 +109,7 @@ export default function Navbar() {
                 style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
               >
                 <EmojiProvider data={emojiData}>
-                  <Emoji name="dashing-away" width={20} />
+                  <Emoji name="bomb" width={20} />
                 </EmojiProvider>
                 <span className="ml-2">Quick Quiz</span>
               </NavLink>

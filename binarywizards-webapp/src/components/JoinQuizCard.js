@@ -32,20 +32,20 @@ export default function JoinQuizCard({ quiz, enableModal, onQuizSelect }) {
   };
 
   return (
-      <div>
+      <div className="w-full max-w-[30rem] mx-auto">
           <button
               onClick={handleCardClick}
-              className="join-quiz-card p-2 bg-white border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 flex items-center w-[30rem] h-[4rem] mb-5"
+              className="join-quiz-card p-4 bg-white border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 flex items-center w-full h-auto mb-5 transition-all duration-200"
               tabIndex="0"
           >
-              <div className="quiz-info flex justify-between items-center w-full">
-                  <h3 className="text-sm font-semibold text-black text-center break-all">
+              <div className="quiz-info flex flex-col sm:flex-row justify-between items-center w-full space-y-2 sm:space-y-0 sm:space-x-4">
+                  <h3 className="text-sm font-semibold text-black text-center break-all sm:text-left">
                       {quiz.title}
                   </h3>
-                  <p className="text-xs text-center">
+                  <p className="text-xs text-center sm:text-left">
                       Difficulty: {renderDifficultyStars(quiz.difficulty)}
                   </p>
-                  <p className="text-xs text-center">{quiz.nb_questions} Questions</p>
+                  <p className="text-xs text-center sm:text-left">{quiz.nb_questions} Questions</p>
               </div>
           </button>
           {isModalOpen && enableModal && (

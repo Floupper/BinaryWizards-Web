@@ -46,33 +46,33 @@ export default function JoinQuiz() {
         style={{ backgroundImage: "url('/backgrounds/SinglePlayerQuiz.svg')" }}
       >
         <Navbar />
-        <div className="flex items-center justify-center mt-5 bg-white w-7/12 pt-10 rounded-xl">
+        <div className="flex items-center justify-center mt-5 bg-white w-full sm:w-10/12 lg:w-7/12 pt-10 rounded-xl">
           {token ? (
-            <div className="flex flex-col items-center">
-              <div className="flex space-x-8"> 
+            <div className="flex flex-col items-center w-full">
+              <div className="flex space-x-8 mb-5">
                 <button
                   onClick={() => setActiveTab('resume')}
-                  className={`text-3xl ${activeTab === 'resume' ? 'border-b-4 border-[#8B2DF1] font-semibold' : ''}`}
+                  className={`text-2xl sm:text-xl ${activeTab === 'resume' ? 'border-b-4 border-[#8B2DF1] font-semibold' : ''}`}
                 >
                   Resume Game
                 </button>
                 <button
                   onClick={() => setActiveTab('search')}
-                  className={`text-3xl ${activeTab === 'search' ? 'font-semibold border-b-4 border-[#8B2DF1]' : ''}`}
+                  className={`text-2xl sm:text-xl ${activeTab === 'search' ? 'font-semibold border-b-4 border-[#8B2DF1]' : ''}`}
                 >
                   Search Quiz
                 </button>
               </div>
-              {activeTab === 'search' ?(
-                <JoinQuizSearchQuiz
-                    enableModal={true}
-                /> )
-                : (<JoinQuizResumeGame />)}
+              {activeTab === 'search' ? (
+                <JoinQuizSearchQuiz enableModal={true} />
+              ) : (
+                <JoinQuizResumeGame />
+              )}
             </div>
           ) : (
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center w-full">
               <div className="p-8 rounded-lg w-full text-center">
-                <h1 className="text-4xl font-bold mb-6 text-white">Play Quiz</h1>
+                <h1 className="text-4xl sm:text-3xl font-bold mb-6 text-white">Play Quiz</h1>
                 <div className="form-group mb-4">
                   <input
                     type="text"
@@ -80,19 +80,19 @@ export default function JoinQuiz() {
                     value={gameCode}
                     onChange={(e) => setGameCode(e.target.value)}
                     placeholder="Enter the quiz id"
-                    className="p-2 rounded-lg border border-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+                    className="p-3 sm:p-2 rounded-lg border border-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-800 w-full sm:w-3/4"
                   />
                 </div>
                 <button
                   onClick={handleJoinGame}
                   disabled={isLoadingGame}
-                  className="w-[30%] bg-black text-white py-2 rounded-md hover:bg-gray-800 transition duration-300 mb-8"
+                  className="w-full sm:w-[30%] bg-black text-white py-2 rounded-md hover:bg-gray-800 transition duration-300 mb-8"
                 >
                   {isLoadingGame ? 'Playing...' : 'Play'}
                 </button>
               </div>
 
-              <div className="p-6 rounded-lg text-center w-full mt-40">
+              <div className="p-6 rounded-lg text-center w-full">
                 <div className="w-full h-1 bg-[#8B2DF1] mb-4 px-2"></div>
                 <button
                   onClick={handleCreateQuiz}
