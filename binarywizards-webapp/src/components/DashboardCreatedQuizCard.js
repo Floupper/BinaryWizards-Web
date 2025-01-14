@@ -53,7 +53,7 @@ export default function CreatedQuizCard({ quiz, route }) {
         </button>
         <button
           onClick={handlePlayClick}
-          className="text-3xl text-green-500 hover:text-green-700 transition-colors duration-200"
+          className="text-3xl hover:text-green-700 transition-colors duration-200"
           title="Play Quiz"
         >
           <FaPlay />
