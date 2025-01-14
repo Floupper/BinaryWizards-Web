@@ -26,6 +26,28 @@ const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
     setShowAnswers((prev) => !prev);
   };
 
+  const renderOptionContent = (option) => {
+    const { type, content } = option.option_content;
+    switch (type) {
+      case 'text':
+        return <span>{content}</span>;
+
+      case 'audio':
+        return (
+          <audio controls className="w-full">
+            <source src={content} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        );
+
+      case 'image':
+        return <img src={content} alt="Quiz option" className="max-w-full h-auto rounded-md" />;
+
+      default:
+        return <span>Unsupported content type</span>;
+    }
+  };
+
   return (
     <div className="p-4 mb-6">
       <div className="Question-header flex justify-between items-center">
@@ -38,11 +60,17 @@ const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
         <div className="mt-4 p-6 border border-gray-300 rounded-[2rem] bg-white shadow-inner">
           <ul className="Answers-list space-y-2">
             {questionDetails.option_selection_stats.map((option, index) => (
-              <li key={option.option_id} className={`p-3 border-[0.125rem] rounded-lg ${option.is_correct_answer ? 'border-green-500' : 'border-red-500'} flex justify-between items-center`}> 
-                <span>{option.option_text}</span>
-                <span className="ml-2 text-gray-500">({option.selection_percentage}%)</span>
+              <li
+                key={option.option_id}
+                className={`p-3 border-[0.125rem] rounded-lg ${
+                  option.is_correct_answer ? 'border-green-500' : 'border-red-500'
+                } flex justify-between items-center`}
+              >
+                <div className="flex flex-col">
+                  {renderOptionContent(option)}
+                  <span className="text-gray-500">{option.selection_percentage}%</span>
+                </div>
                 <span className="ml-2">{option.is_correct_answer ? '✔️' : '❌'}</span>
-
               </li>
             ))}
           </ul>
