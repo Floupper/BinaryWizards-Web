@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from "react";
 import { toast } from "react-toastify";
-import CreateQuizService from '../services/CreateQuizService';
+import CreateQuizService from "../services/CreateQuizService";
+import { useEffect } from "react";
 
 export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput }) {
-  const [file, setFile] = useState(null);
-
-  if (!selectedOptionInput.choices || selectedOptionInput.choices.length === 0) {
-    setSelectedOptionInput((prevState) => ({
-      ...prevState,
-      choices: [{ type: "text", content: "" }, { type: "text", content: "" }],
-      type_of_question: "text",
-      correctAnswerMultiple: 0,
-    }));
-  }
+  useEffect(() => {
+    if (!selectedOptionInput.choices || selectedOptionInput.choices.length === 0) {
+      setSelectedOptionInput((prevState) => ({
+        ...prevState,
+        choices: [{ type: "text", content: "" }, { type: "text", content: "" }],
+        type_of_question: "text",
+        correctAnswerMultiple: 0,
+      }));
+    }
+  }, [selectedOptionInput, setSelectedOptionInput]);
 
   const handleChangeAnswerText = (event, index) => {
-    const value = event.target.value || { type: "text", content: "" };
+    const value = event.target.value;
     setSelectedOptionInput((prevState) => ({
       ...prevState,
       choices: prevState.choices.map((choice, i) =>
@@ -28,7 +29,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
     if (selectedOptionInput.choices.length < 8) {
       setSelectedOptionInput((prevState) => ({
         ...prevState,
-        choices: [...prevState.choices, { type: selectedOptionInput.type_of_question, content: "" }],
+        choices: [...prevState.choices, { type: prevState.type_of_question || "text", content: "" }],
       }));
     }
   };
@@ -38,12 +39,12 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
       setSelectedOptionInput((prevState) => {
         const updatedChoices = prevState.choices.filter((_, i) => i !== index);
 
-        let updatedCorrectAnswer = prevState.correctAnswerMultiple;
-        if (prevState.correctAnswerMultiple === index) {
-          updatedCorrectAnswer = Math.max(0, index - 1);
-        } else if (prevState.correctAnswerMultiple > index) {
-          updatedCorrectAnswer -= 1;
-        }
+        const updatedCorrectAnswer =
+          prevState.correctAnswerMultiple === index
+            ? Math.max(0, prevState.correctAnswerMultiple - 1)
+            : prevState.correctAnswerMultiple > index
+            ? prevState.correctAnswerMultiple - 1
+            : prevState.correctAnswerMultiple;
 
         return {
           ...prevState,
@@ -56,7 +57,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
 
   const handleUpload = async (id, file, type) => {
     if (!file) {
-      alert(`Veuillez sélectionner un fichier ${type === "audio" ? "audio" : "image"} avant de continuer.`);
+      toast.error(`Veuillez sélectionner un fichier ${type === "audio" ? "audio" : "image"}.`);
       return;
     }
 
@@ -64,32 +65,24 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
     formData.append(type, file);
 
     try {
-      let data;
-      if (type === "audio") {
-        data = await CreateQuizService.updateAudio(formData); // Utilisation de updateAudio pour les fichiers audio
-      } else {
-        data = await CreateQuizService.updateImage(formData); // Utilisation de updateImage pour les fichiers image
-      }
+      const data =
+        type === "audio"
+          ? await CreateQuizService.updateAudio(formData)
+          : await CreateQuizService.updateImage(formData);
 
       setSelectedOptionInput((prevState) => {
         const updatedChoices = [...prevState.choices];
         updatedChoices[id].content = data.url;
 
-        return {
-          ...prevState,
-          choices: updatedChoices,
-        };
+        return { ...prevState, choices: updatedChoices };
       });
 
-      console.log(setSelectedOptionInput);
       toast.success(`${type === "audio" ? "Audio" : "Image"} uploadé avec succès !`);
     } catch (error) {
       toast.error(`Erreur lors de l'upload du fichier ${type}.`);
       console.error(error);
     }
   };
-
-
 
   return (
     <div>
@@ -99,86 +92,59 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
             <input
               type="radio"
               name="multipleChoice"
-              className="text-green-600 focus:ring-green-500"
               checked={selectedOptionInput.correctAnswerMultiple === id}
               onChange={() =>
                 setSelectedOptionInput({ ...selectedOptionInput, correctAnswerMultiple: id })
               }
+              className="text-green-600 focus:ring-green-500"
             />
-
             {choice.type === "text" ? (
               <input
                 type="text"
-                value={choice.content || ""}
+                value={choice.content}
                 onChange={(e) => handleChangeAnswerText(e, id)}
                 placeholder={`Option ${id + 1}`}
-                className={`p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${selectedOptionInput.correctAnswerMultiple === id
-                  ? "border-4 border-[#417336] bg-white"
-                  : "border-2 border-gray-300"
-                  }`}
+                className={`p-3 border rounded-md focus:ring-blue-500 ${
+                  selectedOptionInput.correctAnswerMultiple === id
+                    ? "border-4 border-[#417336]"
+                    : "border-2 border-gray-300"
+                }`}
               />
             ) : choice.type === "image" ? (
               <div className="flex items-center gap-4">
                 <input
                   type="file"
-                  id={`fileInput-${id}`}
                   accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    handleUpload(id, file, "image");
-                  }}
+                  onChange={(e) => handleUpload(id, e.target.files[0], "image")}
                   className="hidden"
                 />
-                <label
-                  htmlFor={`fileInput-${id}`}
-                  className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
-                >
-                  Importer une image
+                <label className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer">
+                  Import a picture
                 </label>
                 {choice.content && (
-                  <img
-                    src={choice.content}
-                    alt="Aperçu de l'image"
-                    className="w-20 h-20 object-cover rounded border"
-                  />
+                  <img src={choice.content} alt="Aperçu" className="w-20 h-20 rounded border" />
                 )}
               </div>
             ) : choice.type === "audio" ? (
               <div className="flex items-center gap-4">
                 <input
                   type="file"
-                  id={`audioInput-${id}`}
                   accept="audio/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    handleUpload(id, file, "audio");
-                  }}
+                  onChange={(e) => handleUpload(id, e.target.files[0], "audio")}
                   className="hidden"
                 />
-                <label
-                  htmlFor={`audioInput-${id}`}
-                  className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
-                >
-                  Importer un fichier audio
+                <label className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer">
+                  Import audio file
                 </label>
-                {choice.content && (
-                  <audio controls className="w-full">
-                    <source src={choice.content} type="audio/mpeg" />
-                    Votre navigateur ne supporte pas l'élément audio.
-                  </audio>
-                )}
+                {choice.content && <audio controls src={choice.content} />}
               </div>
             ) : (
-              <div>
-                <p>ERREUR {choice.type}</p>
-              </div>
+              <p>Error.</p>
             )}
-
+            
             <button
               onClick={() => handleRemoveOption(id)}
-              className="ml-2 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+              className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
               disabled={selectedOptionInput.choices.length <= 2}
             >
               X
@@ -186,17 +152,17 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
           </div>
         ))}
       </div>
-
       <div className="mt-4">
         <button
           onClick={handleAddOption}
-          className={`px-4 py-2 text-white rounded ${selectedOptionInput.choices.length >= 8
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-600"
-            }`}
+          className={`px-4 py-2 rounded ${
+            selectedOptionInput.choices.length >= 8
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600"
+          }`}
           disabled={selectedOptionInput.choices.length >= 8}
         >
-          Add Option
+          Add an option
         </button>
       </div>
     </div>

@@ -7,14 +7,11 @@ import QuestionInContainer, { QuestionInContainerDefault } from './CreateQuizQue
 import ImportQuestionTrivia from './CreateQuizImportQuestionTrivia';
 import CreateQuizNavbar from './CreateQuizNavbar';
 import ProgressBar from './ProgressBar';
+import Navbar from './Navbar';
 
 Modal.setAppElement('#root');
 
-
-
 export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRedicted }) {
-
-
   const [quizId, setQuizId] = useState(quizIdParameter || '');
   //Modal of editing/creating question
   const [isModalOpen, setModalOpen] = useState(false);
@@ -38,7 +35,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   const [idQuestionSelectedForProgress, setIdQuestionSelectedForProgress] = useState(0);
   const [progress, setProgress] = useState(0);
 
-
   //NAVBAR
   const [quiz, setQuiz] = useState({
     difficulty: 'easy',
@@ -50,15 +46,12 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   const [refreshQuizQuestionEditing, setRefreshQuizQuestions] = useState('false');
 
-
   let initialized = false;
 
   useEffect(() => {
 
-
     if (initialized) return;
     initialized = true;
-
 
     CreateQuizService.fetchDifficulties()
       .then(data => setDifficulties(data))
@@ -130,30 +123,21 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     setIdQuestionSelected(questionId);
   };
 
-
   const handleSelectedQuestionProgressBar = (questionId) => {
 
     setIdQuestionSelectedForProgress(questionId);
   };
-  const resetCreateQuestionForm = () => {
-    setRefreshQuizQuestions(false);
-    setTypeOfScreen('create');
-    setIdQuestionSelected('');
-  }
+
   const handleSubmitCreateQuestion = (event) => {
     setTypeOfScreen('create');
     setRefreshQuizQuestions(true);
     setIdQuestionSelected('');
   };
+
   const handleSubmitImportTrivia = (event) => {
     setTrivialModalOpen(true);
 
   };
-
-  const handleChangeIsPublicQuiz = (event) => {
-    setIsPublicQuiz(event.target.checked);
-  };
-
 
   const handleSubmitSave = () => {
 
@@ -162,7 +146,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
       return;
     }
-
 
     if (!quiz.difficulty) {
       toast.info('Please select a difficulty.');
@@ -199,10 +182,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   return (
     <div className="CreateQuiz p-0 m-0">
-      {/*  */}
-
-      <CreateQuizNavbar handleSubmitSave={handleSubmitSave} quiz={quiz} setQuiz={setQuiz} />
-      <div className="CreateQuiz-container  flex flex-col gap-4 ">
+      <Navbar />
+      <div className="CreateQuiz-container flex flex-col gap-2">
         <div className="trivia modal">
           <Modal
             isOpen={isTriviaModalOpen}
@@ -217,23 +198,14 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             />
           </Modal>
         </div>
-
-
-        <div className=" grid min-grid-rows-[70vh_1fr_2fr] grid-flow-col max-h-[70vh] pl-4">
-
+        <div className="grid min-grid-rows-[70vh_1fr_2fr] grid-flow-col pl-4 m-4">
           <div
-            className="flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 mr-5 bg-white rounded-md p-4 shadow-lg h-[60vh]"
-
-          >
+            className="flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 mr-5 bg-white rounded-md p-4 shadow-lg h-[60vh]">
             <div
-              className="flex items-center flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-500 p-0"
-
-            >
-
-              <div className="flex flex-col gap-4 w-[35vh] ">
+              className="flex items-center flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-500 p-0">
+              <div className="flex flex-col w-[35vh]">
                 {quizQuestions.map((question) => (
                   <QuestionInContainer
-
                     key={question.question_id}
                     question_text={question.question_text}
                     question_id={question.question_id}
@@ -247,27 +219,20 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                 ))}
                 {TypeOfScreen === 'create' ?
                   <QuestionInContainerDefault />
-
-
                   : <div></div>}
-
-              </div>
-            </div>
-
+              </div></div>
           </div>
-          <div className="size-full flex justify-center items-center pr-4 mr-5 ">
-            <div className="flex flex-col justify-center  w-[30vh] row-span-1 row-start-2 col-end-1 bg-white rounded-md m-2 p-4 shadow-lg">
-
-
+          <div className="flex justify-center items-center">
+            <div className="flex flex-col justify-center w-[30vh] gap-y-2 bg-white rounded-md m-2 p-4 shadow-lg">
               <button
                 onClick={handleSubmitCreateQuestion}
-                className="text-white bg-black px-4 py-2 rounded-lg hover:bg-black"
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-black hover:text-white"
               >
                 Create question
               </button>
               <button
                 onClick={handleSubmitImportTrivia}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-blue-600"
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-black hover:text-white"
               >
                 Import questions from Trivia
               </button>
@@ -276,11 +241,9 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           </div>
           {/*  CreateQuizQuestionEditing */}
 
-          <div className="flex flex-col  row-span-2 col-start-2 col-span-2 rounded-lg pr-10 ">
+          <div className="flex flex-col row-span-2 col-start-2 col-span-2 rounded-lg pr-10">
             <ProgressBar progress={progress} />
-
             <div>
-
               <CreateQuizzQuestion
                 TypeOfScreen={TypeOfScreen}
                 quizId={quizId}
@@ -291,13 +254,10 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                 handleSelectedQuestionAfterCreate={handleSelectedQuestionAfterCreate}
               />
             </div>
+            <CreateQuizNavbar handleSubmitSave={handleSubmitSave} quiz={quiz} setQuiz={setQuiz} />
           </div>
         </div>
-
-
-
       </div>
-
     </div>
   );
 }

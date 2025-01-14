@@ -3,13 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
-import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
-import QuestionInContainer from './CreateQuizQuestionInContainer';
 
 export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
-
-
   const [selectedOptionInput, setSelectedOptionInput] = useState({
     type: 'boolean',
     choices: [{ type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }, { type: "text", content: "" }],
@@ -22,17 +18,9 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   const [selectedCategory, setSelectedCategory] = useState('');
   const [quizDifficulty, setQuizDifficulty] = useState('easy');
   const [difficulties, setDifficulties] = useState([]);
-  const [difficulty, setDifficulty] = useState('');
-
-  const [answerText, setAnswerText] = useState([]);
-  const [responceIndex, setResponseIndex] = useState(null);
-
   const [questionData, setQuestionData] = useState();
-
-
-  const [questionType, setQuestionType] = useState('boolean');
+  const questionType = 'multiple';
   const [questionOptions, setQuestionOptions] = useState();
-
   const [questionText, setQuestionText] = useState('Write your question');
   const [isEditing, setIsEditing] = useState(false);
 
@@ -75,7 +63,6 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       .then((data) => {
         const question = data.question;
 
-        // Vérifier si la question et ses options sont valides
         if (!question) {
           toast.error('Error: Question not found.');
           return;
@@ -86,10 +73,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           return;
         }
 
-        // Mettre à jour les états avec les données récupérées
         setQuestionData(question);
         setQuestionOptions(question.options);
-        setQuestionType(question.question_type);
         setQuestionText(question.question_text);
         setQuizDifficulty(question.question_difficulty);
         setSelectedCategory(question.question_category);
@@ -97,7 +82,6 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
         setSelectedOptionInput((prevState) => {
           const isMultiple = question.question_type === 'multiple';
 
-          // Construire la liste des choix
           const choices = isMultiple
             ? question.options.map((option) => ({
               type: option.option_content?.type || 'text',
@@ -108,9 +92,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
               { type: 'text', content: '' },
               { type: 'text', content: '' },
               { type: 'text', content: '' },
-            ]; // Valeurs par défaut pour les questions non multiples
+            ];
 
-          // Identifier les bonnes réponses
           const correctAnswerBoolean = !isMultiple
             ? question.options.find((option) => option.is_correct_answer)?.option_content?.content === 'True'
               ? 1
@@ -179,31 +162,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       return;
     }
     try {
-
       const options = [];
-
-      if (questionType === 'boolean') {
-
-        options.push(
-          {
-            option_content: {
-              content: "True",
-              type: 'text'
-            },
-            is_correct_answer: selectedOptionInput.correctAnswerBoolean === 1,
-            option_index: 0
-          },
-          {
-            option_content: {
-              content: "False",
-              type: 'text'
-            },
-            is_correct_answer: selectedOptionInput.correctAnswerBoolean === 0,
-            option_index: 1
-          }
-        );
-      } else if (questionType === 'multiple') {
-
         options.push(
 
           ...selectedOptionInput.choices.map((choice, index) => ({
@@ -215,9 +174,6 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
             option_index: index
           }))
         );
-      } else {
-        throw new Error("Invalid question type");
-      }
 
       const requestBody = {
         question_text: questionText,
@@ -227,16 +183,11 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
         options: options,
       };
 
-
-
       const action = TypeOfScreen === "edit"
         ? CreateQuizService.updateQuestion
         : CreateQuizService.createQuestion;
 
-
       const data = await action(requestBody, quizId, questionId);
-
-
 
       toast.success(
         `Question successfully ${TypeOfScreen ? "updated" : "created"}!`
@@ -249,7 +200,6 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
         `Error ${TypeOfScreen ? "updating" : "creating"} question: ${error.message || "Unknown error"
         }`
       );
-
     }
   };
 
@@ -259,7 +209,6 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   };
 
   const handleOnTypeQuestionChange = (newType) => {
-    console.log("jsuis bougge0");
     setSelectedOptionInput((prevState) => ({
       ...prevState,
       choices: prevState.choices.map(() => ({ type: newType, content: "" })),
@@ -267,39 +216,10 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
     }));
   };
 
-
-
   return (
     <div>
-      <div className="flex items-baseline justify-center space-x-6 mt-6 flex-wrap">
-
-        <div className="flex items-baseline space-x-4">
-          <span className="text-lg font-medium text-gray-700 whitespace-nowrap mb-[5vh]">Question Type</span>
-          <div className="flex items-baseline space-x-4">
-            <button
-              onClick={() => setQuestionType("boolean")}
-              className={`px-4 py-2 rounded-md font-medium bg-white border-2 hover:bg-transparent ${questionType === "boolean"
-                ? "border-[#8B2DF1] text-gray-800 shadow-md shadow-[#8B2DF1] focus:ring-0 focus:outline-none"
-                : "border-gray-300 text-gray-800 hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
-                }`}
-            >
-              True/False
-            </button>
-
-            <button
-              onClick={() => setQuestionType("multiple")}
-              className={`px-4 py-2 rounded-md font-medium bg-white hover:bg-transparent ${questionType === "multiple"
-                ? " text-gray-800 shadow-md shadow-[#8B2DF1] focus:ring-0 focus:outline-none"
-                : "border-gray-300 text-gray-800 hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
-                }`}
-            >
-              Multiple Choice
-            </button>
-          </div>
-        </div>
-
+      <div className="flex items-baseline justify-center space-x-6 mt-6">
         <span className=" text-2xl text-gray-500">|</span>
-
         {/* Difficulty Selection */}
         <div className="flex items-baseline space-x-4">
           <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
@@ -311,11 +231,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
             onDifficultyChange={handleOnDifficultyChange}
           />
         </div>
-
         <span className="text-2xl text-gray-500">|</span>
-
         {/* Category Selection */}
-
         <div className="flex items-baseline space-x-4">
           <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
             Category
@@ -336,9 +253,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
             ))}
           </select>
         </div>
-
         <span className="text-2xl text-gray-500">|</span>
-
         {/* Save Button */}
         <div>
           <button
@@ -383,32 +298,15 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
                 onClick={() => handleOnTypeQuestionChange("audio")}>Audio</button>
             </div>
           ) : (<></>)}
-          {/* Question Type */}
           {/* Options */}
           <div className="flex  justify-center">
-
-            {questionType === "multiple" ? (
               <MultipleChoiceQuestion
-
                 selectedOptionInput={selectedOptionInput}
                 setSelectedOptionInput={setSelectedOptionInput}
               />
-            )
-              : (
-                <BooleanChoiceQuestion
-                  selectedOptionInput={selectedOptionInput}
-                  setSelectedOptionInput={setSelectedOptionInput}
-                />
-              )}
           </div>
-
-
-
-
-
         </div >
       </div>
-
     </div >
   );
 };
