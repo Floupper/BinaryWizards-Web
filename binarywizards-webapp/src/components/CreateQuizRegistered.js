@@ -12,24 +12,28 @@ import Navbar from './Navbar';
 Modal.setAppElement('#root');
 
 export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRedicted }) {
+
+  const [questionInfo, setQuestionInfo] = useState({
+    questionText: 'Write your question',
+    questionOptions: ["", "", "", ""],
+    questionType: 'text',
+    questionDifficulty: 'easy',
+    questionCategory: '',
+    questionCorrectAnswer: 0,
+  });
+
   const [quizId, setQuizId] = useState(quizIdParameter || '');
-  //Modal of editing/creating question
-  const [isModalOpen, setModalOpen] = useState(false);
+
   const [isTriviaModalOpen, setTrivialModalOpen] = useState(false);
-  const [pageTitle, setPageTitle] = useState('Change a Quiz');
+
   const [TypeOfScreen, setTypeOfScreen] = useState('create');
   //diffilcies fetching from the API
-  //#######   API      ########
-  const [difficulties, setDifficulties] = useState([]);
-  const [quizTitle, setQuizTitle] = useState('');
-  const [quizDescription, setQuizDescription] = useState('');
-  const [quizDifficulty, setQuizDifficulty] = useState('');
-  const [quizIsPublic, setQuizIsPublic] = useState('');
+  //#######   API      ######## 
   const [quizQuestions, setQuizQuestions] = useState([]);
 
   //########   LOCAL    ########
   //Public or private (local -> API)
-  const [isPublicQuiz, setIsPublicQuiz] = useState(false);
+
   //Id of the question selected, for passing data
   const [idQuestionSelected, setIdQuestionSelected] = useState('');
   const [idQuestionSelectedForProgress, setIdQuestionSelectedForProgress] = useState(0);
@@ -53,12 +57,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     if (initialized) return;
     initialized = true;
 
-    CreateQuizService.fetchDifficulties()
-      .then(data => setDifficulties(data))
-      .catch(error => toast.info('Error fetching difficulties:', error));
-
     if (quizId === '') {
-      setPageTitle('Create a Quiz');
+
       CreateQuizService.initQuiz()
         .then(data => setQuizId(data.quiz_id))
         .catch(error => toast.info('Error initializing quiz:', error));
@@ -71,9 +71,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       CreateQuizService.fetchQuizDetails(quizId)
         .then(data => {
           setQuizQuestions(data.quiz.questions || []);
-          setQuizTitle(data.quiz.title || '');
-          setQuizIsPublic(data.quiz.is_public || false);
-          setQuizDifficulty(data.quiz.difficulty || '');
+
+
 
           setQuiz((prevQuiz) => ({
             ...prevQuiz,
@@ -98,11 +97,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     }
   }, [idQuestionSelectedForProgress, quizQuestions]);
 
-  useEffect(() => {
-    if (quizIsPublic) {
-      setIsPublicQuiz(quizIsPublic)
-    }
-  }, [quizIsPublic]);
+
 
 
   const refreshQuizQuestions = () => {
@@ -136,8 +131,67 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   };
 
 
+  //Submit de la question
+  const handleSubmitActualQuestion = async () => {
+    if (!questionInfo.questionCategory) {
+      toast.error("Please select a category.");
+      return;
+    }
+    if (!questionInfo.questionText) {
+      toast.error("Please enter a question.");
+      return;
+
+    }
+    if (!questionInfo.questionDifficulty) {
+      toast.error("Please select a difficulty.");
+      return;
+    }
+    if (questionInfo.questionOptions.some(choice => !choice || !choice.trim())) {
+      toast.error("Please ensure all choices are filled out.");
+      return;
+    }
+
+    try {
+      const options = [];
+      options.push(
+        ...questionInfo.questionOptions.map((choice, index) => ({
+          option_content: choice,
+          is_correct_answer: questionInfo.questionCorrectAnswer === index,
+          option_index: index,
+
+        }))
+      );
+
+      const requestBody = {
+        question_text: questionInfo.questionText,
+        question_difficulty: questionInfo.questionDifficulty,
+        question_category: questionInfo.questionCategory,
+        question_type: questionInfo.questionType,
+        options: options,
+      };
+
+      const action = TypeOfScreen === "edit"
+        ? CreateQuizService.updateQuestion
+        : CreateQuizService.createQuestion;
+
+      const data = await action(requestBody, quizId, idQuestionSelected);
+
+      toast.success(
+        `Question successfully ${TypeOfScreen ? "updated" : "created"}!`
+      );
+      handleSelectedQuestionAfterCreate(data.question_id);
+      refreshQuizQuestions();
+    } catch (error) {
+
+      toast.error(
+        `Error ${TypeOfScreen ? "updating" : "creating"} question: ${error.message || "Unknown error"
+        }`
+      );
+    }
+  };
+
   //Met à jour le quiz & la question en cours 
-  const handleSubmitSave = () => {
+  const handleSubmitSaveQuiz = () => {
     if (!quiz.title) {
       toast.info('Please select a title.');
       return;
@@ -158,14 +212,28 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     CreateQuizService.createQuiz(quizData, quizId)
       .then(() => {
         toast.info('Quiz created successfully! ');
-        setQuizIdRedicted(quizId);
+        if (quiz.isPublic) { setQuizIdRedicted(quizId) };
       })
       .catch(error => {
         toast.info(error.message);
       });
 
-
   };
+
+  const handleSubmitSave = async () => {
+    try {
+      // Attendez que handleSubmitActualQuestion soit terminé
+      await handleSubmitActualQuestion();
+
+      // Ensuite, appelez handleSubmitSaveQuiz après la première fonction
+      await handleSubmitSaveQuiz();
+
+    } catch (error) {
+      // Gérez les erreurs, si nécessaire
+      console.error('Erreur lors de la soumission des deux fonctions:', error);
+    }
+  };
+
 
   const handleSubmitDeleteQuestion = (questionId) => {
     CreateQuizService.deleteQuestion(quizId, questionId)
@@ -210,7 +278,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                     question_id={question.question_id}
                     question_index={question.question_index || 0}
                     setIdQuestionSelected={setIdQuestionSelected}
-                    setModalOpen={setModalOpen}
                     setTypeOfScreen={setTypeOfScreen}
                     handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
                     handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}
@@ -244,6 +311,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             <ProgressBar progress={progress} />
             <div>
               <CreateQuizzQuestionEditing
+                questionInfo={questionInfo}
+                setQuestionInfo={setQuestionInfo}
                 TypeOfScreen={TypeOfScreen}
                 quizId={quizId}
                 questionId={idQuestionSelected}

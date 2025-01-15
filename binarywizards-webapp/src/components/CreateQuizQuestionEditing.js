@@ -3,21 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
-import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
-export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
-  const [questionInfo, setQuestionInfo] = useState({
-    questionText: 'Write your question',
-    questionOptions: ["", "", "", ""],
-    questionType: 'text',
-    questionDifficulty: 'easy',
-    questionCategory: '',
-    questionCorrectAnswer: 0,
-  });
+
+export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
+
 
 
   //Catégories disponibles
-  const [categories, setCategories] = useState([]);
+
   //Si la question est une édition
   const [isEditing, setIsEditing] = useState(false);
 
@@ -42,11 +35,6 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
     }
   }, [refreshQuizQuestionEditing]);
-  useEffect(() => {
-    CreateQuizService.fetchCategories()
-      .then(data => setCategories(data))
-      .catch(error => toast.info('Error fetching categories:', error));
-  }, []);
 
   useEffect(() => {
     if (!questionId) return;
@@ -106,69 +94,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
 
 
-  //Submit de la question
-  const handleSubmit = async () => {
-    if (!questionInfo.questionCategory) {
-      toast.error("Please select a category.");
-      return;
-    }
-    if (!questionInfo.questionText) {
-      toast.error("Please enter a question.");
-      return;
 
-    }
-    if (!questionInfo.questionDifficulty) {
-      toast.error("Please select a difficulty.");
-      return;
-    }
-    if (questionInfo.questionOptions.some(choice => !choice || !choice.trim())) {
-      toast.error("Please ensure all choices are filled out.");
-      return;
-    }
 
-    try {
-      const options = [];
-      options.push(
-        ...questionInfo.questionOptions.map((choice, index) => ({
-          option_content: choice,
-          is_correct_answer: questionInfo.questionCorrectAnswer === index,
-          option_index: index,
-
-        }))
-      );
-
-      const requestBody = {
-        question_text: questionInfo.questionText,
-        question_difficulty: questionInfo.questionDifficulty,
-        question_category: questionInfo.questionCategory,
-        question_type: questionInfo.questionType,
-        options: options,
-      };
-
-      const action = TypeOfScreen === "edit"
-        ? CreateQuizService.updateQuestion
-        : CreateQuizService.createQuestion;
-
-      const data = await action(requestBody, quizId, questionId);
-
-      toast.success(
-        `Question successfully ${TypeOfScreen ? "updated" : "created"}!`
-      );
-      handleSelectedQuestionAfterCreate(data.question_id);
-      refreshQuizQuestions();
-    } catch (error) {
-
-      toast.error(
-        `Error ${TypeOfScreen ? "updating" : "creating"} question: ${error.message || "Unknown error"
-        }`
-      );
-    }
-  };
-
-  const handleOnDifficultyChange = (newDifficulty) => {
-    setQuestionInfo((prevState) => ({ ...prevState, questionDifficulty: newDifficulty }));
-
-  };
 
   const handleOnTypeQuestionChange = (newType) => {
     setQuestionInfo((prevState) => ({
@@ -180,52 +107,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
   return (
     <div>
-      <div className="flex items-baseline justify-center space-x-6 mt-6">
-        <span className=" text-2xl text-gray-500">|</span>
-        {/* Difficulty Selection */}
-        <div className="flex items-baseline space-x-4">
-          <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
-            Difficulty question
-          </label>
-          <DifficultyQuizStars
-            className="flex-grow"
-            initialDifficulty={questionInfo.questionDifficulty}
-            onDifficultyChange={handleOnDifficultyChange}
-          />
-        </div>
-        <span className="text-2xl text-gray-500">|</span>
-        {/* Category Selection */}
-        <div className="flex items-baseline space-x-4">
-          <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
-            Category
-          </label>
-          <select
-            id="category"
-            value={questionInfo.questionCategory}
-            onChange={(e) => setQuestionInfo((prevState) => ({ ...prevState, questionCategory: e.target.value }))}
-            className="p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.name}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <span className="text-2xl text-gray-500">|</span>
-        {/* Save Button */}
-        <div>
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-          >
-            Save Question
-          </button>
-        </div>
-      </div>
+
       <div className="bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4] p-2 rounded-lg  ">
         <div className="flex flex-col flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[50vh] ">
           {/* Editable Question */}
