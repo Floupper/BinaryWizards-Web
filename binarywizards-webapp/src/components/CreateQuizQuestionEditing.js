@@ -136,7 +136,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       options.push(
         ...selectedOptionInput.choices.map((choice, index) => ({
           option_content: choice,
-          is_correct_answer: selectedOptionInput.correctAnswerMultiple === index,
+          is_correct_answer: selectedOptionInput.correctAnswer === index,
           option_index: index,
 
         }))

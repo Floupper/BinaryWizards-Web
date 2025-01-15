@@ -11,7 +11,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
       ...prevState,
       choices: ["", ""],
       type: "text",
-      correctAnswerMultiple: 0,
+      correctAnswer: 0,
     }));
   }
 
@@ -111,9 +111,9 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
               type="radio"
               name="multipleChoice"
               className="text-green-600 focus:ring-green-500"
-              checked={selectedOptionInput.correctAnswerMultiple === id}
+              checked={selectedOptionInput.correctAnswer === id}
               onChange={() =>
-                setSelectedOptionInput({ ...selectedOptionInput, correctAnswerMultiple: id })
+                setSelectedOptionInput({ ...selectedOptionInput, correctAnswer: id })
               }
             />
 
@@ -228,9 +228,9 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
 
         {aiModalOpen && (
           <div className="flex gap-2  bg-white rounded-xl border-black border-2" >
-            <button className=" ml-1 my-1 p-1  rounded-xl border-grey-100 border-2">Realistic</button>
-            <button className="p-1 my-1 bg-gray-200 rounded-xl border-black border-2">Humouristic</button>
-            <button className="mr-1 my-1 p-1 bg-gray-200 rounded-xl border-black border-2">Mixt</button>
+            <button className=" ml-1 my-1 p-1   shadow-sm shadow-black hover:shadow-black hover:shadow-lg rounded-lg ">Realistic</button>
+            <button className="p-1 my-1 shadow-sm shadow-black hover:shadow-black hover:shadow-lg rounded-lg">Humouristic</button>
+            <button className="mr-1 my-1 p-1 shadow-sm shadow-black hover:shadow-black hover:shadow-lg rounded-lg">Mixt</button>
           </div>
         )}
       </div>
