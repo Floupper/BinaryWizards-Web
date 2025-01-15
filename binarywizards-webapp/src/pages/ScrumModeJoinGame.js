@@ -96,7 +96,7 @@ export default function ScrumModeJoinGame() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
       <Navbar />
       <div className="flex flex-col items-center p-8">
-        <h1 className="text-2xl font-bold mb-4">Join Scrum Game</h1>
+        <h1 className="text-2xl font-semibold mb-4">Join Scrum Game</h1>
 
         {/* Game Code and QR Code */}
         <div className="mb-6">
@@ -116,7 +116,7 @@ export default function ScrumModeJoinGame() {
         {/* Quiz Details */}
         {quizDetails && (
           <div className="mb-6 p-4 bg-white rounded-lg shadow-md">
-            <h2 className="text-lg font-bold mb-2">Quiz Details</h2>
+            <h2 className="text-lg font-semibold mb-2">Quiz Details</h2>
             <p>
               <span className="font-semibold">Title:</span> {quizDetails.title}
             </p>
@@ -128,7 +128,7 @@ export default function ScrumModeJoinGame() {
 
         {/* Player List */}
         <div className="w-full max-w-md p-4 bg-white rounded-lg shadow-md mb-6">
-          <h2 className="text-lg font-bold mb-2">Players</h2>
+          <h2 className="text-lg font-semibold mb-2">Players</h2>
           <ul>
             {players.length > 0 ? (
               players.map((player, index) => (

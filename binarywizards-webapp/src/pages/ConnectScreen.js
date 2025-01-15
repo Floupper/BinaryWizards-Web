@@ -44,7 +44,7 @@ export default function ConnectScreen() {
       <div className="min-h-screen flex items-center justify-center">
         <form className="bg-white p-8 rounded-lg shadow-md w-full max-w-md" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Username:</label>
+            <label className="block text-gray-700 font-semibold mb-2">Username:</label>
             <input
               type="text"
               value={username}
@@ -55,7 +55,7 @@ export default function ConnectScreen() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Password:</label>
+            <label className="block text-gray-700 font-semibold mb-2">Password:</label>
             <input
               type="password"
               value={password}

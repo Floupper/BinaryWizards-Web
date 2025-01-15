@@ -65,20 +65,25 @@ const QuizRecapScreen = () => {
       <div className="flex flex-col lg:flex-row items-start justify-center mt-8 space-y-8 lg:space-y-0 lg:space-x-20 w-full px-4">
         {/* Quiz Details */}
         <div className="p-6 rounded-xl w-full lg:w-1/3 border border-gray-300 shadow-lg bg-white relative">
-          <EmojiProvider data={emojiData}>
-            <button
-              className="absolute top-4 right-4 bg-transparent p-2 rounded-full hover:bg-gray-200 transition-all duration-300"
-              onClick={() => navigate('/create-quiz', { state: { quizId } })}
-              aria-label="Edit Quiz"
-            >
-              <Emoji name="paintbrush" width={30} />
-            </button>
-          </EmojiProvider>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4 break-words">{quizDetails.title}</h2>
-          <p className="text-gray-700 mb-2">Difficulty: {renderDifficultyStars(quizDetails.difficulty)}</p>
-          <p className="text-gray-700 mb-2">Number of Questions: {quizDetails.nb_questions}</p>
-          <p className="text-gray-700 mb-2">Times Played: {quizDetails.nb_played}</p>
-          <p className="text-gray-700">Average Score: {quizDetails.average_score}</p>
+            {!quizDetails.is_public ? (<>
+              <EmojiProvider data={emojiData}>
+                <button
+                  className="absolute top-8 right-8 bg-transparent p-2 rounded-full hover:bg-white transition-all duration-300"
+                  onClick={() => navigate('/create-quiz', { state: { quizId } })}
+                  aria-label="Edit Quiz"
+                >
+                  <Emoji name="paintbrush" width={30} />
+                </button>
+            </EmojiProvider>
+            </>) : (<></>)
+            }
+          <h2 className="text-2xl font-semibold bg-[#8B2DF1] text-white p-4 rounded-xl mb-4 break-words">{quizDetails.title}</h2>
+          <div className='ml-2'>
+            <p className="text-gray-700 mb-2">Difficulty: {renderDifficultyStars(quizDetails.difficulty)}</p>
+            <p className="text-gray-700 mb-2">Number of Questions: {quizDetails.nb_questions}</p>
+            <p className="text-gray-700 mb-2">Times Played: {quizDetails.nb_played}</p>
+            <p className="text-gray-700">Average Score: {quizDetails.average_score}</p>
+          </div>
         </div>
 
         {/* Questions Panel */}

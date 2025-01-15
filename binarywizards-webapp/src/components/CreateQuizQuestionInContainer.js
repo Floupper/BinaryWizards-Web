@@ -25,7 +25,7 @@ export default function QuestionInContainer({
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="flex flex-row items-center gap-2 text-lg font-bold text-gray-800">
+      <div className="flex flex-row items-center gap-2 text-lg font-semibold text-gray-800">
         <button
           id={question_id}
           className="text-gray-500 text-2xl transition-transform bg-transparent border-none hover:bg-transparent"
@@ -56,7 +56,7 @@ export function QuestionInContainerDefault() {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="text-lg font-bold text-gray-800">Question</div>
+      <div className="text-lg font-semibold text-gray-800">Question</div>
       <div className="flex items-start gap-2">
         <div
           className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-r ${colors} rounded-lg p-2 shadow-lg border-[#8B2DF1] border-2`}

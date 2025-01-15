@@ -138,7 +138,7 @@ export default function PlayersList({ game_mode }) {
       {showTeamPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-2xl font-bold mb-4">Join a Team</h2>
+            <h2 className="text-2xl font-semibold mb-4">Join a Team</h2>
             {teams.length > 0 ? (
               teams.map((teamName, index) => (
                 <button
@@ -158,7 +158,7 @@ export default function PlayersList({ game_mode }) {
 
       {!showTeamPopup && (
         <>
-          <h1 className="text-2xl font-bold mb-4">Game Details</h1>
+          <h1 className="text-2xl font-semibold mb-4">Game Details</h1>
 
           <div className="flex items-center mb-4">
             <span className="font-semibold mr-2">Game Code:</span>
@@ -206,7 +206,7 @@ export default function PlayersList({ game_mode }) {
           </div>
 
           <div className="mt-4">
-            <h2 className="text-xl font-bold mb-2">Teams</h2>
+            <h2 className="text-xl font-semibold mb-2">Teams</h2>
             {teams.length > 0 ? (
               teams.map((team, index) => (
                 <div key={index} className="mb-8">

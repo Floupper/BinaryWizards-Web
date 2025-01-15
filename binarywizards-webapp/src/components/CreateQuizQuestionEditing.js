@@ -270,7 +270,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           <div className="flex items-center items-center justify-center text-center mb-6">
             {!isEditing ? (
               <h1
-                className="text-2xl font-bold text-gray-800 cursor-pointer hover:underline "
+                className="text-2xl font-semibold text-gray-800 cursor-pointer hover:underline "
                 onClick={handleEditClick}
               >
                 {questionText}
@@ -282,7 +282,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
                 onChange={(e) => setQuestionText(e.target.value)}
                 onBlur={handleBlur}
                 autoFocus
-                className="text-2xl font-bold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
+                className="text-2xl font-semibold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
               />
             )}
           </div>
