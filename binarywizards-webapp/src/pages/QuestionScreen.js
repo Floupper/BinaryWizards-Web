@@ -27,6 +27,7 @@ export default function QuestionScreen() {
   const [isAnswered, setIsAnswered] = useState(false);
   const [idCorrectAnswers, setIdCorrectAnswers] = useState(null);
   const [timeAvailable, setTimeAvailable] = useState(null);
+  const [correctAnswer, setCorrectAnswer] = useState(null);
 
   const chronoRef = useRef();
 
@@ -39,7 +40,6 @@ export default function QuestionScreen() {
   const handleQuestionSelect = async (selectedId) => {
     if (isAnswered) return;
     if (mode === "time") chronoRef.current?.stopTimer();
-
     setSelectedQuestionId(selectedId);
     setIsAnswered(true);
     try {
@@ -48,6 +48,12 @@ export default function QuestionScreen() {
         result = await PostAnswers(id, questionIndex, selectedId);
       }
       setIdCorrectAnswers(result.correct_option_index);
+      if(selectedId == result.correct_option_index)
+      {
+        setCorrectAnswer(true);
+      } else {
+        setCorrectAnswer(false);
+      }
     } catch (error) {
       if (error.message === "Question's index invalid") {
         toast.success("Updating the current question...");
@@ -84,7 +90,8 @@ export default function QuestionScreen() {
         "15": "medium",
         "30": "easy",
       };
-
+      
+      setCorrectAnswer(null)
       setDifficultyLevel(difficultyMap[data.time_limit] || "none");
       setQuestionText(data.question_text);
       setOptions(data.options);
@@ -140,9 +147,9 @@ export default function QuestionScreen() {
         <QuestionHUD handleFetchQuiz={handleFetchQuiz} party_parameters={paramHUD} />
       </div>
 
-      <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10">
+      <div className={`${correctAnswer === false ? 'bg-red-500' : ''} ${correctAnswer === true ? 'bg-green-500' : ''} ${correctAnswer === null ? 'bg-gradient-to-r from-orange-400 to-green-400' : ''} p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10`}>
         <div className="flex flex-col items-center space-y-6 p-6 bg-[#F4F2EE] rounded-lg shadow-md w-full">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-center text-black">{questionText}</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-center text-black">{questionText}</h1>
           <div className="flex justify-center w-full">
             <QuestionChoiceMultiple
               question_choice={options}
@@ -150,6 +157,7 @@ export default function QuestionScreen() {
               onQuestionSelect={handleQuestionSelect}
               selectedQuestionId={selectedQuestionId}
               isAnswered={isAnswered}
+              type={questionType}
             />
           </div>
           <button
