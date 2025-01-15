@@ -147,6 +147,7 @@ export default function QuestionScreen() {
           <h1 className="Question text-3xl font-bold text-center text-black">{questionText}</h1>
           <div className="flex justify-center">
             <QuestionChoiceMultiple
+              type={questionType}
               question_choice={options}
               correctOptionIndex={idCorrectAnswers}
               onQuestionSelect={handleQuestionSelect}

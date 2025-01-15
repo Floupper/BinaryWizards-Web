@@ -231,7 +231,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           </button>
         </div>
       </div>
-      <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg  ">
+      <div className="bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4] p-2 rounded-lg  ">
         <div className="flex flex-col flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[50vh] ">
           {/* Editable Question */}
           <div className="flex items-center items-center justify-center text-center mb-6">

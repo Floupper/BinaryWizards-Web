@@ -8,7 +8,7 @@ function ProgressBar({ progress }) {
             < div className="flex mb-2" >
                 <div className="w-full bg-gray-200 rounded-full h-4" >
                     <div
-                        className="bg-gradient-to-r from-orange-400 to-green-400 h-4 rounded-full"
+                        className="bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4] h-4 rounded-full transition-all duration-500 ease-in-out"
                         style={{ width: `${progress}%` }
                         }
                     > </div>

@@ -1,6 +1,7 @@
 import CustomAudioPlayer from './CustomAudioPlayer';
 import { useState } from 'react';
 export default function QuestionChoiceMultiple({
+  type,
   question_choice,
   correctOptionIndex,
   selectedQuestionId,
@@ -14,7 +15,7 @@ export default function QuestionChoiceMultiple({
     <div className="QuestionChoiceMultiple place-items-center grid justify-items-center grid-cols-2 gap-4">
       {question_choice.map((choice) => {
         const { option_index, option_content } = choice;
-        const { type, content } = option_content;
+
         let buttonClass = '';
 
         if (option_index === correctOptionIndex) {
@@ -32,12 +33,12 @@ export default function QuestionChoiceMultiple({
         const renderOptionContent = () => {
           switch (type) {
             case 'text':
-              return <span className="text-center">{content}</span>;
+              return <span className="text-center">{option_content}</span>;
             case 'image':
-              return <img src={content} alt={`Option ${option_index}`} className="w-full h-auto max-h-24 object-contain" />;
+              return <img src={option_content} alt={`Option ${option_index}`} className="w-full h-auto max-h-24 object-contain" />;
             case 'audio':
               return (
-                <CustomAudioPlayer src={content} isAnswered={isAnswered} option_id={option_index} setOnSelected={onQuestionSelect} />
+                <CustomAudioPlayer src={option_content} isAnswered={isAnswered} option_id={option_index} setOnSelected={onQuestionSelect} />
               );
             default:
               return <span className="text-center">Unsupported content</span>;

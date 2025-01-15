@@ -25,7 +25,7 @@ export default function CreateQuiz() {
     navigate('/dashboard');
   }
   return (
-    <div className=" min-h-screen bg-cover bg-center bg-[#F4F2EE] ">
+    <div className=" min-h-screen bg-cover bg-center bg-[#F4F2EE] min-h-screen w-screen">
       {quizIdRedicted === 'any' ? (
         <CreateQuizRegisteredPage quizIdParameter={quizId} setQuizIdRedicted={setQuizIdRedicted} />
       )
@@ -34,6 +34,6 @@ export default function CreateQuiz() {
             <QuizCreated></QuizCreated>
           </div>
         )}
-    </div>
+    </ div>
   );
 }

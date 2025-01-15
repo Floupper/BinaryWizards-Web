@@ -184,6 +184,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     <div className="CreateQuiz p-0 m-0">
       <Navbar />
       <div className="CreateQuiz-container flex flex-col gap-2">
+        <CreateQuizNavbar handleSubmitSave={handleSubmitSave} quiz={quiz} setQuiz={setQuiz} />
         <div className="trivia modal">
           <Modal
             isOpen={isTriviaModalOpen}
@@ -254,7 +255,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                 handleSelectedQuestionAfterCreate={handleSelectedQuestionAfterCreate}
               />
             </div>
-            <CreateQuizNavbar handleSubmitSave={handleSubmitSave} quiz={quiz} setQuiz={setQuiz} />
+
           </div>
         </div>
       </div>
