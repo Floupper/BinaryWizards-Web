@@ -61,6 +61,16 @@ const CreateQuizService = {
     }
   },
 
+
+  AICreateChoices: (questionData) => {
+    try {
+      return axiosInstance.post(`/question/complete_options`, questionData,).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error asking AI to complete the choices');
+    }
+  },
+
+
   deleteQuestion: (quizId, questionId) => {
     try {
       return axiosInstance.delete(`/quiz/${quizId}/${questionId}`).then((response) => response.data);

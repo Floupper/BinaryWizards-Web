@@ -4,32 +4,33 @@ import CreateQuizService from '../services/CreateQuizService';
 import CustomAudioPlayer from './CustomAudioPlayer';
 export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput }) {
   const [file, setFile] = useState(null);
-
-
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  console.log(selectedOptionInput)
   if (!selectedOptionInput.choices || selectedOptionInput.choices.length === 0) {
     setSelectedOptionInput((prevState) => ({
       ...prevState,
-      choices: [{ content: "" }, { content: "" }],
+      choices: ["", ""],
       type: "text",
       correctAnswerMultiple: 0,
     }));
   }
 
   const handleChangeAnswerText = (event, index) => {
-    const value = event.target.value || { content: "" };
+    const value = event.target.value || "";
     setSelectedOptionInput((prevState) => ({
       ...prevState,
       choices: prevState.choices.map((choice, i) =>
-        i === index ? { ...choice, content: value } : choice
+        i === index ? value : choice // Remplace uniquement à l'index spécifié
       ),
     }));
   };
+
 
   const handleAddOption = () => {
     if (selectedOptionInput.choices.length < 8) {
       setSelectedOptionInput((prevState) => ({
         ...prevState,
-        choices: [...prevState.choices, { content: "" }],
+        choices: [...prevState.choices, ""],
       }));
     }
   };
@@ -60,7 +61,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
     setSelectedOptionInput((prevState) => ({
       ...prevState,
       choices: prevState.choices.map((item, index) =>
-        index === id ? { ...item, content: "" } : item
+        index === id ? "" : item
       ),
     }));
   }
@@ -83,7 +84,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
 
       setSelectedOptionInput((prevState) => {
         const updatedChoices = [...prevState.choices];
-        updatedChoices[id].content = data.url;
+        updatedChoices[id] = data.url;
 
         return {
           ...prevState,
@@ -119,7 +120,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
             {selectedOptionInput.type === "text" ? (
               <input
                 type="text"
-                value={choice.content || ""}
+                value={choice || ""}
                 onChange={(e) => handleChangeAnswerText(e, id)}
                 placeholder={`Option ${id + 1}`}
                 className={`p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${selectedOptionInput.correctAnswerMultiple === id
@@ -129,7 +130,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
               />
             ) : selectedOptionInput.type === "image" ? (
               <div className="flex items-center gap-4">
-                {!choice.content ? (
+                {!choice ? (
                   <>
                     <input
                       type="file"
@@ -151,7 +152,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
                   </>
                 ) : (
                   <img
-                    src={choice.content}
+                    src={choice}
                     alt="Aperçu de l'image"
                     className="w-20 h-20 object-cover rounded border"
                     onClick={() => { handleDeleteImageAudio(id) }}
@@ -161,7 +162,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
               </div>
             ) : selectedOptionInput.type === "audio" ? (
               <div className="flex items-center gap-4">
-                {!choice.content ? (
+                {!choice ? (
                   <>
                     <input
                       type="file"
@@ -182,7 +183,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
                     </label>
                   </>
                 ) : (
-                  <CustomAudioPlayer src={choice.content} deleteAudio={() => handleDeleteImageAudio(id)} />
+                  <CustomAudioPlayer src={choice} deleteAudio={() => handleDeleteImageAudio(id)} />
 
 
 
@@ -190,7 +191,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
               </div>
             ) : (
               <div>
-                <p>ERREUR {choice.type}</p>
+                <p>ERREUR {choice}</p>
               </div>
             )}
 
@@ -205,7 +206,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
         ))}
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 flex gap">
         <button
           onClick={handleAddOption}
           className={`px-4 py-2 text-white rounded ${selectedOptionInput.choices.length >= 8
@@ -216,6 +217,22 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
         >
           Add choice
         </button>
+        <div className="flex items-center rounded border-black  border-2 ">
+          <button className=" text-3xl h-10      justify-center rounded bg-white w-10  "
+            onClick={() => { setAiModalOpen(!aiModalOpen) }}>🪄
+          </button>
+
+
+        </div>
+
+
+        {aiModalOpen && (
+          <div className="flex gap-2  bg-white rounded-xl border-black border-2" >
+            <button className=" ml-1 my-1 p-1  rounded-xl border-grey-100 border-2">Realistic</button>
+            <button className="p-1 my-1 bg-gray-200 rounded-xl border-black border-2">Humouristic</button>
+            <button className="mr-1 my-1 p-1 bg-gray-200 rounded-xl border-black border-2">Mixt</button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
       setQuestionText('Write your question');
       setSelectedOptionInput({
-        choices: [{ content: "" }, { content: "" }, { content: "" }, { content: "" }],
+        choices: ["", "", "", ""],
         type: 'text',
         correctAnswer: 0,
       });
@@ -79,9 +79,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
         setSelectedOptionInput((prevState) => {
 
 
-          const choices = question.options.map((option) => ({
-            content: option.option_content?.content || "",
-          })) || [{ content: '' }, { content: '' }];
+          const choices = question.options.map((option) => option.option_content || "");
+
 
           const correctAnswer = question.options.findIndex((option) => option.is_correct_answer) || 0;
 
@@ -127,7 +126,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       toast.error("Please select a difficulty.");
       return;
     }
-    if (selectedOptionInput.choices.some(choice => !choice.content || !choice.content.trim())) {
+    if (selectedOptionInput.choices.some(choice => !choice || !choice.trim())) {
       toast.error("Please ensure all choices are filled out.");
       return;
     }
@@ -136,9 +135,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       const options = [];
       options.push(
         ...selectedOptionInput.choices.map((choice, index) => ({
-          option_content: {
-            content: choice.content
-          },
+          option_content: choice,
           is_correct_answer: selectedOptionInput.correctAnswerMultiple === index,
           option_index: index,
 
@@ -181,7 +178,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   const handleOnTypeQuestionChange = (newType) => {
     setSelectedOptionInput((prevState) => ({
       ...prevState,
-      choices: prevState.choices.map(() => ({ content: "" })),
+      choices: prevState.choices.map(() => ("")),
       type: newType,
     }));
   };
