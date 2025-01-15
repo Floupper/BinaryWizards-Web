@@ -201,11 +201,15 @@ export default function MultiplayerQuestionScreen() {
             </div>
           )}
           <div>
-            {isAnswered ? (
-              <span>Waiting for other players...</span>
-            ) : (
-              <span>Choose an option...</span>
-            )}
+            {/* {setCorrectAnswer ? (
+              
+              ) : (
+              {isAnswered ? (
+                <span>Waiting for other players...</span>
+              ) : (
+                <span>Choose an option...</span>
+              )})
+            } */}
           </div>
         </div>
       </div>

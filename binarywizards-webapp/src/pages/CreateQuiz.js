@@ -16,7 +16,6 @@ export default function CreateQuiz() {
 
   useEffect(() => {
     if (!userId) {
-      toast.info("no user id");
       navigate('/quick-quiz');
     }
   }, []);

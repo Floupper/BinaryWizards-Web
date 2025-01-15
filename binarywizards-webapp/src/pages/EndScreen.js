@@ -10,31 +10,37 @@ import emojiData from "react-apple-emojis/src/data.json";
 export default function EndScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { difficulty_level, correct_answers_nb, nb_questions_total, quizId } = location.state || {
-    correct_answers_nb: null,
-    nb_questions_total: null,
-    quizId: null,
-  };
+
+  // Extraction des paramètres d'état ou valeurs par défaut
+  const { 
+    difficulty_level, 
+    correct_answers_nb, 
+    nb_questions_total, 
+    quizId 
+  } = location.state || {};
+
   const [isLoading, setIsLoading] = useState(false);
 
+  // Rediriger si des données essentielles sont absentes
   useEffect(() => {
-    if (correct_answers_nb === null || nb_questions_total === null || quizId === null) {
+    if (!correct_answers_nb || !nb_questions_total || !quizId) {
       navigate("/");
     }
   }, [correct_answers_nb, nb_questions_total, quizId, navigate]);
 
+  // Gestion de la redémarrage du quiz
   const handleRestartQuiz = async () => {
-    if (quizId) {
-      setIsLoading(true);
-      try {
-        const data = await createGameWithQuizId(quizId, difficulty_level);
-        navigate(`/question/${data.game_id}`);
-      } catch (error) {
-        console.error("Error restarting quiz:", error);
-        toast.error(error.message || "Failed to restart quiz. Please try again.");
-      } finally {
-        setIsLoading(false);
-      }
+    if (!quizId) return;
+
+    setIsLoading(true);
+    try {
+      const data = await createGameWithQuizId(quizId, difficulty_level);
+      navigate(`/question/${data.game_id}`);
+    } catch (error) {
+      console.error("Error restarting quiz:", error);
+      toast.error(error.message || "Failed to restart quiz. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -44,18 +50,14 @@ export default function EndScreen() {
       style={{ backgroundImage: "url('/backgrounds/EndScreenBackground.svg')" }}
     >
       <Navbar />
-      <div
-        className="flex flex-col items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-4"
-      >
-        <div
-          className="EndScreenContainer bg-white p-6 sm:p-16 text-center rounded-3xl w-full max-w-3xl"
-        >
-          {correct_answers_nb !== null && nb_questions_total !== null ? (
+      <div className="flex flex-col items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-4">
+        <div className="EndScreenContainer bg-white p-6 sm:p-16 text-center rounded-3xl w-full max-w-3xl">
+          {correct_answers_nb && nb_questions_total ? (
             <>
               <EmojiProvider data={emojiData}>
                 <div className="flex items-baseline justify-center mb-8">
                   <div className="hidden md:block">
-                      <Emoji name="party-popper" width={80} />
+                    <Emoji name="party-popper" width={80} />
                   </div>
                   <h1
                     className="text-4xl sm:text-5xl font-semibold mx-4"
@@ -82,12 +84,16 @@ export default function EndScreen() {
                 Score: {correct_answers_nb}/{nb_questions_total}
               </h2>
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center">
+                {/* Bouton retour à l'accueil */}
                 <button
                   className="text-white font-semibold py-4 px-8 transition hover:bg-gray-800 bg-black rounded-xl text-lg sm:text-2xl"
                   onClick={() => navigate("/")}
+                  aria-label="Back to Home Page"
                 >
                   Back to home page
                 </button>
+
+                {/* Bouton redémarrer le quiz */}
                 <button
                   className={`text-white font-semibold py-4 px-8 flex items-center justify-center transition ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"} bg-black rounded-xl text-lg sm:text-2xl`}
                   onClick={handleRestartQuiz}
@@ -122,7 +128,9 @@ export default function EndScreen() {
               </div>
             </>
           ) : (
-            <p className="errorMessage text-red-500 text-2xl">Error: The result could not be retrieved.</p>
+            <p className="errorMessage text-red-500 text-2xl">
+              Error: The result could not be retrieved.
+            </p>
           )}
         </div>
       </div>

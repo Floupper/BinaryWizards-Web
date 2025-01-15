@@ -12,11 +12,11 @@ export default function QuestionChoiceMultiple({
   const renderOptionContent = (option_content, option_index) => {
     switch (type) {
       case 'text':
-        return <span className="text-center">{option_content.content}</span>;
+        return <span className="text-center">{option_content}</span>;
       case 'image':
         return (
           <img
-            src={option_content.content}
+            src={option_content}
             alt={`Option ${option_index}`}
             className="w-full h-auto max-h-24 object-contain"
           />
@@ -24,7 +24,7 @@ export default function QuestionChoiceMultiple({
       case 'audio':
         return (
           <CustomAudioPlayer
-            src={option_content.content}
+            src={option_content}
             isAnswered={isAnswered}
             option_id={option_index}
             setOnSelected={onQuestionSelect}
