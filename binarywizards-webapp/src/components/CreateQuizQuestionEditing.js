@@ -6,55 +6,47 @@ import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoic
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
 export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
-
-
   const [questionInfo, setQuestionInfo] = useState({
     questionText: 'Write your question',
-    questionOptions: [],
+    questionOptions: ["", "", "", ""],
     questionType: 'text',
     questionDifficulty: 'easy',
     questionCategory: '',
+    questionCorrectAnswer: 0,
   });
 
 
-
-  const [selectedOptionInput, setSelectedOptionInput] = useState({
-    choices: ["", "", "", ""],
-    type: 'text',
-    correctAnswer: 0,
-  });
-
+  //Catégories disponibles
   const [categories, setCategories] = useState([]);
-
-  //Categories disponibles
-  const [selectedCategory, setSelectedCategory] = useState('');
-
-
-
-  const [questionData, setQuestionData] = useState();
-  const questionType = 'text';
-  const [questionOptions, setQuestionOptions] = useState();
-  const [questionText, setQuestionText] = useState('Write your question');
+  //Si la question est une édition
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (refreshQuizQuestionEditing) {
       setRefreshQuizQuestions(false);
 
-      setQuestionText('Write your question');
-      setSelectedOptionInput({
-        choices: ["", "", "", ""],
-        type: 'text',
-        correctAnswer: 0,
-      });
-      setIsEditing(false);
-      setQuestionData();
-      setQuestionInfo((prevState) => ({ ...prevState, questionDifficulty: 'easy' }));
 
-      setSelectedCategory('');
+      setIsEditing(false);
+
+      setQuestionInfo((prevState) => ({
+        ...prevState,
+        questionDifficulty: 'easy',
+        questionCategory: '',
+        questionText: 'Write your question',
+        questionType: 'text',
+        questionCorrectAnswer: 0,
+        questionOptions: ["", "", "", ""],
+      }));
+
+
 
     }
   }, [refreshQuizQuestionEditing]);
+  useEffect(() => {
+    CreateQuizService.fetchCategories()
+      .then(data => setCategories(data))
+      .catch(error => toast.info('Error fetching categories:', error));
+  }, []);
 
   useEffect(() => {
     if (!questionId) return;
@@ -71,27 +63,27 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           return;
         }
 
-        setQuestionData(question);
-        setQuestionOptions(question.options);
-        setQuestionText(question.question_text);
 
         // Mise à jour de questionInfo
         setQuestionInfo((prevState) => ({
           ...prevState,
+          questionText: question.question_text,
           questionDifficulty: question.question_difficulty,
+          questionCategory: question.question_category,
+          questionType: question.question_type,
         }));
 
-        setSelectedCategory(question.question_category);
-        setSelectedOptionInput((prevState) => {
-          const choices = question.options.map((option) => option.option_content || "");
-          const correctAnswer = question.options.findIndex((option) => option.is_correct_answer) || 0;
+
+        setQuestionInfo((prevState) => {
+          const questionOptions = question.options.map((option) => option.option_content || "");
+          const questionCorrectAnswer = question.options.findIndex((option) => option.is_correct_answer) || 0;
           return {
             ...prevState,
-            type: question.question_type || 'text',
-            choices,
-            correctAnswer,
+            questionCorrectAnswer: questionCorrectAnswer,
+            questionOptions: questionOptions,
           }
         });
+
 
       })
       .catch((error) => {
@@ -100,16 +92,13 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       });
   }, [questionId]);
 
-  useEffect(() => {
-    console.log("Updated questionInfo:", questionInfo);
-  }, [questionInfo]);
 
 
   const handleEditClick = () => setIsEditing(true);
 
   const handleBlur = () => {
-    if (!questionText.trim()) {
-      setQuestionText("Write your question");
+    if (!questionInfo.questionText.trim()) {
+      setQuestionInfo((prevState) => ({ ...prevState, questionText: 'Write your question' }));
     }
     setIsEditing(false);
   };
@@ -119,11 +108,11 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
   //Submit de la question
   const handleSubmit = async () => {
-    if (!selectedCategory) {
+    if (!questionInfo.questionCategory) {
       toast.error("Please select a category.");
       return;
     }
-    if (!questionText) {
+    if (!questionInfo.questionText) {
       toast.error("Please enter a question.");
       return;
 
@@ -132,7 +121,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       toast.error("Please select a difficulty.");
       return;
     }
-    if (selectedOptionInput.choices.some(choice => !choice || !choice.trim())) {
+    if (questionInfo.questionOptions.some(choice => !choice || !choice.trim())) {
       toast.error("Please ensure all choices are filled out.");
       return;
     }
@@ -140,22 +129,22 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
     try {
       const options = [];
       options.push(
-        ...selectedOptionInput.choices.map((choice, index) => ({
+        ...questionInfo.questionOptions.map((choice, index) => ({
           option_content: choice,
-          is_correct_answer: selectedOptionInput.correctAnswer === index,
+          is_correct_answer: questionInfo.questionCorrectAnswer === index,
           option_index: index,
 
         }))
       );
 
       const requestBody = {
-        question_text: questionText,
+        question_text: questionInfo.questionText,
         question_difficulty: questionInfo.questionDifficulty,
-        question_category: selectedCategory,
-        question_type: selectedOptionInput.type,
+        question_category: questionInfo.questionCategory,
+        question_type: questionInfo.questionType,
         options: options,
       };
-      console.log("requestBody", requestBody);
+
       const action = TypeOfScreen === "edit"
         ? CreateQuizService.updateQuestion
         : CreateQuizService.createQuestion;
@@ -182,11 +171,11 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   };
 
   const handleOnTypeQuestionChange = (newType) => {
-    setSelectedOptionInput((prevState) => ({
-      ...prevState,
-      choices: prevState.choices.map(() => ("")),
-      type: newType,
+    setQuestionInfo((prevState) => ({
+      ...prevState, questionType: newType,
+      questionOptions: prevState.questionOptions.map(() => (""))
     }));
+
   };
 
   return (
@@ -212,8 +201,8 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           </label>
           <select
             id="category"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
+            value={questionInfo.questionCategory}
+            onChange={(e) => setQuestionInfo((prevState) => ({ ...prevState, questionCategory: e.target.value }))}
             className="p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="" disabled>
@@ -246,13 +235,13 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
                 className="text-2xl font-semibold text-gray-800 cursor-pointer hover:underline "
                 onClick={handleEditClick}
               >
-                {questionText}
+                {questionInfo.questionText}
               </h1>
             ) : (
               <input
                 type="text"
-                value={questionText}
-                onChange={(e) => setQuestionText(e.target.value)}
+                value={questionInfo.questionText}
+                onChange={(e) => setQuestionInfo((prevState) => ({ ...prevState, questionText: e.target.value }))}
                 onBlur={handleBlur}
                 autoFocus
                 className="text-2xl font-semibold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
@@ -272,9 +261,9 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           </div>
           <div className="flex  justify-center">
             <MultipleChoiceQuestion
-              selectedOptionInput={selectedOptionInput}
-              setSelectedOptionInput={setSelectedOptionInput}
-              questionText={questionText}
+
+              questionInfo={questionInfo}
+              setQuestionInfo={setQuestionInfo}
             />
           </div>
         </div >

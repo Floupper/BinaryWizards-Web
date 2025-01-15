@@ -47,8 +47,7 @@ export default function QuestionScreen() {
         result = await PostAnswers(id, questionIndex, selectedId);
       }
       setIdCorrectAnswers(result.correct_option_index);
-      if(selectedId === result.correct_option_index)
-      {
+      if (selectedId === result.correct_option_index) {
         setCorrectAnswer(true);
       } else {
         setCorrectAnswer(false);
@@ -89,7 +88,7 @@ export default function QuestionScreen() {
         "15": "medium",
         "30": "easy",
       };
-      
+
       setCorrectAnswer(null)
       setDifficultyLevel(difficultyMap[data.time_limit] || "none");
       setQuestionText(data.question_text);
@@ -153,7 +152,7 @@ export default function QuestionScreen() {
       )}
       <div className={`${correctAnswer === false ? 'bg-red-500' : ''} ${correctAnswer === true ? 'bg-green-500' : ''} ${correctAnswer === null ? 'bg-gradient-to-r from-orange-400 to-green-400' : ''} p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10`}>
         <div className="flex flex-col items-center space-y-6 p-6 bg-[#F4F2EE] rounded-lg shadow-md w-full">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-center text-black">{questionText}</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-center text-black">{questionText}</h1>
           <div className="flex justify-center w-full">
             <QuestionChoiceMultiple
               type={questionType}
@@ -162,7 +161,7 @@ export default function QuestionScreen() {
               onQuestionSelect={handleQuestionSelect}
               selectedQuestionId={selectedQuestionId}
               isAnswered={isAnswered}
-              type={questionType}
+
             />
           </div>
           <button
