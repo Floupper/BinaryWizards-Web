@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import TimeSelector from "../components/TeamModeTime";
 import TeamCreator from "../components/TeamModeTeamCreator";
 import JoinQuizSearchQuiz from "../components/JoinQuizSearchQuiz";
+import JoinQuizCard from "../components/JoinQuizCard";
 import TeamModeService from "../services/TeamModeService";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -15,10 +16,16 @@ export default function TeamModeConfigureScreen() {
   const [teams, setTeams] = useState([]);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showTimerWarning, setShowTimerWarning] = useState(false);
 
   const handleInitializeGame = async () => {
     if (!selectedQuiz || teams.length === 0) {
       alert("Please select a quiz and add at least one team.");
+      return;
+    }
+
+    if (selectedTimer === "none") {
+      setShowTimerWarning(true);
       return;
     }
 
@@ -40,27 +47,44 @@ export default function TeamModeConfigureScreen() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <div
+      className="flex flex-col min-h-screen"
+      style={{
+        backgroundImage: "url('/backgrounds/team_background.svg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <Navbar />
-      <div className="flex flex-col items-center flex-grow">
-        <div className="w-full max-w-lg p-4 bg-white rounded-lg shadow-md">
-          <TimeSelector onTimerSelect={(timer) => setSelectedTimer(timer)} />
+      <div className="flex flex-col items-center flex-grow text-center">
+        <h1 className="text-4xl underline decoration-[#8B2DF1] decoration-4 text-black mt-4">Team</h1>
+        <div className="w-full max-w-lg p-4">
+          <TeamCreator onTeamsChange={(newTeams) => setTeams(newTeams)} />
           <div className="mt-6">
-            <TeamCreator onTeamsChange={(newTeams) => setTeams(newTeams)} />
+            <TimeSelector onTimerSelect={(timer) => setSelectedTimer(timer)} />
+            {showTimerWarning && selectedTimer === "none" && (
+              <p className="text-red-500 mt-2">Please select a timer before starting the game.</p>
+            )}
           </div>
         </div>
+
+        {selectedQuiz && (
+          <div className="mt-6">
+            <JoinQuizCard quiz={selectedQuiz} enableModal={false} />
+          </div>
+        )}
 
         <div className="mt-8 flex space-x-4">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+            className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800"
           >
             Select Quiz
           </button>
 
           <button
             onClick={handleInitializeGame}
-            className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+            className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800"
           >
             Initialize Game
           </button>
