@@ -21,11 +21,6 @@ export default function ScrumModeConfigureScreen() {
   }, [navigate]);
 
   const handleInitializeGame = async () => {
-    if (!selectedQuiz || maxPlayers < 2) {
-      alert("Please select a quiz and set at least 2 players.");
-      return;
-    }
-
     const gameData = {
       mode: "scrum",
       max_players: maxPlayers,
@@ -40,45 +35,41 @@ export default function ScrumModeConfigureScreen() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-blue-100"
+      style={{ backgroundImage: "url('/backgrounds/ScrumQuiz.svg')" }}
+    >
       <Navbar />
-      <div className="flex flex-col items-center flex-grow">
-        <div className="w-full max-w-lg p-4 bg-white rounded-lg shadow-md">
-          <div className="mb-4">
-            <label className="block mb-2 font-bold">Max Players</label>
+      <div className="flex flex-col justify-center items-center flex-grow p-4">
+        <div className="flex flex-col bg-white p-20 rounded-xl gap-y-6">
+            <label className="block mb-2 font-semibold text-3xl text-center pb-4">Max Players</label>
             <input
               type="number"
-              min="2"
+              min="1"
               value={maxPlayers}
               onChange={(e) => setMaxPlayers(parseInt(e.target.value, 10))}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              className="w-6/12 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  self-center"
             />
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-black text-white py-2 px-6 rounded-lg hover:bg-white hover:text-black border-2 border-black mt-14"
+            >
+              Select Quiz
+            </button>
+
+            <button
+              onClick={handleInitializeGame}
+              className="bg-black text-white py-2 px-6 rounded-lg hover:bg-white hover:text-black border-2 border-black"
+            >
+              Initialize Game
+            </button>
           </div>
         </div>
-
-        <div className="mt-8 flex space-x-4">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-          >
-            Select Quiz
-          </button>
-
-          <button
-            onClick={handleInitializeGame}
-            className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
-          >
-            Initialize Game
-          </button>
-        </div>
-      </div>
-
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-red-500 hover:text-red-700"
+              className="absolute top-4 right-4 text-red-500 hover:text-red-700 focus:outline-none"
             >
               Close
             </button>

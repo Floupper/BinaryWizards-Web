@@ -5,6 +5,4 @@
 @font-face {
     font-family: 'Mogula';
     src: local('Mogula'), url(./fonts/mogula.otf) format('opentype');
-    font-weight: 100;
-    font-display: swap;
 }

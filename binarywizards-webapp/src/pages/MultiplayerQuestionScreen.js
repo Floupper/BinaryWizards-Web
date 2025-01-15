@@ -2,12 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import QuestionHUD from "../components/QuestionHUD";
-import QuestionChoiceMultipleTeamMode from "../components/QuestionChoiceMultipleTeamMode";
-import Chrono from "../components/Chrono";
+import QuestionChoiceMultiple from "../components/QuestionChoiceMultiple";
 import Navbar from "../components/Navbar";
 import "react-toastify/dist/ReactToastify.css";
 
-const SERVER_URL = `${process.env.REACT_APP_API_BASE_URL}`;
+const SERVER_URL = process.env.REACT_APP_API_BASE_URL;
 
 export default function MultiplayerQuestionScreen() {
   const { gameId } = useParams();
@@ -22,13 +21,16 @@ export default function MultiplayerQuestionScreen() {
   const [questionType, setQuestionType] = useState("");
   const [questionDifficulty, setQuestionDifficulty] = useState("");
   const [questionCategory, setQuestionCategory] = useState("");
-  const [loading, setLoading] = useState(true);
   const [selectedQuestionId, setSelectedQuestionId] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [idCorrectAnswers, setIdCorrectAnswers] = useState(null);
   const [timeAvailable, setTimeAvailable] = useState(null);
-  const chronoRef = useRef();
-  const [socket, setSocket] = useState(null);
+  const [remainingTime, setRemainingTime] = useState(null);
+  const [correctAnswer, setCorrectAnswer] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+  const [timeAnswer, setTimeAnswer] = useState(null);
+  const chronoInterval = useRef(null);
+  const socketRef = useRef(null);
 
   useEffect(() => {
     const userToken = localStorage.getItem("token");
@@ -37,55 +39,74 @@ export default function MultiplayerQuestionScreen() {
       return;
     }
 
-    const newSocket = io(SERVER_URL, {
+    const socket = io(SERVER_URL, {
       extraHeaders: {
         Authorization: `Bearer ${userToken}`,
       },
     });
 
-    newSocket.on("connect", () => {
-      newSocket.emit("getQuestionInformations", { game_id: gameId });
+    socket.on("connect", () => {
+      socket.emit("getQuestionInformations", { game_id: gameId });
     });
 
-    newSocket.on("currentQuestion", (data) => {
-      handleNewQuestion(data);
-    });
+    socket.on("currentQuestion", handleNewQuestion);
+    socket.on("newQuestion", handleNewQuestion);
 
-    newSocket.on("newQuestion", (data) => {
-      handleNewQuestion(data);
-    });
+    socket.on("gameFinished", ({ ranking }) =>
+      navigate("/team-end", { state: { ranking } })
+    );
 
-    newSocket.on("gameFinished", (data) => {
-      const { ranking } = data;
-      navigate("/team-end", {
-        state: {
-          ranking,
-        },
-      });
-    });
-
-    newSocket.on("answerResult", (data) => {
+    socket.on("answerResult", (data) => {
       setIdCorrectAnswers(data.correct_option_index);
       setIsAnswered(true);
+      setTimeAnswer(data.time_remaining);
+
+      setCorrectAnswer(selectedId === data.correct_option_index);
     });
 
-    setSocket(newSocket);
+    socketRef.current = socket;
 
     return () => {
-      if (newSocket) {
-        newSocket.disconnect();
-      }
+      socket.disconnect();
+      clearInterval(chronoInterval.current);
     };
-  }, [gameId, navigate]);
+  }, [gameId, navigate, selectedId]);
 
   useEffect(() => {
-    if (timeAvailable !== null && chronoRef.current) {
-      chronoRef.current.resetTimer(timeAvailable);
+    if (timeAvailable === null) return;
+
+    const now = Date.now();
+    const endTime = now + timeAvailable * 1000;
+    const savedEndTime = localStorage.getItem(`endTime_${gameId}`);
+    const finalEndTime =
+      savedEndTime && parseInt(savedEndTime, 10) > now
+        ? parseInt(savedEndTime, 10)
+        : endTime;
+
+    localStorage.setItem(`endTime_${gameId}`, finalEndTime);
+    updateRemainingTime(finalEndTime);
+
+    clearInterval(chronoInterval.current);
+    chronoInterval.current = setInterval(() => {
+      updateRemainingTime(finalEndTime);
+    }, 1000);
+
+    return () => clearInterval(chronoInterval.current);
+  }, [timeAvailable, gameId]);
+
+  const updateRemainingTime = (endTime) => {
+    const timeLeft = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+    setRemainingTime(timeLeft);
+
+    if (timeLeft <= 0) {
+      clearInterval(chronoInterval.current);
     }
-  }, [timeAvailable]);
+  };
 
   const handleNewQuestion = (data) => {
-    const answeredQuestions = JSON.parse(localStorage.getItem(`answeredQuestions_${gameId}`)) || {};
+    const answeredQuestions =
+      JSON.parse(localStorage.getItem(`answeredQuestions_${gameId}`)) || {};
+
     if (answeredQuestions[data.question_index] !== undefined) {
       setIsAnswered(true);
       setSelectedQuestionId(answeredQuestions[data.question_index]);
@@ -105,19 +126,25 @@ export default function MultiplayerQuestionScreen() {
     setQuizId(data.quiz_id);
     setTimeAvailable(data.time_available);
     setIdCorrectAnswers(null);
+    setCorrectAnswer(null);
   };
 
   const handleQuestionSelect = (selectedId) => {
-    if (!socket || isAnswered) return;
+    if (!socketRef.current || isAnswered) return;
 
     setSelectedQuestionId(selectedId);
     setIsAnswered(true);
+    setSelectedId(selectedId);
 
-    const answeredQuestions = JSON.parse(localStorage.getItem(`answeredQuestions_${gameId}`)) || {};
+    const answeredQuestions =
+      JSON.parse(localStorage.getItem(`answeredQuestions_${gameId}`)) || {};
     answeredQuestions[questionIndex] = selectedId;
-    localStorage.setItem(`answeredQuestions_${gameId}`, JSON.stringify(answeredQuestions));
+    localStorage.setItem(
+      `answeredQuestions_${gameId}`,
+      JSON.stringify(answeredQuestions)
+    );
 
-    socket.emit("sendAnswer", {
+    socketRef.current.emit("sendAnswer", {
       game_id: gameId,
       question_index: questionIndex,
       option_index: selectedId,
@@ -134,28 +161,78 @@ export default function MultiplayerQuestionScreen() {
     category: questionCategory,
   };
 
+  const getChronoColor = () =>
+    remainingTime <= 5 ? "text-red-600" : "text-[#8B2DF1]";
+
+  useEffect(() => {
+    if (timeAnswer === null || timeAnswer <= 0) return;
+  
+    const interval = setInterval(() => {
+      setTimeAnswer((prevTimeAnswer) => {
+        if (prevTimeAnswer <= 1000) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prevTimeAnswer - 1;
+      });
+    }, 1);
+  
+    return () => clearInterval(interval); 
+  }, [timeAnswer]);
+
   return (
-    <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center">
+    <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center"
+      style={{
+        backgroundImage: "url('/backgrounds/team_background.svg')",
+      }}
+    >
       <Navbar />
-      <div className="mb-6 w-11/12">
+      <div className="mb-6 w-full sm:w-10/12 md:w-8/12 lg:w-6/12">
         <QuestionHUD party_parameters={paramHUD} />
       </div>
 
-      <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg">
-        <div className="flex flex-col items-center space-y-6 p-6 bg-[#F4F2EE] rounded-lg shadow-md w-[110vh] h-[60vh]">
-          <h1 className="Question text-3xl font-bold text-center text-black">{questionText}</h1>
-          <div className="flex justify-center">
-            <QuestionChoiceMultipleTeamMode
+      <div
+        className={`${correctAnswer === false ? "bg-red-500" : ""} ${
+          correctAnswer === true ? "bg-green-500" : ""
+        } ${
+          correctAnswer === null ? "bg-gradient-to-r from-orange-400 to-green-400" : ""
+        } p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10`}
+      >
+        <div className="flex flex-col items-center space-y-6 p-6 bg-[#F4F2EE] rounded-lg shadow-md w-full">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-center text-black">
+            {questionText}
+          </h1>
+          <div className="flex justify-center w-full">
+            <QuestionChoiceMultiple
               question_choice={options}
               correctOptionIndex={idCorrectAnswers}
               onQuestionSelect={handleQuestionSelect}
               selectedQuestionId={selectedQuestionId}
               isAnswered={isAnswered}
+              type={questionType}
             />
           </div>
-          {timeAvailable !== null && (
-            <Chrono ref={chronoRef} sendResponse={handleQuestionSelect} id_quiz={quizId} />
+          {remainingTime !== null && (
+            <div className={`text-5xl font-semibold ${getChronoColor()}`}>
+              {correctAnswer === null ? `${remainingTime}s` : null}       
+           </div>
           )}
+          <div style={{width: '100%'}}>
+            {correctAnswer !== null ? (
+              <div
+                style={{
+                  width: `${Math.min(120 - timeAnswer / 50, 100)}%`,
+                }}
+                className="h-3 bg-[#8B2DF1] rounded-xl"
+              />              
+            ) : (
+              isAnswered ? (
+                <span className="text-center">Waiting for the chrono to finish...</span>
+              ) : (
+                <span className="text-center">Choose an option...</span>
+              )
+            )}
+          </div>
         </div>
       </div>
     </div>

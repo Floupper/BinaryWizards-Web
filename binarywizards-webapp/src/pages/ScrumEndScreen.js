@@ -13,7 +13,7 @@ export default function ScrumEndScreen() {
   if (!ranking) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-bold">Données manquantes</h1>
+        <h1 className="text-2xl font-semibold">Données manquantes</h1>
         <button
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
           onClick={() => navigate("/")}
@@ -43,7 +43,7 @@ export default function ScrumEndScreen() {
             <div className="flex items-center justify-center mb-8">
               <Emoji name="party-popper" width={60} />
               <h1
-                className="text-4xl font-bold mx-4"
+                className="text-4xl font-semibold mx-4"
                 style={{
                   color: "#7A00FF",
                   fontFamily: "Sifonn, sans-serif",
@@ -67,7 +67,7 @@ export default function ScrumEndScreen() {
           <div className="grid grid-cols-1 gap-6">
             {ranking.map((player, index) => (
               <div key={player.username} className="bg-gray-100 p-4 rounded-lg shadow">
-                <h3 className="text-lg font-bold mb-2" style={{ color: "#7A00FF" }}>
+                <h3 className="text-lg font-semibold mb-2" style={{ color: "#7A00FF" }}>
                   {index + 1}. {player.username}
                 </h3>
                 <p className="text-base">Score : {player.score} points</p>
@@ -76,7 +76,7 @@ export default function ScrumEndScreen() {
           </div>
           <div className="flex justify-center mt-8">
             <button
-              className="text-white font-bold py-3 px-6 bg-black rounded-lg text-lg"
+              className="text-white font-semibold py-3 px-6 bg-black rounded-lg text-lg"
               onClick={() => navigate("/")}
             >
               Retour à l'accueil

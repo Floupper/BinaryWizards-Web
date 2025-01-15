@@ -45,24 +45,24 @@ export default function JoinQuizResumeGame() {
         listElement.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [hasNextPage, fetchNextPage]);
+  }, [hasNextPage, fetchNextPage, handleScroll]);
 
   return (
-    <div className="mx-auto px-4 py-6 w-full max-w-4xl">
-      {/* Loader */}
-      {isLoading && (
-        <div className="flex justify-center items-center h-20">
-          <span className="text-lg text-gray-500 animate-pulse">
-            Loading...
-          </span>
-        </div>
-      )}
-
+    <div className="mx-auto px-4 xl:px-20 py-6 w-full">
       {/* Game List */}
       <div
-        className="game-list rounded-lg p-4 mx-auto w-full max-w-xl"
+        className="rounded-lg overflow-y-auto my-6 bg-gray-100 p-6 border-4 border-[#8B2DF1] h-[30rem]"
         ref={gameListRef}
       >
+        {/* Loader */}
+        {isLoading && (
+          <div className="flex justify-center items-center h-20">
+            <span className="text-lg text-gray-500 animate-pulse">
+              Loading...
+            </span>
+          </div>
+        )}
+
         {data?.pages?.flatMap((page) => page.unfinished_games || []).map((item) => (
           <ResumGameCard
             key={item.game_id}

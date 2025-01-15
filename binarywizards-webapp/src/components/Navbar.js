@@ -24,7 +24,7 @@ export default function Navbar() {
   return (
     <nav className="relative w-full flex justify-between items-center p-5 text-black">
       {/* Logo */}
-      <div className="text-[3.3rem] font-semibold font-mogula">
+      <div className="text-[2.5rem] font-semibold font-mogula md:text-[3.3rem]">
         <NavLink to="/" className="text-black">
           Mogula
         </NavLink>
@@ -32,7 +32,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Button */}
       <button
-        className="md:hidden text-2xl bg-black text-white p-2 w-14 rounded focus:outline-none hover:bg-black hover:text-white"
+        className="lg:hidden z-20 text-3xl bg-black text-white p-2 w-14 rounded focus:outline-none hover:bg-black hover:text-white"
         onClick={toggleMenu}
       >
         ☰
@@ -40,26 +40,12 @@ export default function Navbar() {
 
       {/* Navigation Links */}
       <ul
-        className={`md:flex md:items-center md:gap-5 list-none ${
+        className={`lg:flex lg:items-center lg:gap-5 list-none transition-all duration-300 ease-in-out ${
           isOpen
-            ? "flex flex-col items-center absolute top-full left-0 w-full p-5 bg-white"
-            : "hidden md:flex"
+          ? "z-10 flex flex-col absolute top-0 right-[-1rem] h-[100vh] pt-[8rem] gap-y-5 p-8 bg-white shadow-lg rounded-3xl transform lg:static lg:p-0 md:shadow-none transition-all duration-500 ease-out"
+          : "hidden lg:flex"
         }`}
       >
-        {/* Play */}
-        <li className="flex items-center mr-5">
-          <NavLink
-            to="/"
-            className="flex items-center text-black"
-            style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
-          >
-            <EmojiProvider data={emojiData}>
-              <Emoji name="waving-hand" width={20} />
-            </EmojiProvider>
-            <span className="ml-2">Play</span>
-          </NavLink>
-        </li>
-
         {/* Download */}
         <li className="flex items-center mr-5">
           <a
@@ -74,6 +60,19 @@ export default function Navbar() {
             <span className="ml-2">Download</span>
           </a>
         </li>
+        {/* Play */}
+        <li className="flex items-center mr-5">
+          <NavLink
+            to="/"
+            className="flex items-center text-black"
+            style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+          >
+            <EmojiProvider data={emojiData}>
+              <Emoji name="waving-hand" width={20} />
+            </EmojiProvider>
+            <span className="ml-2">Play</span>
+          </NavLink>
+        </li>
 
         {/* Create Quiz */}
         <li className="flex items-center mr-5">
@@ -82,64 +81,80 @@ export default function Navbar() {
             className="flex items-center text-black"
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
-            <EmojiProvider data={emojiData}>
-              <Emoji name="paintbrush" width={20} />
-            </EmojiProvider>
-            <span className="ml-2">Create Quiz</span>
+              {token ? (
+                <>
+                  <EmojiProvider data={emojiData}>
+                    <Emoji name="paintbrush" width={20} />
+                  </EmojiProvider>
+                  <span className="ml-2">Create Quiz</span>
+                </>
+              ) : (
+                <>
+                  <EmojiProvider data={emojiData}>
+                    <Emoji name="bomb" width={20} />
+                  </EmojiProvider>
+                  <span className="ml-2">Quick Quiz</span>
+                </>
+              )}
           </NavLink>
         </li>
-
         {token ? (
           <>
-            {/* Create Quick Quiz */}
-            <li className="flex items-center mr-5">
-              <NavLink
-                to="/quick-quiz"
-                className="flex items-center text-black"
-                style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
-              >
-                <EmojiProvider data={emojiData}>
-                  <Emoji name="paintbrush" width={20} />
-                </EmojiProvider>
-                <span className="ml-2">Create Quick Quiz</span>
-              </NavLink>
-            </li>
+          {/* Profile */}
+            <div className="flex flex-col lg:flex-row gap-y-4">
+              {/* Create Quick Quiz */}
+              <li className="flex items-center mr-5">
+                <NavLink
+                  to="/quick-quiz"
+                  className="flex items-center text-black"
+                  style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+                >
+                  <EmojiProvider data={emojiData}>
+                    <Emoji name="bomb" width={20} />
+                  </EmojiProvider>
+                  <span className="ml-2">Quick Quiz</span>
+                </NavLink>
+              </li>
 
-            {/* Dashboard */}
-            <li className="flex items-center mr-5">
-              <NavLink
-                to="/dashboard"
-                className="text-black"
-                style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
-              >
-                Dashboard
-              </NavLink>
-            </li>
+              {/* Dashboard */}
+              <li className="flex items-center mr-5">
+                <NavLink
+                  to="/dashboard"
+                  className="flex items-center text-black"
+                  style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+                >
+                  <EmojiProvider data={emojiData}>
+                    <Emoji name="bust-in-silhouette" width={20} />
+                  </EmojiProvider>
+                  <span className="ml-2">Dashboard</span>
+                </NavLink>
+              </li>
 
-            {/* Sign Out */}
-            <li className="flex items-center mr-5">
-              <button
-                onClick={handleSignout}
-                className="bg-black text-white rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
-                style={{
-                  fontFamily: "Helvetica",
-                  fontSize: "1.401rem",
-                  borderRadius: "1.778rem",
-                }}
-              >
-                Sign Out
-              </button>
-            </li>
+              {/* Sign Out */}
+              <li className="flex items-center lg:mr-5 mb-3 md:mb-0">
+                <button
+                  onClick={handleSignout}
+                  className="border-2 border-black text-black rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
+                  style={{
+                    fontFamily: "Helvetica",
+                    fontSize: "1.2rem",
+                    borderRadius: "1.778rem",
+                  }}
+                >
+                  Sign Out
+                </button>
+              </li>
+            </div>
           </>
         ) : (
           /* Sign In */
-          <li className="flex items-center">
+          <li className="flex items-center mb-3 md:mb-0">
             <button
               onClick={handleSignin}
-              className="bg-black text-white rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
+              className="border-2 border-black text-black rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
               style={{
                 fontFamily: "Helvetica",
-                fontSize: "1.401rem",
+                fontSize: "1.2rem",
                 borderRadius: "1.778rem",
               }}
             >

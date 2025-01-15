@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify';
 import axiosInstance from '../utils/axiosInstance';
 
 const HistoryGamePlayService = {
@@ -13,7 +12,7 @@ const HistoryGamePlayService = {
   getStartedGames: async ({page = 1}) => {
     try {
       const params = new URLSearchParams();
-      params.append('pageSize', 3);
+      params.append('pageSize', 6);
       params.append('page', page);
       const url = `game/user/started_games?${params.toString()}`;
   
