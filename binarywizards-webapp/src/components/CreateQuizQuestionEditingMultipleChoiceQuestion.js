@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import CreateQuizService from '../services/CreateQuizService';
 import CustomAudioPlayer from './CustomAudioPlayer';
-export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput }) {
+export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionInput, questionText }) {
   const [file, setFile] = useState(null);
   const [aiModalOpen, setAiModalOpen] = useState(false);
-  console.log(selectedOptionInput)
+  const [aiGenerating, setAiGenerating] = useState(false);
   if (!selectedOptionInput.choices || selectedOptionInput.choices.length === 0) {
     setSelectedOptionInput((prevState) => ({
       ...prevState,
@@ -57,7 +57,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
   };
 
   const handleDeleteImageAudio = (id) => {
-    console.log('actif');
+
     setSelectedOptionInput((prevState) => ({
       ...prevState,
       choices: prevState.choices.map((item, index) =>
@@ -65,6 +65,40 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
       ),
     }));
   }
+
+  const handleAiChoices = async (option) => {
+    console.log(selectedOptionInput);
+    const requestBody = {
+      question_text: questionText,
+      options_type: option,
+      nb_options: 4//selectedOptionInput.choices.length,
+
+    };
+    let data;
+    try {
+      setAiGenerating(true);
+      data = await CreateQuizService.AICreateChoices(requestBody);
+      setAiGenerating(false);
+      setSelectedOptionInput((prevState) => ({
+        ...prevState,
+        choices: [
+          data.generatedAnswers.correct_answer, // Ajouter la réponse correcte
+          ...data.generatedAnswers.incorrect_answers // Ajouter les réponses incorrectes
+        ],
+        type: "text", // Type de la question (par exemple, texte)
+        correctAnswer: 0, // L'index de la réponse correcte (ici 0, car c'est la première réponse)
+      }));
+
+
+      console.log(data);
+    }
+    catch (error) {
+      setAiGenerating(false);
+      console.log(error);
+    }
+
+  }
+
   const handleUpload = async (id, file, type) => {
     if (!file) {
       alert(`Veuillez sélectionner un fichier ${type === "audio" ? "audio" : "image"} avant de continuer.`);
@@ -92,7 +126,6 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
         };
       });
 
-      console.log(setSelectedOptionInput);
       toast.success(`${type === "audio" ? "Audio" : "Image"} uploadé avec succès !`);
     } catch (error) {
       toast.error(`Erreur lors de l'upload du fichier ${type}.`);
@@ -206,7 +239,7 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
         ))}
       </div>
 
-      <div className="mt-4 flex gap">
+      <div className="mt-4 flex gap-1">
         <button
           onClick={handleAddOption}
           className={`px-4 py-2 text-white rounded ${selectedOptionInput.choices.length >= 8
@@ -217,21 +250,35 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
         >
           Add choice
         </button>
-        <div className="flex items-center rounded border-black  border-2 ">
-          <button className=" text-3xl h-10      justify-center rounded bg-white w-10  "
-            onClick={() => { setAiModalOpen(!aiModalOpen) }}>🪄
+        <div className="flex items-center justify-center text-3xl h-12 w-12 bg-white rounded-xl border-black border-2">
+          <button
+            className="m-0 p-0 text-3xl h-10 w-10"
+            onClick={() => { setAiModalOpen(!aiModalOpen) }}
+          >
+            🪄
           </button>
-
-
         </div>
+
 
 
         {aiModalOpen && (
           <div className="flex gap-2  bg-white rounded-xl border-black border-2" >
-            <button className=" ml-1 my-1 p-1   shadow-sm shadow-black hover:shadow-black hover:shadow-lg rounded-lg ">Realistic</button>
-            <button className="p-1 my-1 shadow-sm shadow-black hover:shadow-black hover:shadow-lg rounded-lg">Humouristic</button>
-            <button className="mr-1 my-1 p-1 shadow-sm shadow-black hover:shadow-black hover:shadow-lg rounded-lg">Mixt</button>
+            <button disabled={aiGenerating} onClick={() => { console.log("here"); handleAiChoices('realistic'); }} className={`ml-1 my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
+              ? 'opacity-50 cursor-not-allowed'
+              : 'hover:shadow-black hover:shadow-lg'
+              }`}>Realistic</button>
+            <button disabled={aiGenerating} onClick={() => { console.log("here"); handleAiChoices('humouristic'); }} className={` my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
+              ? 'opacity-50 cursor-not-allowed'
+              : 'hover:shadow-black hover:shadow-lg'
+              }`}>Humouristic</button>
+            <button disabled={aiGenerating} onClick={() => { console.log("here"); handleAiChoices('mixt'); }} className={`mr-1 my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
+              ? 'opacity-50 cursor-not-allowed'
+              : 'hover:shadow-black hover:shadow-lg'
+              }`}>Mixt</button>
           </div>
+        )}
+        {aiGenerating && (
+          <a>Generating...</a>
         )}
       </div>
     </div>

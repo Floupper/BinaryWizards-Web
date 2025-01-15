@@ -62,7 +62,7 @@ const CreateQuizService = {
   },
 
 
-  AICreateChoices: (questionData) => {
+  AICreateChoices: async (questionData) => {
     try {
       return axiosInstance.post(`/question/complete_options`, questionData,).then((response) => response.data);
     } catch (error) {

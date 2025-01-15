@@ -7,7 +7,7 @@ import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
 export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
   const [selectedOptionInput, setSelectedOptionInput] = useState({
-    choices: [{ content: "" }, { content: "" }, { content: "" }, { content: "" }],
+    choices: ["", "", "", ""],
     type: 'text',
     correctAnswer: 0,
   });
@@ -268,6 +268,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
             <MultipleChoiceQuestion
               selectedOptionInput={selectedOptionInput}
               setSelectedOptionInput={setSelectedOptionInput}
+              questionText={questionText}
             />
           </div>
         </div >
