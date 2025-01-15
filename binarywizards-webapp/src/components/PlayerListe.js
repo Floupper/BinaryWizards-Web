@@ -4,6 +4,10 @@ import { io } from "socket.io-client";
 import { QRCodeCanvas } from "qrcode.react";
 import axiosInstance from "../utils/axiosInstance";
 import { MdRefresh } from "react-icons/md";
+import JoinQuizCard from "../components/JoinQuizCard";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import Navbar from "./Navbar";
 
 const SERVER_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 
@@ -43,6 +47,17 @@ export default function PlayersList({ game_mode }) {
         },
       });
 
+      newSocket.on("teamSwitch", (data) => {
+        if (data && data.teams) {
+          const updatedPlayers = {};
+          data.teams.forEach((team) => {
+            updatedPlayers[team.name] = team.players || [];
+          });
+          setPlayers(updatedPlayers);
+          setTeams(data.teams);
+        }
+      });
+
       newSocket.on("connect", () => {
         newSocket.emit("getGameInformations", { game_id: gameId });
       });
@@ -77,9 +92,7 @@ export default function PlayersList({ game_mode }) {
         navigate(`/team-question/${gameId}`);
       });
 
-      newSocket.on("disconnect", () => {
-        console.log("Disconnected from WebSocket server.");
-      });
+      newSocket.on("disconnect", () => { });
 
       setSocket(newSocket);
     };
@@ -88,7 +101,6 @@ export default function PlayersList({ game_mode }) {
 
     return () => {
       if (socket) {
-        console.log("Disconnecting from WebSocket server...");
         socket.disconnect();
       }
     };
@@ -132,112 +144,163 @@ export default function PlayersList({ game_mode }) {
     });
   };
 
-  
+  const handleSwitchTeam = (newTeamName) => {
+    if (socket && newTeamName) {
+      socket.emit("switchTeam", { game_id: gameId, new_team_name: newTeamName });
+
+      setSelectedTeam(newTeamName);
+      localStorage.setItem(`team_${gameId}`, newTeamName);
+    }
+  };
+
   return (
-    <div className="p-8">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundImage: "url('/backgrounds/team_background.svg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+
+    >
+      <Navbar />
+
+
+
       {showTeamPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-2xl font-semibold mb-4">Join a Team</h2>
-            {teams.length > 0 ? (
-              teams.map((teamName, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleJoinTeam(teamName)}
-                  className="bg-blue-500 text-white p-2 rounded mb-2 w-full"
-                >
-                  {teamName}
-                </button>
-              ))
-            ) : (
-              <p>No teams available at the moment.</p>
-            )}
+            <h2 className="text-2xl underline decoration-[#8B2DF1] mb-6 text-center">
+              Join a Team
+            </h2>
+            <div className="border-2 border-[#8B2DF1] p-4 rounded-lg">
+              {teams.length > 0 ? (
+                teams.map((teamName, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleJoinTeam(teamName)}
+                    className="bg-white text-black p-2 rounded-lg mb-4 shadow-md w-full hover:bg-gray-100 border border-gray-300"
+                  >
+                    {teamName}
+                  </button>
+                ))
+              ) : (
+                <p className="text-center text-gray-500">No teams available at the moment.</p>
+              )}
+            </div>
           </div>
         </div>
       )}
 
       {!showTeamPopup && (
-        <>
-          <h1 className="text-2xl font-semibold mb-4">Game Details</h1>
-
-          <div className="flex items-center mb-4">
-            <span className="font-semibold mr-2">Game Code:</span>
-            <span className="text-blue-600 font-mono">{gameId}</span>
-            <button
-              onClick={handleCopyGameCode}
-              className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded"
-            >
-              Copy
-            </button>
-          </div>
-
-          <div className="mb-4">
-            <QRCodeCanvas value={`${window.location.origin}/team-mode-join-team/${gameId}`} size={128} />
-          </div>
-
-          {quizDetails && (
-            <div className="mb-4">
-              <p>
-                <span className="font-semibold">Quiz:</span> {quizDetails.title}
-              </p>
+        <div className="flex flex-wrap justify-center items-center space-y-8 lg:space-y-0 lg:space-x-8 overflow-hidden" style={{ minHeight: 'calc(90vh - 64px)' }}> {/* Aligner les sections au centre verticalement et horizontalement en prenant en compte la navbar */}
+          {/* Left Section */}
+          <div className="w-full lg:w-2/5 flex flex-col items-center">
+            <p className="text-4xl mb-4">Game Code:</p>
+            <div className="flex items-center text-3xl text-[#8B2DF1]">
+              <span>{gameId}</span>
+              <button onClick={handleCopyGameCode} className="ml-4 text-2xl">
+                <FontAwesomeIcon icon={faCopy} />
+              </button>
             </div>
-          )}
-
-          {timer && (
-            <div className="mb-4">
-              <p>
-                <span className="font-semibold">Time:</span> {timer} minutes
-              </p>
+            <div className="mt-8"> {/* Ajout d'espace entre le code et le QR code */}
+              <QRCodeCanvas
+                value={`${window.location.origin}/team-mode-join-team/${gameId}`}
+                size={184} /* Augmenter la taille du QR Code */
+                className="shadow-lg rounded-lg"
+              />
+              <p className="mt-4 text-xl text-gray-700">Scan this code to join!</p>
             </div>
-          )}
 
-          <div className="mt-4">
-            
-              {isGameOwner ? (
-                <button
-                  onClick={handleStartGame}
-                  className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-                >
-                  Start Game
-                </button>
-              ) : (
-                <p className="text-gray-500">Waiting for game owner...</p>
-              )}
-          </div>
-
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold mb-2">Teams</h2>
-            {teams.length > 0 ? (
-              teams.map((team, index) => (
-                <div key={index} className="mb-8">
-                  <h3 className="text-2xl font-semibold text-blue-600 mb-4">{team.name}</h3>
-                  <table className="w-full border-collapse border border-gray-300">
-                    <thead>
-                      <tr>
-                        <th className="border border-gray-300 px-4 py-2 text-left">Player Name</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {players[team.name] && players[team.name].length > 0 ? (
-                        players[team.name].map((player, playerIndex) => (
-                          <tr key={playerIndex}>
-                            <td className="border border-gray-300 px-4 py-2">{player.username}</td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td className="border border-gray-300 px-4 py-2 text-gray-500">No players in this team.</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              ))
-            ) : (
-              <p>No teams available at the moment.</p>
+            {isGameOwner && (
+              <button
+                onClick={handleStartGame}
+                className="mt-10 bg-[#8B2DF1] text-white py-6 px-12 rounded-lg text-xl hover:bg-[#7A24E1]"
+              >
+                Start Game
+              </button>
             )}
           </div>
-        </>
+
+          {/* Right Section */}
+          <div className="w-full lg:w-2/5">
+          <p className="text-4xl mb-4">Game Details :</p>
+
+          {quizDetails && <JoinQuizCard quiz={quizDetails} enableModal={false} className="w-full" />}
+            
+
+
+            <div className="mt-12 p-6 border-2 border-[#8B2DF1] rounded-lg bg-opacity-70 bg-transparent max-h-[500px] overflow-y-auto">
+              <div className="flex justify-between items-center mb-8"> {/* Positionnement des titres */}
+                <h2 className="text-3xl">Teams</h2>
+                <div className="flex items-center space-x-4">
+                  <span className="text-2xl">👤</span>
+                  <span className="text-2xl">{Object.values(players).flat().length}</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6"> {/* Ajout d'une grille */}
+                {teams.length > 0 ? (
+                  teams.map((team, index) => (
+                    <div
+                      key={index}
+                      className="border border-black rounded-lg overflow-hidden p-4"
+                    >
+                      <h3
+                        className="text-2xl bg-white text-black p-4 border-b border-black cursor-pointer hover:underline"
+                        onClick={() => handleSwitchTeam(team.name)}
+                      >
+                        {team.name}
+                      </h3>
+                      <table className="w-full border-collapse">
+                        <tbody>
+                          {players[team.name] && players[team.name].length > 0 ? (
+                            players[team.name].map((player, playerIndex) => (
+                              <tr
+                                key={playerIndex}
+                                className="border-b border-black"
+                              >
+                                <td className="p-4 border-black bg-transparent text-black text-xl">
+                                  {player.username}
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td className="p-4 text-gray-500 text-xl">No players in this team.</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xl">No teams available at the moment.</p>
+                )}
+              </div>
+            </div>
+
+            <style>{`
+                    ::-webkit-scrollbar {
+                       width: 8px;
+                     }
+                    ::-webkit-scrollbar-track {
+                       background: white;
+                     }
+                     ::-webkit-scrollbar-thumb {
+                      background: #8B2DF1;
+                      border-radius: 4px;
+                       }
+                   `}</style>
+          </div>
+        </div>
+
+
+
+
+
+
+
       )}
     </div>
   );

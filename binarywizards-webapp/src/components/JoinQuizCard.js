@@ -15,23 +15,23 @@ const renderDifficultyStars = (difficulty) => {
   }
 };
 
-export default function JoinQuizCard({ quiz, enableModal, onQuizSelect }) {
+export default function JoinQuizCard({ quiz, enableModal, onQuizSelect, className = "" }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCardClick = () => {
-      if (enableModal) {
-          setIsModalOpen(true);
-      } else if (onQuizSelect) {
-          onQuizSelect(quiz);
-      }
+    if (enableModal) {
+      setIsModalOpen(true);
+    } else if (onQuizSelect) {
+      onQuizSelect(quiz);
+    }
   };
 
   const closeModal = () => {
-      setIsModalOpen(false);
+    setIsModalOpen(false);
   };
 
   return (
-      <div className="w-full max-w-[30rem] mx-auto">
+      <div className="w-full mx-auto">
           <button
               onClick={handleCardClick}
               className="join-quiz-card p-4 bg-white border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 flex items-center w-full h-auto mb-5 transition-all duration-200"
