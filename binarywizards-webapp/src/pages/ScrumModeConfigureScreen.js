@@ -21,11 +21,6 @@ export default function ScrumModeConfigureScreen() {
   }, [navigate]);
 
   const handleInitializeGame = async () => {
-    if (!selectedQuiz || maxPlayers < 2) {
-      alert("Please select a quiz and set at least 2 players.");
-      return;
-    }
-
     const gameData = {
       mode: "scrum",
       max_players: maxPlayers,
@@ -40,16 +35,16 @@ export default function ScrumModeConfigureScreen() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-blue-100"
+      style={{ backgroundImage: "url('/backgrounds/ScrumQuiz.svg')" }}
+    >
       <Navbar />
-      <div className="flex flex-col justify-center items-center flex-grow p-4"
-        style={{ backgroundImage: "url('/backgrounds/ScrumQuiz.svg')" }}
-      >
+      <div className="flex flex-col justify-center items-center flex-grow p-4">
         <div className="flex flex-col bg-white p-20 rounded-xl gap-y-6">
             <label className="block mb-2 font-semibold text-3xl text-center pb-4">Max Players</label>
             <input
               type="number"
-              min="2"
+              min="1"
               value={maxPlayers}
               onChange={(e) => setMaxPlayers(parseInt(e.target.value, 10))}
               className="w-6/12 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  self-center"
