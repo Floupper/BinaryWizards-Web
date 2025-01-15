@@ -28,10 +28,10 @@ export default function MultiplayerQuestionScreen() {
   const [remainingTime, setRemainingTime] = useState(null);
   const [correctAnswer, setCorrectAnswer] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
+  const [timeAnswer, setTimeAnswer] = useState(null);
   const chronoInterval = useRef(null);
   const socketRef = useRef(null);
 
-  // Initialisation et configuration du socket
   useEffect(() => {
     const userToken = localStorage.getItem("token");
     if (!userToken) {
@@ -59,6 +59,7 @@ export default function MultiplayerQuestionScreen() {
     socket.on("answerResult", (data) => {
       setIdCorrectAnswers(data.correct_option_index);
       setIsAnswered(true);
+      setTimeAnswer(data.time_remaining);
 
       setCorrectAnswer(selectedId === data.correct_option_index);
     });
@@ -71,7 +72,6 @@ export default function MultiplayerQuestionScreen() {
     };
   }, [gameId, navigate, selectedId]);
 
-  // Gestion du chronomètre
   useEffect(() => {
     if (timeAvailable === null) return;
 
@@ -103,7 +103,6 @@ export default function MultiplayerQuestionScreen() {
     }
   };
 
-  // Gestion d'une nouvelle question
   const handleNewQuestion = (data) => {
     const answeredQuestions =
       JSON.parse(localStorage.getItem(`answeredQuestions_${gameId}`)) || {};
@@ -116,7 +115,6 @@ export default function MultiplayerQuestionScreen() {
       setSelectedQuestionId(null);
     }
 
-  console.log(data.time_available)
     setQuestionText(data.question_text);
     setOptions(data.options);
     setQuestionIndex(data.question_index);
@@ -131,7 +129,6 @@ export default function MultiplayerQuestionScreen() {
     setCorrectAnswer(null);
   };
 
-  // Gestion de la sélection d'une option
   const handleQuestionSelect = (selectedId) => {
     if (!socketRef.current || isAnswered) return;
 
@@ -167,8 +164,28 @@ export default function MultiplayerQuestionScreen() {
   const getChronoColor = () =>
     remainingTime <= 5 ? "text-red-600" : "text-[#8B2DF1]";
 
+  useEffect(() => {
+    if (timeAnswer === null || timeAnswer <= 0) return;
+  
+    const interval = setInterval(() => {
+      setTimeAnswer((prevTimeAnswer) => {
+        if (prevTimeAnswer <= 1000) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prevTimeAnswer - 1;
+      });
+    }, 1);
+  
+    return () => clearInterval(interval); 
+  }, [timeAnswer]);
+
   return (
-    <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center">
+    <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center"
+      style={{
+        backgroundImage: "url('/backgrounds/team_background.svg')",
+      }}
+    >
       <Navbar />
       <div className="mb-6 w-full sm:w-10/12 md:w-8/12 lg:w-6/12">
         <QuestionHUD party_parameters={paramHUD} />
@@ -197,19 +214,24 @@ export default function MultiplayerQuestionScreen() {
           </div>
           {remainingTime !== null && (
             <div className={`text-5xl font-semibold ${getChronoColor()}`}>
-              {remainingTime}s
-            </div>
+              {correctAnswer === null ? `${remainingTime}s` : null}       
+           </div>
           )}
-          <div>
-            {/* {setCorrectAnswer ? (
-              
+          <div style={{width: '100%'}}>
+            {correctAnswer !== null ? (
+              <div
+                style={{
+                  width: `${Math.min(120 - timeAnswer / 50, 100)}%`,
+                }}
+                className="h-3 bg-[#8B2DF1] rounded-xl"
+              />              
+            ) : (
+              isAnswered ? (
+                <span className="text-center">Waiting for the chrono to finish...</span>
               ) : (
-              {isAnswered ? (
-                <span>Waiting for other players...</span>
-              ) : (
-                <span>Choose an option...</span>
-              )})
-            } */}
+                <span className="text-center">Choose an option...</span>
+              )
+            )}
           </div>
         </div>
       </div>

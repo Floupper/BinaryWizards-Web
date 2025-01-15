@@ -23,7 +23,7 @@ const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
     if (showAnswers && !questionDetails) {
       fetchQuestionDetails();
     }
-  }, [showAnswers, quizId, questionId]);
+  }, [showAnswers, quizId, questionId, questionDetails]);
 
   const toggleShowAnswers = () => {
     setShowAnswers((prev) => !prev);

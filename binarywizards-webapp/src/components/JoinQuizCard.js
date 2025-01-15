@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TimeModal from "./TimeModal"; // Correct import name
+import TimeModal from "./TimeModal";
 
 const renderDifficultyStars = (difficulty) => {
   switch (difficulty.toLowerCase()) {
@@ -17,7 +17,6 @@ const renderDifficultyStars = (difficulty) => {
 
 export default function JoinQuizCard({ quiz, enableModal, onQuizSelect }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
 
   const handleCardClick = () => {
       if (enableModal) {

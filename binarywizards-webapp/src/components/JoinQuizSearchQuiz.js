@@ -65,7 +65,7 @@ export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal }) {
                 listElement.removeEventListener('scroll', handleScroll);
             }
         };
-    }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
+    }, [hasNextPage, fetchNextPage, isFetchingNextPage, handleScroll]);
 
     const handleTextChange = (value) => {
         setText(value);

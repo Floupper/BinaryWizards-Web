@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import QuestionHUD from "../components/QuestionHUD";
 import QuestionChoiceMultiple from "../components/QuestionChoiceMultiple";
 
-const SERVER_URL = `${process.env.REACT_APP_API_BASE_URL}`;
+const SERVER_URL = process.env.REACT_APP_API_BASE_URL;
 
 export default function ScrumModeQuestionScreen() {
   const { gameId } = useParams();
@@ -24,6 +24,7 @@ export default function ScrumModeQuestionScreen() {
   const [isAnswered, setIsAnswered] = useState(false);
   const [correctOptionIndex, setCorrectOptionIndex] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [correctAnswer, setCorrectAnswer] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -42,33 +43,19 @@ export default function ScrumModeQuestionScreen() {
       newSocket.emit("getQuestionInformations", { game_id: gameId });
     });
 
-    newSocket.on("currentQuestion", (data) => {
-      handleNewQuestion(data);
-    });
-
-    newSocket.on("newQuestion", (data) => {
-      handleNewQuestion(data);
-    });
+    newSocket.on("currentQuestion", handleNewQuestion);
+    newSocket.on("newQuestion", handleNewQuestion);
 
     newSocket.on("gameFinished", (data) => {
       navigate(`/scrum-end`, {
-        state: {
-          ranking: data.ranking,
-        },
+        state: { ranking: data.ranking },
       });
-    });
-
-    newSocket.on("answerResult", (data) => {
-      setCorrectOptionIndex(data.correct_option_index);
-      setIsAnswered(true);
     });
 
     setSocket(newSocket);
 
     return () => {
-      if (newSocket) {
-        newSocket.disconnect();
-      }
+      newSocket.disconnect();
     };
   }, [gameId, navigate]);
 
@@ -85,20 +72,33 @@ export default function ScrumModeQuestionScreen() {
     setSelectedAnswer(null);
     setIsAnswered(false);
     setCorrectOptionIndex(null);
+    setCorrectAnswer(null);
   };
 
   const handleAnswerSelect = (selectedOptionIndex) => {
     if (!socket || isAnswered) return;
-
+  
     setSelectedAnswer(selectedOptionIndex);
     setIsAnswered(true);
-
+  
     socket.emit("sendAnswer", {
       game_id: gameId,
       question_index: questionIndex,
       option_index: selectedOptionIndex,
     });
+  
+    socket.selectedOptionIndex = selectedOptionIndex; 
   };
+  
+  useEffect(() => {
+    if (socket) {
+      socket.on("answerResult", (data) => {
+        setCorrectOptionIndex(data.correct_option_index);
+        setCorrectAnswer(socket.selectedOptionIndex === data.correct_option_index); // Utiliser la valeur temporaire
+        setIsAnswered(true);
+      });
+    }
+  }, [socket]);
 
   const hudParams = {
     idparty: gameId,
@@ -110,23 +110,35 @@ export default function ScrumModeQuestionScreen() {
     category: questionCategory,
   };
 
+  const answerBgClass = correctAnswer === true
+    ? "bg-green-500"
+    : correctAnswer === false
+    ? "bg-red-500"
+    : "bg-gradient-to-r from-orange-400 to-green-400";
+
   return (
-    <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center">
+    <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center"
+      style={{ backgroundImage: "url('/backgrounds/ScrumQuiz.svg')" }}  
+    >
       <Navbar />
-      <div className="mb-6 w-11/12">
+      <div className="mb-6 w-full sm:w-10/12 md:w-8/12 lg:w-6/12">
         <QuestionHUD party_parameters={hudParams} />
       </div>
-
-      <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg">
-        <div className="flex flex-col items-center space-y-6 p-6 bg-[#F4F2EE] rounded-lg shadow-md w-[110vh] h-[60vh]">
-          <h1 className="Question text-3xl font-semibold text-center text-black">{questionText}</h1>
-          <div className="flex justify-center">
+      <div
+        className={`p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10 ${answerBgClass}`}
+      >
+        <div className="flex flex-col items-center space-y-6 p-6 bg-[#F4F2EE] rounded-lg shadow-md w-full">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-center text-black">
+            {questionText}
+          </h1>
+          <div className="flex justify-center w-full">
             <QuestionChoiceMultiple
               question_choice={options}
               onQuestionSelect={handleAnswerSelect}
               selectedOptionIndex={selectedAnswer}
               isAnswered={isAnswered}
               correctOptionIndex={correctOptionIndex}
+              type={questionType}
             />
           </div>
         </div>
