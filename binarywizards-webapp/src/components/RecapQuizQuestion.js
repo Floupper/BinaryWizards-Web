@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import RecapQuizService from '../services/RecapQuizService';
+import CustomAudioPlayer from '../components/CustomAudioPlayer';
 
 const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
   const [showAnswers, setShowAnswers] = useState(false);
   const [questionDetails, setQuestionDetails] = useState(null);
   const { quizId } = useParams();
+  const [type, setType] = useState(null);
 
   useEffect(() => {
     const fetchQuestionDetails = async () => {
       try {
         const details = await RecapQuizService.getGameQuestionsAndAnswers(quizId, questionId);
         setQuestionDetails(details);
+        setType(details.question_type)
       } catch (error) {
         console.error('Error fetching question details:', error);
       }
@@ -20,28 +23,27 @@ const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
     if (showAnswers && !questionDetails) {
       fetchQuestionDetails();
     }
-  }, [showAnswers, quizId, questionId]);
+  }, [showAnswers, quizId, questionId, questionDetails]);
 
   const toggleShowAnswers = () => {
     setShowAnswers((prev) => !prev);
   };
 
   const renderOptionContent = (option) => {
-    const { type, content } = option.option_content;
+    const { option_content } = option;
     switch (type) {
       case 'text':
-        return <span>{content}</span>;
+        return <span>{option_content}</span>;
 
       case 'audio':
         return (
-          <audio controls className="w-full">
-            <source src={content} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
+          <CustomAudioPlayer
+            src={option_content}
+          />
         );
 
       case 'image':
-        return <img src={content} alt="Quiz option" className="max-w-full h-auto rounded-md" />;
+        return <img src={option_content} alt="Quiz option" className="max-w-full h-auto rounded-md" />;
 
       default:
         return <span>Unsupported content type</span>;
@@ -51,11 +53,11 @@ const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
   return (
     <div className="p-4 mb-6">
       <div className="Question-header flex justify-between items-center flex-wrap">
-        <h3 className="text-black font-sifonn text-xl sm:text-2xl md:text-3xl lg:text-4xl">{`Question ${questionNumber}: ${questionText}`}</h3>
+        <h3 className="text-black text-xl sm:text-2xl md:text-3xl lg:text-4xl">{`Question ${questionNumber}: ${questionText}`}</h3>
         <NavLink
           to="#"
           onClick={toggleShowAnswers}
-          className="text-black font-medium text-lg ml-4 sm:text-xl"
+          className="text-[#8B2DF1] font-medium text-lg mt-3 ml-4 sm:text-xl"
         >
           {showAnswers ? 'Hide Answers' : 'Show Answers'}
         </NavLink>

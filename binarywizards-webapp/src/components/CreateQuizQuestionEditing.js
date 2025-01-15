@@ -6,6 +6,18 @@ import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoic
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
 export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
+
+
+  const [questionInfo, setQuestionInfo] = useState({
+    questionText: 'Write your question',
+    questionOptions: [],
+    questionType: 'text',
+    questionDifficulty: 'easy',
+    questionCategory: '',
+  });
+
+
+
   const [selectedOptionInput, setSelectedOptionInput] = useState({
     choices: ["", "", "", ""],
     type: 'text',
@@ -13,9 +25,12 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   });
 
   const [categories, setCategories] = useState([]);
+
+  //Categories disponibles
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [quizDifficulty, setQuizDifficulty] = useState('easy');
-  const [difficulties, setDifficulties] = useState([]);
+
+
+
   const [questionData, setQuestionData] = useState();
   const questionType = 'text';
   const [questionOptions, setQuestionOptions] = useState();
@@ -34,24 +49,12 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
       });
       setIsEditing(false);
       setQuestionData();
-      setQuizDifficulty('easy');
+      setQuestionInfo((prevState) => ({ ...prevState, questionDifficulty: 'easy' }));
+
       setSelectedCategory('');
 
     }
   }, [refreshQuizQuestionEditing]);
-
-
-  useEffect(() => {
-
-    CreateQuizService.fetchCategories()
-      .then(data => setCategories(data))
-      .catch(error => toast.info('Error fetching categories:', error));
-
-    CreateQuizService.fetchDifficulties()
-      .then(data => setDifficulties(data))
-      .catch(error => toast.info('Error fetching difficulties:', error));
-
-  }, []);
 
   useEffect(() => {
     if (!questionId) return;
@@ -59,12 +62,10 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
     CreateQuizService.fetchQuestionDetails(quizId, questionId)
       .then((data) => {
         const question = data.question;
-
         if (!question) {
           toast.error('Error: Question not found.');
           return;
         }
-
         if (!question.options || !Array.isArray(question.options)) {
           toast.error('Error: Question options are missing or invalid.');
           return;
@@ -73,32 +74,35 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
         setQuestionData(question);
         setQuestionOptions(question.options);
         setQuestionText(question.question_text);
-        setQuizDifficulty(question.question_difficulty);
+
+        // Mise à jour de questionInfo
+        setQuestionInfo((prevState) => ({
+          ...prevState,
+          questionDifficulty: question.question_difficulty,
+        }));
+
         setSelectedCategory(question.question_category);
-
         setSelectedOptionInput((prevState) => {
-
-
           const choices = question.options.map((option) => option.option_content || "");
-
-
           const correctAnswer = question.options.findIndex((option) => option.is_correct_answer) || 0;
-
-
-
           return {
             ...prevState,
             type: question.question_type || 'text',
             choices,
             correctAnswer,
-          };
+          }
         });
+
       })
       .catch((error) => {
         console.error('Error fetching question details:', error);
         toast.error('An error occurred while fetching question details.');
       });
   }, [questionId]);
+
+  useEffect(() => {
+    console.log("Updated questionInfo:", questionInfo);
+  }, [questionInfo]);
 
 
   const handleEditClick = () => setIsEditing(true);
@@ -110,19 +114,21 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
     setIsEditing(false);
   };
 
+
+
+
+  //Submit de la question
   const handleSubmit = async () => {
     if (!selectedCategory) {
       toast.error("Please select a category.");
       return;
     }
-
     if (!questionText) {
       toast.error("Please enter a question.");
       return;
 
     }
-
-    if (!quizDifficulty) {
+    if (!questionInfo.questionDifficulty) {
       toast.error("Please select a difficulty.");
       return;
     }
@@ -144,12 +150,12 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
 
       const requestBody = {
         question_text: questionText,
-        question_difficulty: quizDifficulty,
+        question_difficulty: questionInfo.questionDifficulty,
         question_category: selectedCategory,
         question_type: selectedOptionInput.type,
         options: options,
       };
-
+      console.log("requestBody", requestBody);
       const action = TypeOfScreen === "edit"
         ? CreateQuizService.updateQuestion
         : CreateQuizService.createQuestion;
@@ -171,7 +177,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
   };
 
   const handleOnDifficultyChange = (newDifficulty) => {
-    setQuizDifficulty(newDifficulty)
+    setQuestionInfo((prevState) => ({ ...prevState, questionDifficulty: newDifficulty }));
 
   };
 
@@ -194,7 +200,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           </label>
           <DifficultyQuizStars
             className="flex-grow"
-            initialDifficulty={quizDifficulty}
+            initialDifficulty={questionInfo.questionDifficulty}
             onDifficultyChange={handleOnDifficultyChange}
           />
         </div>
@@ -237,7 +243,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
           <div className="flex items-center items-center justify-center text-center mb-6">
             {!isEditing ? (
               <h1
-                className="text-2xl font-bold text-gray-800 cursor-pointer hover:underline "
+                className="text-2xl font-semibold text-gray-800 cursor-pointer hover:underline "
                 onClick={handleEditClick}
               >
                 {questionText}
@@ -249,7 +255,7 @@ export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, 
                 onChange={(e) => setQuestionText(e.target.value)}
                 onBlur={handleBlur}
                 autoFocus
-                className="text-2xl font-bold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
+                className="text-2xl font-semibold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
               />
             )}
           </div>

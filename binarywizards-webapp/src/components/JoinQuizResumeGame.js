@@ -45,7 +45,7 @@ export default function JoinQuizResumeGame() {
         listElement.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [hasNextPage, fetchNextPage]);
+  }, [hasNextPage, fetchNextPage, handleScroll]);
 
   return (
     <div className="mx-auto px-4 xl:px-20 py-6 w-full">

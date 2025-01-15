@@ -26,16 +26,16 @@ export default function Dashboard() {
     <div className="bg-[#F4F2EE] min-h-screen w-screen">
       <Navbar />
       <div className="p-6 w-full">
-        <div className="flex space-x-4 mb-4">
+        <div className="flex space-x-4 mb-4 text-xl lg:text-2xl">
           <button
-            className={`px-4 py-2 rounded-md font-semibold font-helvetica hover:bg-black hover:text-white ${activeTab === 'created' ? 'bg-black text-white' : 'bg-white text-black'}`}
+            className={`px-6 py-3 rounded-md hover:bg-black hover:text-white ${activeTab === 'created' ? 'bg-black text-white' : 'bg-white text-black'}`}
             onClick={() => setActiveTab('created')}
             style={{ outline: 'none', boxShadow: 'none' }}
           >
             Your Created Quizzes
           </button>
           <button
-            className={`px-4 py-2 rounded-md font-semibold font-helvetica hover:bg-black hover:text-white ${activeTab === 'played' ? 'bg-black text-white' : 'bg-white text-black'}`}
+            className={`px-6 py-3 rounded-md hover:bg-black hover:text-white ${activeTab === 'played' ? 'bg-black text-white' : 'bg-white text-black'}`}
             onClick={() => setActiveTab('played')}
             style={{ outline: 'none', boxShadow: 'none' }}
           >
@@ -44,14 +44,14 @@ export default function Dashboard() {
         </div>
         <div className="quiz-list max-h-[43.75rem] w-full overflow-y-auto">
           {activeTab === 'created' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="justify-items-center items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {userQuizzes.map((quiz) => (
                 <CreatedQuizCard key={quiz.id} quiz={quiz} route={`/dashboard/detail-create-quiz/${quiz.id}`} />
               ))}
             </div>
           )}
           {activeTab === 'played' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="justify-items-center grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {playedQuizzes.map((quiz) => (
                 <PlayedQuizCard key={quiz.game_id} quiz={quiz} />
               ))}

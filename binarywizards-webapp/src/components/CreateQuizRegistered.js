@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CreateQuizService from '../services/CreateQuizService';
 import Modal from 'react-modal';
-import CreateQuizzQuestion from './CreateQuizQuestionEditing';
+import CreateQuizzQuestionEditing from './CreateQuizQuestionEditing';
 import { toast } from "react-toastify";
 import QuestionInContainer, { QuestionInContainerDefault } from './CreateQuizQuestionInContainer';
 import ImportQuestionTrivia from './CreateQuizImportQuestionTrivia';
@@ -48,8 +48,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   let initialized = false;
 
+  //Permet d'init la page globale (catégories et init le quiz si il n'existe pas)
   useEffect(() => {
-
     if (initialized) return;
     initialized = true;
 
@@ -65,19 +65,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     }
   }, []);
 
-  useEffect(() => {
-
-    if (quizQuestions.length > 0) {
-      const progressValue = ((idQuestionSelectedForProgress + 1) / quizQuestions.length) * 100;
-      setProgress(progressValue);
-    }
-    else {
-      setProgress(100);
-    }
-
-  }, [idQuestionSelectedForProgress, quizQuestions]);
-
-
+  //Récupère les données du quiz si c'est une modification de quiz/lorsqu'on crée le quiz
   useEffect(() => {
     if (quizId) {
       CreateQuizService.fetchQuizDetails(quizId)
@@ -94,13 +82,28 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             isPublic: data.quiz.is_public,
             difficulty: data.quiz.difficulty,
           }));
-
-
-
         })
         .catch(error => toast.info('Error fetching quiz details:', error));
     }
   }, [quizId]);
+
+  //Met à jour la barre de progression
+  useEffect(() => {
+    if (quizQuestions.length > 0) {
+      const progressValue = ((idQuestionSelectedForProgress + 1) / quizQuestions.length) * 100;
+      setProgress(progressValue);
+    }
+    else {
+      setProgress(100);
+    }
+  }, [idQuestionSelectedForProgress, quizQuestions]);
+
+  useEffect(() => {
+    if (quizIsPublic) {
+      setIsPublicQuiz(quizIsPublic)
+    }
+  }, [quizIsPublic]);
+
 
   const refreshQuizQuestions = () => {
     if (quizId) {
@@ -112,11 +115,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     }
   };
 
-  useEffect(() => {
-    if (quizIsPublic) {
-      setIsPublicQuiz(quizIsPublic)
-    }
-  }, [quizIsPublic]);
 
   const handleSelectedQuestionAfterCreate = (questionId) => {
     setTypeOfScreen('edit');
@@ -124,7 +122,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   };
 
   const handleSelectedQuestionProgressBar = (questionId) => {
-
     setIdQuestionSelectedForProgress(questionId);
   };
 
@@ -136,14 +133,13 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   const handleSubmitImportTrivia = (event) => {
     setTrivialModalOpen(true);
-
   };
 
-  const handleSubmitSave = () => {
 
+  //Met à jour le quiz & la question en cours 
+  const handleSubmitSave = () => {
     if (!quiz.title) {
       toast.info('Please select a title.');
-
       return;
     }
 
@@ -167,6 +163,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       .catch(error => {
         toast.info(error.message);
       });
+
+
   };
 
   const handleSubmitDeleteQuestion = (questionId) => {
@@ -245,7 +243,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           <div className="flex flex-col row-span-2 col-start-2 col-span-2 rounded-lg pr-10">
             <ProgressBar progress={progress} />
             <div>
-              <CreateQuizzQuestion
+              <CreateQuizzQuestionEditing
                 TypeOfScreen={TypeOfScreen}
                 quizId={quizId}
                 questionId={idQuestionSelected}

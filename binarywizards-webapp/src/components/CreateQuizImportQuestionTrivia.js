@@ -99,7 +99,7 @@ export default function ImportQuestionTrivia({ setTrivialModalOpen, quizId, refr
           >
             <span className="text-3xl">×</span>
           </button>
-          <div className="text-center text-2xl font-bold text-purple-700 mb-4 pr-4">
+          <div className="text-center text-2xl font-semibold text-purple-700 mb-4 pr-4">
             Import generated questions into your quiz
           </div>
         </div>

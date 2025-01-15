@@ -250,35 +250,40 @@ export function MultipleChoiceQuestion({ selectedOptionInput, setSelectedOptionI
         >
           Add choice
         </button>
-        <div className="flex items-center justify-center text-3xl h-12 w-12 bg-white rounded-xl border-black border-2">
-          <button
-            className="m-0 p-0 text-3xl h-10 w-10"
-            onClick={() => { setAiModalOpen(!aiModalOpen) }}
-          >
-            🪄
-          </button>
-        </div>
+        {selectedOptionInput.type == "text" && (
+          <>
+            <div className="flex items-center justify-center text-3xl h-12 w-12 bg-white rounded-xl border-black border-2">
+              <button
+                className="m-0 p-0 text-3xl h-10 w-10"
+                onClick={() => { setAiModalOpen(!aiModalOpen) }}
+              >
+                🪄
+              </button>
+            </div>
 
 
 
-        {aiModalOpen && (
-          <div className="flex gap-2  bg-white rounded-xl border-black border-2" >
-            <button disabled={aiGenerating} onClick={() => { console.log("here"); handleAiChoices('realistic'); }} className={`ml-1 my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
-              ? 'opacity-50 cursor-not-allowed'
-              : 'hover:shadow-black hover:shadow-lg'
-              }`}>Realistic</button>
-            <button disabled={aiGenerating} onClick={() => { console.log("here"); handleAiChoices('humouristic'); }} className={` my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
-              ? 'opacity-50 cursor-not-allowed'
-              : 'hover:shadow-black hover:shadow-lg'
-              }`}>Humouristic</button>
-            <button disabled={aiGenerating} onClick={() => { console.log("here"); handleAiChoices('mixt'); }} className={`mr-1 my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
-              ? 'opacity-50 cursor-not-allowed'
-              : 'hover:shadow-black hover:shadow-lg'
-              }`}>Mixt</button>
-          </div>
-        )}
-        {aiGenerating && (
-          <a>Generating...</a>
+            {aiModalOpen && (
+              <div className="flex gap-2  bg-white rounded-xl border-black border-2" >
+                <button disabled={aiGenerating} onClick={() => { console.log("here"); handleAiChoices('realistic'); }} className={`ml-1 my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:shadow-black hover:shadow-lg'
+                  }`}>Realistic</button>
+                <button disabled={aiGenerating} onClick={() => { console.log("here"); handleAiChoices('humouristic'); }} className={` my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:shadow-black hover:shadow-lg'
+                  }`}>Humouristic</button>
+                <button disabled={aiGenerating} onClick={() => { console.log("here"); handleAiChoices('mixt'); }} className={`mr-1 my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:shadow-black hover:shadow-lg'
+                  }`}>Mixt</button>
+              </div>
+            )}
+            {aiGenerating && (
+              <a>Generating...</a>
+            )}
+          </>
+
         )}
       </div>
     </div>
