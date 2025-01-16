@@ -5,8 +5,9 @@ const TeamCreator = ({ onTeamsChange }) => {
   const [teamName, setTeamName] = useState("");
 
   const handleAddTeam = () => {
-    if (teamName.trim() !== "") {
-      const newTeams = [...teams, teamName.trim()];
+    const trimmedName = teamName.trim();
+    if (trimmedName !== "" && !teams.includes(trimmedName)) {
+      const newTeams = [...teams, trimmedName];
       setTeams(newTeams);
       onTeamsChange(newTeams);
       setTeamName("");
@@ -32,7 +33,7 @@ const TeamCreator = ({ onTeamsChange }) => {
         <button
           onClick={handleAddTeam}
           className="w-36 ml-4 bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 disabled:opacity-50 border"
-          disabled={!teamName.trim()}
+          disabled={!teamName.trim() || teams.includes(teamName.trim())}
         >
           Add Team
         </button>
