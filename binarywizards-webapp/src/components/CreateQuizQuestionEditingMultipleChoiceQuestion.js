@@ -94,6 +94,7 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
         questionType: "text", // Type de la question (par exemple, texte)
         questionCorrectAnswer: 0, // L'index de la réponse correcte (ici 0, car c'est la première réponse)
       }));
+      setAiModalOpen(false);
 
 
     }
@@ -184,7 +185,10 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                     />
                     <label
                       htmlFor={`fileInput-${id}`}
-                      className="px-4 py-2 bg-white text-black  rounded cursor-pointer hover:text-white hover:bg-[#8B2DF1]"
+                      className={` px-4 py-2 bg-white text-black  rounded cursor-pointer hover:text-white hover:bg-[#8B2DF1] ${questionInfo.questionCorrectAnswer === id
+                        ? "border-4 border-[#417336] "
+                        : "border-2 border-gray-300"
+                        }`}
                     >
                       Import image
                     </label>
@@ -193,7 +197,10 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                   <img
                     src={option}
                     alt="Aperçu de l'image"
-                    className="w-20 h-20 object-cover rounded border"
+                    className={`w-20 h-20 object-cover rounded border ${questionInfo.questionCorrectAnswer === id
+                      ? "border-4 border-[#417336] "
+                      : "border-2 border-gray-300"
+                      }`}
                     onClick={() => { handleDeleteImageAudio(id) }}
                   />
 
@@ -216,14 +223,21 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                     />
                     <label
                       htmlFor={`audioInput-${id}`}
-                      className="px-4 py-2 bg-white text-black  rounded cursor-pointer hover:text-white hover:bg-[#8B2DF1]"
+                      className={`px-4 py-2 bg-white text-black  rounded cursor-pointer hover:text-white hover:bg-[#8B2DF1] ${questionInfo.questionCorrectAnswer === id
+                        ? "border-4 border-[#417336] "
+                        : "border-2 border-gray-300"
+                        }`}
                     >
                       Import audio
                     </label>
                   </>
                 ) : (
-                  <CustomAudioPlayer src={option} deleteAudio={() => handleDeleteImageAudio(id)} />
-
+                  <div className={` bg-gray-800 rounded-lg ${questionInfo.questionCorrectAnswer === id
+                    ? "border-4 border-[#417336] "
+                    : "border-2 border-gray-300"
+                    }`}>
+                    <CustomAudioPlayer src={option} deleteAudio={() => handleDeleteImageAudio(id)} />
+                  </div>
 
 
                 )}
@@ -248,7 +262,7 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
       <div className="mt-4 flex gap-1">
         <button
           onClick={handleAddOption}
-          className={`px-4 py-2 text-white rounded ${questionInfo.questionOptions.length >= 8
+          className={`px-4 py-2 text-black bg-[#CDCCCC] rounded ${questionInfo.questionOptions.length >= 8
             ? "bg-gray-400 cursor-not-allowed"
             : "bg-blue-500 hover:bg-blue-600"
             }`}
