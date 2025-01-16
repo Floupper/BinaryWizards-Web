@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { EmojiProvider, Emoji } from "react-apple-emojis";
 import emojiData from "react-apple-emojis/src/data.json";
 
@@ -7,6 +7,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSignout = () => {
     localStorage.removeItem("token");
@@ -19,6 +20,18 @@ export default function Navbar() {
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
+  };
+
+  const isActiveLink = (path) => {
+    return location.pathname === path || location.pathname.startsWith(path);
+  };
+
+  const isPlayActive = () => {
+    return !(
+      location.pathname.startsWith("/create-quiz") || 
+      location.pathname.startsWith("/quick-quiz") || 
+      location.pathname.startsWith("/dashboard")
+    );
   };
 
   return (
@@ -42,8 +55,8 @@ export default function Navbar() {
       <ul
         className={`lg:flex lg:items-center lg:gap-5 list-none transition-all duration-300 ease-in-out ${
           isOpen
-          ? "z-10 flex flex-col absolute top-0 right-[-1rem] h-[100vh] pt-[8rem] gap-y-5 p-8 bg-white shadow-lg rounded-3xl transform lg:static lg:p-0 md:shadow-none transition-all duration-500 ease-out"
-          : "hidden lg:flex"
+            ? "z-10 flex flex-col absolute top-0 right-[-1rem] h-[100vh] pt-[8rem] gap-y-5 p-8 bg-white shadow-lg rounded-3xl transform lg:static lg:p-0 md:shadow-none transition-all duration-500 ease-out"
+            : "hidden lg:flex"
         }`}
       >
         {/* Download */}
@@ -51,7 +64,7 @@ export default function Navbar() {
           <a
             href="https://expo.dev/artifacts/eas/5gEMQTEd1ZfvhicxFnmkjT.apk"
             download
-            className="flex items-center text-black hover:scale-110"
+            className={`flex items-center text-black hover:scale-105`}
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
             <EmojiProvider data={emojiData}>
@@ -64,7 +77,7 @@ export default function Navbar() {
         <li className="flex items-center mr-5">
           <NavLink
             to="/"
-            className="flex items-center text-black hover:scale-110"
+            className={`flex items-center text-black hover:scale-105 ${isPlayActive() ? "underline underline-offset-8" : ""}`}
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
             <EmojiProvider data={emojiData}>
@@ -78,35 +91,36 @@ export default function Navbar() {
         <li className="flex items-center mr-5">
           <NavLink
             to="/create-quiz"
-            className="flex items-center text-black hover:scale-110"
+            className={`flex items-center text-black hover:scale-105 ${isActiveLink("/create-quiz") ? "underline underline-offset-8" : ""}`} // Surbrillance conditionnelle
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
-              {token ? (
-                <>
-                  <EmojiProvider data={emojiData}>
-                    <Emoji name="paintbrush" width={20} />
-                  </EmojiProvider>
-                  <span className="ml-2">Create Quiz</span>
-                </>
-              ) : (
-                <>
-                  <EmojiProvider data={emojiData}>
-                    <Emoji name="bomb" width={20} />
-                  </EmojiProvider>
-                  <span className="ml-2">Quick Quiz</span>
-                </>
-              )}
+            {token ? (
+              <>
+                <EmojiProvider data={emojiData}>
+                  <Emoji name="paintbrush" width={20} />
+                </EmojiProvider>
+                <span className="ml-2">Create Quiz</span>
+              </>
+            ) : (
+              <>
+                <EmojiProvider data={emojiData}>
+                  <Emoji name="bomb" width={20} />
+                </EmojiProvider>
+                <span className="ml-2">Quick Quiz</span>
+              </>
+            )}
           </NavLink>
         </li>
+
         {token ? (
           <>
-          {/* Profile */}
+            {/* Profile */}
             <div className="flex flex-col lg:flex-row gap-y-4">
               {/* Create Quick Quiz */}
               <li className="flex items-center mr-5">
                 <NavLink
                   to="/quick-quiz"
-                  className="flex items-center text-black hover:scale-110"
+                  className={`flex items-center text-black hover:scale-105 ${isActiveLink("/quick-quiz") ? "underline underline-offset-8" : ""}`} // Surbrillance conditionnelle
                   style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
                 >
                   <EmojiProvider data={emojiData}>
@@ -120,7 +134,7 @@ export default function Navbar() {
               <li className="flex items-center mr-5">
                 <NavLink
                   to="/dashboard"
-                  className="flex items-center text-black hover:scale-110"
+                  className={`flex items-center text-black hover:scale-105 ${isActiveLink("/dashboard") ? "underline underline-offset-8" : ""}`} // Surbrillance conditionnelle
                   style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
                 >
                   <EmojiProvider data={emojiData}>
