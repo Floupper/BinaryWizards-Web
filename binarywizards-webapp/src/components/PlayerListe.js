@@ -61,7 +61,7 @@ export default function PlayersList({ game_mode }) {
         }
       });
 
-      newSocket.on("connect", () => {
+      newSocket.on("joinedGame", () => {
         newSocket.emit("getGameInformations", { game_id: gameId });
       });
 
