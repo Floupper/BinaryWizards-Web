@@ -161,7 +161,7 @@ export default function QuestionScreen() {
               question_choice={options}
               correctOptionIndex={idCorrectAnswers}
               onQuestionSelect={handleQuestionSelect}
-              selectedQuestionId={selectedQuestionId}
+              selectedOptionIndex={selectedQuestionId}
               isAnswered={isAnswered}
               isCorrect={correctAnswer}
             />
