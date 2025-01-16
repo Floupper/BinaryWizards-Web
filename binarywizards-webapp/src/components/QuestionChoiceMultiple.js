@@ -1,12 +1,13 @@
 import CustomAudioPlayer from './CustomAudioPlayer';
 
 export default function QuestionChoiceMultiple({
+  type,
   question_choice,
   correctOptionIndex,
   selectedQuestionId,
   isAnswered,
   onQuestionSelect,
-  type
+
 }) {
 
   const renderOptionContent = (option_content, option_index) => {
@@ -53,7 +54,7 @@ export default function QuestionChoiceMultiple({
 
         return (
           <div>
-             <div
+            <div
               key={option_index}
               className="flex items-center justify-center min-w-[30vh]"
             >

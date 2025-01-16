@@ -8,11 +8,11 @@ export default function QuestionInContainer({
   handleSelectedQuestionProgressBar,
 }) {
   const colors = [
-    "from-[#ff7f50] to-[#87cefa]", 
-    "from-[#f39c12] to-[#d35400]", 
-    "from-[#8e44ad] to-[#2980b9]", 
-    "from-[#1abc9c] to-[#16a085]", 
-    "from-[#e74c3c] to-[#c0392b]",
+    "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]",
+    "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]",
+    "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]",
+    "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]",
+    "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]",
   ];
 
   const backgroundClass = colors[question_index % colors.length];
@@ -52,14 +52,16 @@ export default function QuestionInContainer({
 }
 
 export function QuestionInContainerDefault() {
-  const colors = "from-[#ff7f50] to-[#87cefa]";
-
+  const colors = "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]";
+  const color1 = "[#EFDEB3]";
+  const color2 = "[#8A2BF2]";
+  const color3 = "[#377DC9]";
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="text-lg font-semibold text-gray-800">Question</div>
       <div className="flex items-start gap-2">
         <div
-          className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-r ${colors} rounded-lg p-2 shadow-lg border-[#8B2DF1] border-2`}
+          className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-r from-${color1}  via-${color2} to-${color3} rounded-lg p-2 shadow-lg border-[#8B2DF1] border-2`}
         >
           <div className="text-l text-white text-center">Your question</div>
           <div className="flex justify-center items-center w-full h-12 overflow-hidden">
