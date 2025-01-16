@@ -14,7 +14,7 @@ export default function ScrumModeJoinGame() {
   const { gameId } = useParams();
   const navigate = useNavigate();
   const [players, setPlayers] = useState(() => {
-    const savedPlayers = localStorage.getItem(`players_${gameId}`);
+    const savedPlayers = localStorage.getItem(`players`);
     return savedPlayers ? JSON.parse(savedPlayers) : [];
   });
   const [quizDetails, setQuizDetails] = useState(null);
@@ -42,11 +42,15 @@ export default function ScrumModeJoinGame() {
         });
 
         newSocket.on("connect", () => {
+          newSocket.emit("getGameInformations", { game_id: gameId });
           if (localStorage.getItem("hasJoined") && localStorage.getItem("hasJoined") !== gameId) {
             newSocket.emit("leaveGame", { game_id: localStorage.getItem("hasJoined") });
           }
 
-          newSocket.emit("joinGame", { game_id: gameId });
+          if (gameId === localStorage.getItem("hasJoined")) {
+            newSocket.emit("joinGame", { game_id: gameId });
+          }
+
           localStorage.setItem("hasJoined", gameId);
         });
 
@@ -63,7 +67,7 @@ export default function ScrumModeJoinGame() {
         newSocket.on("playerJoined", (data) => {
           if (data?.playerList) {
             setPlayers(data.playerList);
-            localStorage.setItem(`players_${gameId}`, JSON.stringify(data.playerList));
+            localStorage.setItem(`players`, JSON.stringify(data.playerList));
           }
         });
 
@@ -96,7 +100,7 @@ export default function ScrumModeJoinGame() {
     const gameUrl = `${window.location.origin}/scrum-mode-lobby/${gameId}`;
     navigator.clipboard.writeText(gameUrl).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 600); 
+      setTimeout(() => setCopied(false), 600);
     });
   };
 
