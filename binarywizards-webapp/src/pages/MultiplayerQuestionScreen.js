@@ -211,6 +211,7 @@ export default function MultiplayerQuestionScreen() {
               onQuestionSelect={handleQuestionSelect}
               selectedQuestionId={selectedQuestionId}
               isAnswered={isAnswered}
+              isCorrect={correctAnswer}
               type={questionType}
             />
           </div>
