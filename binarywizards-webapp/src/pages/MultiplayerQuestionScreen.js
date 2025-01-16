@@ -29,6 +29,7 @@ export default function MultiplayerQuestionScreen() {
   const [correctAnswer, setCorrectAnswer] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [timeAnswer, setTimeAnswer] = useState(null);
+  const [maxTimeAnswer, setMaxTimeAnswer] = useState(null);
   const chronoInterval = useRef(null);
   const socketRef = useRef(null);
 
@@ -59,6 +60,7 @@ export default function MultiplayerQuestionScreen() {
     socket.on("answerResult", (data) => {
       setIdCorrectAnswers(data.correct_option_index);
       setIsAnswered(true);
+      setMaxTimeAnswer(data.time_remaining/1000);
       setTimeAnswer(data.time_remaining/1000);
 
       setCorrectAnswer(selectedId === data.correct_option_index);
@@ -166,14 +168,15 @@ export default function MultiplayerQuestionScreen() {
 
   useEffect(() => {
     if (timeAnswer === null || timeAnswer <= 0) return;
-      const interval = setInterval(() => {
+  
+    const interval = setInterval(() => {
       setTimeAnswer((prevTimeAnswer) => {
-        const newTime = Math.max(prevTimeAnswer - timeAnswer / 100, 0); 
-        if (newTime === 0) clearInterval(interval);
+        const newTime = Math.max(prevTimeAnswer - 0.01, 0);
         return newTime;
       });
-    }, 10);
-    return () => clearInterval(interval); 
+    }, 10); 
+  
+    return () => clearInterval(interval);
   }, [timeAnswer]);
 
   return (
@@ -220,7 +223,7 @@ export default function MultiplayerQuestionScreen() {
             {correctAnswer !== null ? (
               <div
                 style={{
-                  width: `${Math.min(100 - timeAnswer / 5 * 100, 100)}%`,
+                  width: `${Math.min(120 - timeAnswer / maxTimeAnswer * 100, 100)}%`,
                 }}
                 className="h-3 bg-[#8B2DF1] rounded-xl"
               />

@@ -28,6 +28,7 @@ export default function ScrumModeQuestionScreen() {
   const [correctAnswer, setCorrectAnswer] = useState(null);
   const [timeAnswer, setTimeAnswer] = useState(null);  
   const [timeAvailable, setTimeAvailable] = useState(null);
+  const [maxTimeAnswer, setMaxTimeAnswer] = useState(null);
   const [remainingTime, setRemainingTime] = useState(null);
   const chronoInterval = useRef(null);
   
@@ -136,6 +137,7 @@ export default function ScrumModeQuestionScreen() {
         setCorrectAnswer(socket.selectedOptionIndex === data.correct_option_index);
         setIsAnswered(true);
         setTimeAnswer(data.time_remaining/1000);
+        setMaxTimeAnswer(data.time_remaining/1000);
       });
     }
   }, [socket]);
@@ -151,16 +153,16 @@ export default function ScrumModeQuestionScreen() {
   };
 
   useEffect(() => {
-   console.log(timeAnswer)
     if (timeAnswer === null || timeAnswer <= 0) return;
-      const interval = setInterval(() => {
+  
+    const interval = setInterval(() => {
       setTimeAnswer((prevTimeAnswer) => {
-        const newTime = Math.max(prevTimeAnswer - timeAnswer / 100, 0); 
-        if (newTime === 0) clearInterval(interval);
+        const newTime = Math.max(prevTimeAnswer - 0.01, 0);
         return newTime;
       });
-    }, 10);
-    return () => clearInterval(interval); 
+    }, 10); 
+  
+    return () => clearInterval(interval);
   }, [timeAnswer]);
   
   const answerBgClass = correctAnswer === true
@@ -198,7 +200,7 @@ export default function ScrumModeQuestionScreen() {
             {isAnswered && correctAnswer !== null ? (
                 <div
                 style={{
-                  width: `${Math.min(100 - timeAnswer / 5 * 100, 100)}%`,
+                  width: `${Math.min(120 - timeAnswer / maxTimeAnswer * 100, 100)}%`,
                 }}
                 className="h-3 bg-[#8B2DF1] rounded-xl"
               />
