@@ -101,6 +101,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
           if (questions.length === 0) {
             setNewQuestion(true);
+            selectQuestion('');
           }
 
           setQuiz(prevQuiz => ({
@@ -235,7 +236,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   const handleSubmitActualQuestion = async () => {
     // questionInfo.questionId ;
 
-
+    console.log(questionInfo);
     if (quiz.isPublic) {
       if (!questionInfo.questionCategory || !questionInfo.questionText || !questionInfo.questionDifficulty || questionInfo.questionOptions.some(choice => !choice || !choice.trim())) {
         toast.error("Finish the question before publish quizz.");
@@ -314,32 +315,18 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       questionId: '',
     });
   }
-  const editQuestionIdSelected = async (questionId, typeOfScreen) => {
-    if (typeOfScreen === 'edit' && questionInfo.questionId) {
-      const success = await handleSubmitActualQuestion();
-      if (!success) { return false };
-    }
-    setTypeOfScreen(typeOfScreen);
-    setIdQuestionSelected(questionId);
-
-    setQuestionListReload(true);
-
-    return true;
-  };
-
-
-
-
 
   const handleSubmitCreateQuestion = async (event) => {
 
     try {
 
-      await handleSubmitActualQuestion();
-      if (newQuestion !== false && TypeOfScreen !== 'create') {
 
-
+      if (questionInfo.isEditing || questionInfo.questionId) {
+        await handleSubmitActualQuestion();
       }
+
+
+
       setTypeOfScreen('create');
       setRefreshQuizQuestions(true);
       setIdQuestionSelected('');
@@ -392,7 +379,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   const handleSubmitSave = async () => {
     try {
-      // Attendez que handleSubmitActualQuestion soit terminé
 
       if (idQuestionSelected || newQuestion) {
 
@@ -403,10 +389,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       else {
         await handleSubmitSaveQuiz();
       }
-
-
-      // Ensuite, appelez handleSubmitSaveQuiz après la première fonction
-
 
     } catch (error) {
       // Gérez les erreurs, si nécessaire
@@ -480,7 +462,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             <div className="flex max-h-max align-items-center flex-col gap-4">
               <div className="flex  flex-col justify-center w-[40vh] gap-y-2 bg-white rounded-md  p-4 shadow-lg">
                 <button
-                  onClick={(event) => { handleSubmitCreateQuestion(event) }}
+                  onClick={() => { handleSubmitCreateQuestion() }}
                   className="px-4 py-2  text-gray-800 rounded-lg bg-black text-white hover:bg-white hover:text-black hover:border-black border"
                 >
                   Create question
