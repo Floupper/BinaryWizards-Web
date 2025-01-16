@@ -51,7 +51,7 @@ export default function Navbar() {
           <a
             href="https://expo.dev/artifacts/eas/5gEMQTEd1ZfvhicxFnmkjT.apk"
             download
-            className="flex items-center text-black"
+            className="flex items-center text-black hover:scale-110"
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
             <EmojiProvider data={emojiData}>
@@ -64,7 +64,7 @@ export default function Navbar() {
         <li className="flex items-center mr-5">
           <NavLink
             to="/"
-            className="flex items-center text-black"
+            className="flex items-center text-black hover:scale-110"
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
             <EmojiProvider data={emojiData}>
@@ -78,7 +78,7 @@ export default function Navbar() {
         <li className="flex items-center mr-5">
           <NavLink
             to="/create-quiz"
-            className="flex items-center text-black"
+            className="flex items-center text-black hover:scale-110"
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
               {token ? (
@@ -106,7 +106,7 @@ export default function Navbar() {
               <li className="flex items-center mr-5">
                 <NavLink
                   to="/quick-quiz"
-                  className="flex items-center text-black"
+                  className="flex items-center text-black hover:scale-110"
                   style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
                 >
                   <EmojiProvider data={emojiData}>
@@ -120,7 +120,7 @@ export default function Navbar() {
               <li className="flex items-center mr-5">
                 <NavLink
                   to="/dashboard"
-                  className="flex items-center text-black"
+                  className="flex items-center text-black hover:scale-110"
                   style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
                 >
                   <EmojiProvider data={emojiData}>

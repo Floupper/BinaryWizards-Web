@@ -60,7 +60,9 @@ const QuizRecapScreen = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F2EE]">
+    <div className="min-h-screen bg-[#F4F2EE]"
+      style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
+    >
       <Navbar />
       <div className="flex flex-col lg:flex-row items-start justify-center mt-8 space-y-8 lg:space-y-0 lg:space-x-20 w-full px-4">
         {/* Quiz Details */}

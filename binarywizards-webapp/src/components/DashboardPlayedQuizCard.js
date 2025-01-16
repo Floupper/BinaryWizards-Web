@@ -5,6 +5,7 @@ import { parseISO } from 'date-fns';
 import TimeModal from './TimeModal';
 
 export default function PlayedQuizCard({ quiz }) {
+  console.log(quiz)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const date = new parseISO(quiz.date_game_creation);
   const closeModal = () => {
@@ -31,14 +32,17 @@ export default function PlayedQuizCard({ quiz }) {
           Score: {quiz.correct_answers_nb}/{quiz.nb_questions_total}
         </p>
       </div>
-      <div className="flex justify-between items-center w-full mt-auto">
-        <button
-          onClick={handlePlayClick}
-          className="text-3xl hover:text-green-700 transition-colors duration-200"
-          title="Play Quiz"
-        >
-          <MdReplay />
-        </button>
+      <div className="flex justify-end items-center w-full mt-auto pb-10 h-7">
+        {quiz.game_mode !== 'team' && quiz.game_mode !== 'scrum' ? (
+          <button
+            onClick={handlePlayClick}
+            className="text-3xl hover:text-green-700 transition-colors duration-200"
+            title="Play Quiz"
+          >
+            <MdReplay />
+          </button>
+        ) : null
+        }
       </div>
       {isModalOpen && (
         <TimeModal closeModal={closeModal} quiz_id={quiz.quiz_id} />

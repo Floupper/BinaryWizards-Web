@@ -52,8 +52,8 @@ const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
 
   return (
     <div className="p-4 mb-6">
-      <div className="Question-header flex justify-between items-center flex-wrap">
-        <h3 className="text-black text-xl sm:text-2xl md:text-3xl lg:text-4xl">{`Question ${questionNumber}: ${questionText}`}</h3>
+      <div className="Question-header flex flex-col">
+        <h3 className="text-black sm:text-xl md:text-2xl lg:text-3xl">{`Question ${questionNumber}: ${questionText}`}</h3>
         <NavLink
           to="#"
           onClick={toggleShowAnswers}
@@ -80,7 +80,7 @@ const RecapQuizQuestion = ({ questionNumber, questionText, questionId }) => {
               </li>
             ))}
           </ul>
-          <div className="mt-6 text-sm text-gray-700">
+          <div className="mt-6 text-lg text-gray-700">
             <p>Total Answers: {questionDetails.total_answers}</p>
             <p>Correct Answers Count: {questionDetails.correct_answers_count}</p>
             <p>Accuracy Rate: {questionDetails.accuracy_rate}%</p>
