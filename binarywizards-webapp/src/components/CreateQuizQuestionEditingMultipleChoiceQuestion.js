@@ -94,6 +94,7 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
         questionType: "text", // Type de la question (par exemple, texte)
         questionCorrectAnswer: 0, // L'index de la réponse correcte (ici 0, car c'est la première réponse)
       }));
+      setAiModalOpen(false);
 
 
     }

@@ -20,6 +20,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     questionDifficulty: 'easy',
     questionCategory: '',
     questionCorrectAnswer: 0,
+    questionId: '',
   });
 
 
@@ -31,6 +32,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       questionDifficulty: 'easy',
       questionCategory: '',
       questionCorrectAnswer: 0,
+
     }
   );
 
@@ -130,6 +132,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       questionDifficulty: 'easy',
       questionCategory: '',
       questionCorrectAnswer: 0,
+      questionId: '',
     });
 
   }
@@ -147,21 +150,20 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
 
   const handleSelectedQuestionAfterCreate = (questionId) => {
-    setTypeOfScreen('edit');
-    setNewQuestion(false);
-    setIdQuestionSelected(questionId);
+    if (TypeOfScreen === "create") {
+      setNewQuestion(false);
+    }
+    //setTypeOfScreen('edit');
+
+    console.log("set2");
+    //setIdQuestionSelected(questionId);
+
   };
 
   const handleSelectedQuestionProgressBar = (questionId) => {
     setIdQuestionSelectedForProgress(questionId);
   };
 
-  const handleSubmitCreateQuestion = (event) => {
-    setTypeOfScreen('create');
-    setRefreshQuizQuestions(true);
-    setIdQuestionSelected('');
-    setNewQuestion(true);
-  };
 
   const handleSubmitImportTrivia = (event) => {
     setTrivialModalOpen(true);
@@ -192,35 +194,29 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     try {
       const options = [];
       options.push(
-        ...questionInfo.questionOptions.map((choice, index) => ({
-          option_content: TypeOfScreen === 'edit' ? choice : editingQuestionInfo.questionOptions[index],
-          is_correct_answer:
-            TypeOfScreen === 'edit'
-              ? questionInfo.questionCorrectAnswer === index
-              : editingQuestionInfo.questionCorrectAnswer === index,
+        ...currentQuestionInfo.questionOptions.map((choice, index) => ({
+          option_content: currentQuestionInfo.questionOptions[index],
+          is_correct_answer: currentQuestionInfo.questionCorrectAnswer === index,
           option_index: index,
         }))
       );
 
       const requestBody = {
-        question_text: TypeOfScreen === 'edit' ? questionInfo.questionText : editingQuestionInfo.questionText,
-        question_difficulty: TypeOfScreen === 'edit' ? questionInfo.questionDifficulty : editingQuestionInfo.questionDifficulty,
-        question_category: TypeOfScreen === 'edit' ? questionInfo.questionCategory : editingQuestionInfo.questionCategory,
-        question_type: TypeOfScreen === 'edit' ? questionInfo.questionType : editingQuestionInfo.questionType,
+        question_text: currentQuestionInfo.questionText,
+        question_difficulty: currentQuestionInfo.questionDifficulty,
+        question_category: currentQuestionInfo.questionCategory,
+        question_type: currentQuestionInfo.questionType,
         options: options,
       };
 
 
-      console.log(requestBody);
       const action = TypeOfScreen === "edit"
         ? CreateQuizService.updateQuestion
         : CreateQuizService.createQuestion;
 
-      const data = await action(requestBody, quizId, idQuestionSelected);
+      const data = await action(requestBody, quizId, currentQuestionInfo.questionId);
 
-      toast.success(
-        `Question successfully ${TypeOfScreen ? "updated" : "created"}!`
-      );
+      //      toast.success(  `Question successfully ${TypeOfScreen ? "updated" : "created"}!` );
       handleSelectedQuestionAfterCreate(data.question_id);
       refreshQuizQuestions();
     } catch (error) {
@@ -232,6 +228,43 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     }
   };
 
+  const editQuestionIdSelected = (questionId) => {
+    if (TypeOfScreen === 'edit' && questionInfo.questionId) {
+      handleSubmitActualQuestion();
+    }
+    console.log("Set questoin ID HERE ", questionId);
+    setIdQuestionSelected(questionId);
+  }
+
+
+  const handleSaveQuestionEditedWhenChangingSelectedQuestion = () => {
+    console.log("sumbit");
+    if (TypeOfScreen === 'edit') {
+      handleSubmitActualQuestion();
+    }
+    else {
+
+    }
+  }
+
+  const handleSubmitCreateQuestion = async (event) => {
+    console.log(questionInfo);
+    console.log("SAVE QUESTION");
+    try {
+      console.log("here");
+      await handleSubmitActualQuestion();
+      if (newQuestion !== false && TypeOfScreen !== 'create') {
+        console.log("save");
+
+      }
+      setTypeOfScreen('create');
+      setRefreshQuizQuestions(true);
+      setIdQuestionSelected('');
+      setNewQuestion(true);
+    } catch (error) {
+    }
+
+  };
   //Met à jour le quiz & la question en cours 
   const handleSubmitSaveQuiz = () => {
     if (!quiz.title) {
@@ -265,6 +298,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   const handleSubmitSave = async () => {
     try {
       // Attendez que handleSubmitActualQuestion soit terminé
+
       await handleSubmitActualQuestion();
 
       // Ensuite, appelez handleSubmitSaveQuiz après la première fonction
@@ -287,6 +321,15 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       .catch(error => {
         toast.error('Error deleting question:', error.message);
       });
+    setQuestionInfo({
+      questionText: 'Write your question',
+      questionOptions: ["", "", "", ""],
+      questionType: 'text',
+      questionDifficulty: 'easy',
+      questionCategory: '',
+      questionCorrectAnswer: 0,
+      questionId: '',
+    });
   };
 
   return (
@@ -325,7 +368,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                       question_text={question.question_text}
                       question_id={question.question_id}
                       question_index={question.question_index || 0}
-                      setIdQuestionSelected={setIdQuestionSelected}
+                      editQuestionIdSelected={editQuestionIdSelected}
                       setTypeOfScreen={setTypeOfScreen}
                       handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
                       handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}
@@ -334,8 +377,9 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                   {(newQuestion) ?
                     <QuestionInContainerDefault
                       deleteNewQuestion={handleDeleteQuestionInContainerDefault}
-                      setIdQuestionSelected={setIdQuestionSelected}
+
                       setTypeOfScreen={setTypeOfScreen}
+                      editQuestionIdSelected={editQuestionIdSelected}
                       handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}
                     />
                     : <div></div>}
@@ -344,7 +388,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             <div className="flex max-h-max align-items-center flex-col gap-4">
               <div className="flex  flex-col justify-center w-[40vh] gap-y-2 bg-white rounded-md  p-4 shadow-lg">
                 <button
-                  onClick={handleSubmitCreateQuestion}
+                  onClick={(event) => { handleSubmitCreateQuestion(event) }}
                   className="px-4 py-2  text-gray-800 rounded-lg bg-black text-white hover:bg-white hover:text-black hover:border-black border"
                 >
                   Create question
@@ -380,6 +424,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                     refreshQuizQuestionEditing={refreshQuizQuestionEditing}
                     setRefreshQuizQuestions={setRefreshQuizQuestions}
                     handleSelectedQuestionAfterCreate={handleSelectedQuestionAfterCreate}
+                    handleSaveQuestionEditedWhenChangingSelectedQuestion={handleSaveQuestionEditedWhenChangingSelectedQuestion}
                   />
 
                 </div>

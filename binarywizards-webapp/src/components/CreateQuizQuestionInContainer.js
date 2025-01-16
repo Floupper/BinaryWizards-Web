@@ -3,7 +3,8 @@ export default function QuestionInContainer({
   question_id,
   question_text = "Write your question",
   question_index,
-  setIdQuestionSelected,
+  editQuestionIdSelected,
+
   handleSubmitDeleteQuestion,
   handleSelectedQuestionProgressBar,
 }) {
@@ -13,7 +14,7 @@ export default function QuestionInContainer({
 
   const handleEdit = () => {
     setTypeOfScreen("edit");
-    setIdQuestionSelected(question_id);
+    editQuestionIdSelected(question_id);
     handleSelectedQuestionProgressBar(question_index);
   };
 
@@ -45,12 +46,13 @@ export default function QuestionInContainer({
   );
 }
 
-export function QuestionInContainerDefault({ deleteNewQuestion, setIdQuestionSelected, handleSelectedQuestionProgressBar, setTypeOfScreen }) {
+export function QuestionInContainerDefault({ deleteNewQuestion, editQuestionIdSelected, handleSelectedQuestionProgressBar, setTypeOfScreen }) {
   const colors = "from-[#EFDEB3] via-[#8A2BF2] to-[#377DC9]";
 
   const handleEdit = () => {
     setTypeOfScreen("create");
-    setIdQuestionSelected('');
+
+    editQuestionIdSelected('');
     handleSelectedQuestionProgressBar(-1);
   };
 
@@ -65,7 +67,7 @@ export function QuestionInContainerDefault({ deleteNewQuestion, setIdQuestionSel
           >
             🗑️
           </button>)}
-        Question</div>
+        New Question</div>
 
       <div className="flex items-start gap-2">
         <div
