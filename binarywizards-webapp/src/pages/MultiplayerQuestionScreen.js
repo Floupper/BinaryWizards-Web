@@ -193,7 +193,7 @@ export default function MultiplayerQuestionScreen() {
           correctAnswer === true ? "bg-green-500" : ""
         } ${
           correctAnswer === null
-            ? "bg-gradient-to-r from-orange-400 to-green-400"
+            ? "bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4]"
             : ""
         } p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10`}
       >

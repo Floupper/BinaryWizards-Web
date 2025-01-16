@@ -167,7 +167,7 @@ export default function ScrumModeQuestionScreen() {
     ? "bg-green-500"
     : correctAnswer === false
     ? "bg-red-500"
-    : "bg-gradient-to-r from-orange-400 to-green-400";
+    : "bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4]";
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center"
