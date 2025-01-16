@@ -232,13 +232,12 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     if (TypeOfScreen === 'edit' && questionInfo.questionId) {
       handleSubmitActualQuestion();
     }
-    console.log("Set questoin ID HERE ", questionId);
     setIdQuestionSelected(questionId);
   }
 
 
   const handleSaveQuestionEditedWhenChangingSelectedQuestion = () => {
-    console.log("sumbit");
+
     if (TypeOfScreen === 'edit') {
       handleSubmitActualQuestion();
     }
@@ -248,19 +247,19 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   }
 
   const handleSubmitCreateQuestion = async (event) => {
-    console.log(questionInfo);
-    console.log("SAVE QUESTION");
+
     try {
-      console.log("here");
+
       await handleSubmitActualQuestion();
       if (newQuestion !== false && TypeOfScreen !== 'create') {
-        console.log("save");
+
 
       }
       setTypeOfScreen('create');
       setRefreshQuizQuestions(true);
       setIdQuestionSelected('');
       setNewQuestion(true);
+
     } catch (error) {
     }
 

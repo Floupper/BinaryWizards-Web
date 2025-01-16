@@ -40,9 +40,9 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
   }, []);
 
   useEffect(() => {
-    console.log("use effect questionId", questionId);
+
     if (!questionId) return;
-    console.log(questionId);
+
     CreateQuizService.fetchQuestionDetails(quizId, questionId)
       .then((data) => {
         const question = data.question;
