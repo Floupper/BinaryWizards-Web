@@ -5,18 +5,18 @@ import confetti from 'canvas-confetti';
 export default function QuestionChoiceMultiple({
   question_choice,
   correctOptionIndex,
-  selectedQuestionId,
+  selectedOptionIndex,
   isAnswered,
   isCorrect,
   onQuestionSelect,
   type
 }) {
-
   useEffect(() => {
-    if(isCorrect) {
+    if (isCorrect) {
       confetti()
     }
-  }, [isCorrect]);
+  }, [selectedOptionIndex, correctOptionIndex, question_choice]);
+
   const renderOptionContent = (option_content, option_index) => {
     switch (type) {
       case 'text':
@@ -52,16 +52,16 @@ export default function QuestionChoiceMultiple({
         if (option_index === correctOptionIndex) {
           buttonClass = 'bg-green-100 border-green-500 text-green-700';
         } else if (
-          selectedQuestionId !== null &&
+          selectedOptionIndex !== null &&
           correctOptionIndex !== null &&
-          selectedQuestionId === option_index
+          selectedOptionIndex === option_index
         ) {
           buttonClass = 'bg-red-100 border-red-500 text-red-700';
         }
 
         return (
           <div>
-             <div
+            <div
               key={option_index}
               className="flex items-center justify-center min-w-[30vh]"
             >
@@ -69,7 +69,7 @@ export default function QuestionChoiceMultiple({
                 onClick={() => type !== 'audio' && onQuestionSelect(option_index)}
                 className={`w-full px-6 py-3 text-center rounded-lg border-[0.25rem] bg-white text-black 
                   hover:bg-gray-100 transition-all duration-300 
-                  ${selectedQuestionId === option_index ? 'border-[0.25rem] border-black' : ''}
+                  ${selectedOptionIndex === option_index ? 'border-[0.25rem] border-black' : ''}
                   ${buttonClass}`}
                 style={{ cursor: isAnswered ? 'not-allowed' : 'pointer' }}
                 disabled={isAnswered}
