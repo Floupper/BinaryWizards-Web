@@ -287,6 +287,9 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
       const data = await action(requestBody, quizId, questionInfo.questionId);
 
+      if (!questionInfo.questionId) {
+        closeQuestionInContainerDefault();
+      }
 
       refreshQuizQuestions();
       return true;
@@ -326,31 +329,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
 
 
-  const handleSaveQuestionEditedWhenChangingSelectedQuestion = () => {
 
-    const questionInfo = TypeOfScreen === 'edit' ? questionInfo : editingQuestionInfo;
-    if (TypeOfScreen === 'edit') {
-      if (questionInfo.questionOptions.some(choice => !choice || !choice.trim())) {
-        toast.error("Please ensure all choices are filled out.");
-        return false;
-      }
-      if (!questionInfo.questionDifficulty) {
-        toast.error("Please select a difficulty.");
-        return false;
-      }
-
-      if (!questionInfo.questionCategory) {
-        toast.error("Please select a category.");
-        return false;
-      }
-      handleSubmitActualQuestion();
-    }
-
-
-
-
-
-  }
 
   const handleSubmitCreateQuestion = async (event) => {
 
@@ -540,8 +519,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                     refreshQuizQuestions={refreshQuizQuestions}
                     refreshQuizQuestionEditing={refreshQuizQuestionEditing}
                     setRefreshQuizQuestions={setRefreshQuizQuestions}
-
-                    handleSaveQuestionEditedWhenChangingSelectedQuestion={handleSaveQuestionEditedWhenChangingSelectedQuestion}
                   />
 
                 </div>
