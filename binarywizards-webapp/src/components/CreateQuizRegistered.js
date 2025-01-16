@@ -179,13 +179,12 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   };
 
   const selectQuestion = async (questionId) => {
-    console.log("questinid, ", questionId, "question.id", questionInfo.questionId);
+
 
     if (questionInfo.questionId) {
 
       if (await handleSubmitActualQuestion()) {
 
-        console.log("CAS 1");
       }
       else {
 
@@ -194,13 +193,14 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
     }
     if (!questionInfo.questionId && questionId) {
-      console.log("CAS 2");
+
       /*setQuestionInfo({
         ...editingQuestionInfo, // Copie toutes les propriétés de editingQuestionInfo
         questionId: questionId, // Remplace la propriété questionId
         isEditing: true, // Remplace la propriété isEditing
       });
       */
+
       setEditingQuestionInfo({
         ...questionInfo, // Copie toutes les propriétés de editingQuestionInfo
         questionId: '', // Remplace la propriété questionId
@@ -209,11 +209,11 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     }
 
     if (!questionId) {
-      console.log("CAS 3");
+
       setQuestionInfo(editingQuestionInfo);
     }
     else {
-      console.log("CAS 4");
+
       setQuestionInfo((prevState) => {
         return {
           ...prevState,
@@ -236,7 +236,6 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   const handleSubmitActualQuestion = async () => {
     // questionInfo.questionId ;
 
-    console.log(questionInfo);
     if (quiz.isPublic) {
       if (!questionInfo.questionCategory || !questionInfo.questionText || !questionInfo.questionDifficulty || questionInfo.questionOptions.some(choice => !choice || !choice.trim())) {
         toast.error("Finish the question before publish quizz.");
@@ -290,7 +289,11 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
       if (!questionInfo.questionId) {
         closeQuestionInContainerDefault();
+
       }
+
+      resetQuestionInfo();
+
 
       refreshQuizQuestions();
       return true;
@@ -317,21 +320,18 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   }
 
   const handleSubmitCreateQuestion = async (event) => {
-
     try {
 
-
       if (questionInfo.isEditing || questionInfo.questionId) {
+
         await handleSubmitActualQuestion();
       }
-
-
-
       setTypeOfScreen('create');
       setRefreshQuizQuestions(true);
       setIdQuestionSelected('');
       setQuestionListReload(true);
       setNewQuestion(true);
+
 
       setEditingQuestionInfo({
         questionText: 'Write your question',
@@ -342,6 +342,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
         questionCorrectAnswer: 0,
         isEditing: true,
       })
+
       selectQuestion('');
     } catch (error) {
     }
@@ -350,12 +351,12 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   //Met à jour le quiz & la question en cours 
   const handleSubmitSaveQuiz = () => {
     if (!quiz.title) {
-      toast.info('Please select a title.');
+      toast.info('Please select a quiz title.');
       return;
     }
 
     if (!quiz.difficulty) {
-      toast.info('Please select a difficulty.');
+      toast.info('Please select a quiz difficulty.');
       return;
     }
 
@@ -368,8 +369,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
     CreateQuizService.createQuiz(quizData, quizId)
       .then(() => {
-        toast.info('Quiz created successfully! ');
-        if (quiz.isPublic) { setQuizIdRedicted(quizId) };
+
+        if (quiz.isPublic) { toast.info('Quiz created successfully! '); setQuizIdRedicted(quizId) };
       })
       .catch(error => {
         toast.info(error.message);
@@ -383,10 +384,12 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       if (idQuestionSelected || newQuestion) {
 
         if (await handleSubmitActualQuestion()) {
+
           await handleSubmitSaveQuiz();
         }
       }
       else {
+
         await handleSubmitSaveQuiz();
       }
 
@@ -400,7 +403,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   const handleSubmitDeleteQuestion = (questionId) => {
     CreateQuizService.deleteQuestion(quizId, questionId)
       .then(() => {
-        toast.info('Question deleted successfully!');
+
         setIdQuestionSelected('');
         setQuestionListReload(true);
         refreshQuizQuestions();
