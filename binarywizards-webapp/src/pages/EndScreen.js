@@ -7,16 +7,17 @@ import Navbar from "../components/Navbar";
 import { EmojiProvider, Emoji } from "react-apple-emojis";
 import emojiData from "react-apple-emojis/src/data.json";
 import ConfettiComponent from "../animations/ConfettiComponent";
+import Spinner from "../components/Spinner";
 
 export default function EndScreen() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { 
-    difficulty_level, 
-    correct_answers_nb, 
-    nb_questions_total, 
-    quizId 
+  const {
+    difficulty_level,
+    correct_answers_nb,
+    nb_questions_total,
+    quizId
   } = location.state || {};
 
   const [isLoading, setIsLoading] = useState(false);
@@ -99,26 +100,9 @@ export default function EndScreen() {
                   aria-label="Restart Quiz"
                 >
                   {isLoading ? (
-                    <svg
-                      className="animate-spin h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8v8H4z"
-                      ></path>
-                    </svg>
+                    <div className="flex items-center">
+                      <Spinner size="5" className="mr-2" />
+                    </div>
                   ) : (
                     "Restart Quiz"
                   )}

@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Spinner from '../components/Spinner';
 import EmojiData from 'react-apple-emojis/src/data.json';
 import { Emoji, EmojiProvider } from 'react-apple-emojis';
-import { useLoading } from '../LoadingContext';
 
 export default function HomeScreen() {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
-  const { setIsLoading } = useLoading(true);
-
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleNavigation = async (path, requiresAuth = false) => {
     setIsLoading(true);
@@ -23,6 +22,14 @@ export default function HomeScreen() {
       setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F4F2EE]">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div
