@@ -157,13 +157,10 @@ export default function PlayersList({ game_mode }) {
 
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen bg-cover bg-center"
       style={{
-        backgroundImage: "url('/backgrounds/team_background.svg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundImage: "url('/backgrounds/TeamBackground.svg')",
       }}
-
     >
       <Navbar />
 
