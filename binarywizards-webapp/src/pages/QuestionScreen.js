@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Chrono from "../components/Chrono";
 import Navbar from "../components/Navbar";
+
 export default function QuestionScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -161,7 +162,7 @@ export default function QuestionScreen() {
               onQuestionSelect={handleQuestionSelect}
               selectedQuestionId={selectedQuestionId}
               isAnswered={isAnswered}
-
+              isCorrect={correctAnswer}
             />
           </div>
           <button

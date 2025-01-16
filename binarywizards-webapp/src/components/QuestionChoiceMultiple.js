@@ -1,15 +1,22 @@
+import { useEffect } from 'react';
 import CustomAudioPlayer from './CustomAudioPlayer';
+import confetti from 'canvas-confetti';
 
 export default function QuestionChoiceMultiple({
-  type,
   question_choice,
   correctOptionIndex,
   selectedQuestionId,
   isAnswered,
+  isCorrect,
   onQuestionSelect,
-
+  type
 }) {
 
+  useEffect(() => {
+    if(isCorrect) {
+      confetti()
+    }
+  }, [isCorrect]);
   const renderOptionContent = (option_content, option_index) => {
     switch (type) {
       case 'text':
@@ -40,7 +47,7 @@ export default function QuestionChoiceMultiple({
     <div className="QuestionChoiceMultiple grid place-items-center justify-items-center grid-cols-1 sm:grid-cols-2 gap-4">
       {question_choice.map((choice) => {
         const { option_index, option_content } = choice;
-        let buttonClass = `${isAnswered ? 'bg-gray-100 cursor-not-allowed' : ''}`;
+        let buttonClass = `${isAnswered ? 'confetti-button bg-gray-100 cursor-not-allowed' : ''}`;
 
         if (option_index === correctOptionIndex) {
           buttonClass = 'bg-green-100 border-green-500 text-green-700';
@@ -54,7 +61,7 @@ export default function QuestionChoiceMultiple({
 
         return (
           <div>
-            <div
+             <div
               key={option_index}
               className="flex items-center justify-center min-w-[30vh]"
             >
