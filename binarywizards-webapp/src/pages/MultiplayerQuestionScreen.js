@@ -210,7 +210,6 @@ export default function MultiplayerQuestionScreen() {
               selectedOptionIndex={selectedQuestionId}
               isCorrect={selectedQuestionId !== null && selectedQuestionId == idCorrectAnswers}
               isAnswered={isAnswered}
-              isCorrect={correctAnswer}
               type={questionType}
             />
           </div>
