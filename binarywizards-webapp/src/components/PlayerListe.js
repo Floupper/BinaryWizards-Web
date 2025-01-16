@@ -23,6 +23,7 @@ export default function PlayersList({ game_mode }) {
   const [showTeamPopup, setShowTeamPopup] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isGameOwner, setIsGameOwner] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetchUsername();
@@ -147,8 +148,10 @@ export default function PlayersList({ game_mode }) {
   };
 
   const handleCopyGameCode = () => {
-    navigator.clipboard.writeText(gameId).then(() => {
-      alert("Game code copied!");
+    const gameUrl = `${window.location.origin}/team-mode-join-team/${gameId}`;
+    navigator.clipboard.writeText(gameUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 600); 
     });
   };
 
@@ -202,7 +205,11 @@ export default function PlayersList({ game_mode }) {
             <p className="text-4xl mb-4">Game Code:</p>
             <div className="flex items-center text-3xl text-[#8B2DF1]">
               <span>{gameId}</span>
-              <button onClick={handleCopyGameCode} className="ml-4 text-2xl">
+              <button
+                onClick={handleCopyGameCode}
+                className={`ml-4 text-2xl transition-transform duration-300 ${copied ? "text-[#761EC7] scale-150" : "text-[#8B2DF1] scale-100"
+                  }`}
+              >
                 <FontAwesomeIcon icon={faCopy} />
               </button>
             </div>

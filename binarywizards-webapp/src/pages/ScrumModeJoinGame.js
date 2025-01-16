@@ -20,6 +20,8 @@ export default function ScrumModeJoinGame() {
   const [quizDetails, setQuizDetails] = useState(null);
   const [isGameOwner, setIsGameOwner] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [copied, setCopied] = useState(false);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
 
@@ -88,7 +90,11 @@ export default function ScrumModeJoinGame() {
   };
 
   const handleCopyGameCode = () => {
-    navigator.clipboard.writeText(gameId).then(() => alert("Game code copied!"));
+    const gameUrl = `${window.location.origin}/scrum-mode-lobby/${gameId}`;
+    navigator.clipboard.writeText(gameUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 600); 
+    });
   };
 
   if (isLoading) {
@@ -114,9 +120,14 @@ export default function ScrumModeJoinGame() {
           <p className="text-4xl mb-4">Game Code:</p>
           <div className="flex items-center text-3xl text-[#8B2DF1]">
             <span>{gameId}</span>
-            <button onClick={handleCopyGameCode} className="ml-4 text-2xl">
+            <button
+              onClick={handleCopyGameCode}
+              className={`ml-4 text-2xl transition-transform duration-300 ${copied ? "text-[#761EC7] scale-150" : "text-[#8B2DF1] scale-100"
+                }`}
+            >
               <FontAwesomeIcon icon={faCopy} />
             </button>
+
           </div>
           <div className="mt-8">
             <QRCodeCanvas value={`${window.location.origin}/scrum-mode-lobby/${gameId}`} size={184} className="shadow-lg rounded-lg" />
