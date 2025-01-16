@@ -40,10 +40,12 @@ export default function ScrumModeJoinGame() {
         });
 
         newSocket.on("connect", () => {
-          if (localStorage.getItem("hasJoined") !== gameId) {
-            newSocket.emit("joinGame", { game_id: gameId });
-            localStorage.setItem("hasJoined", gameId);
+          if (localStorage.getItem("hasJoined") && localStorage.getItem("hasJoined") !== gameId) {
+            newSocket.emit("leaveGame", { game_id: localStorage.getItem("hasJoined") });
           }
+
+          newSocket.emit("joinGame", { game_id: gameId });
+          localStorage.setItem("hasJoined", gameId);
           newSocket.emit("getGameInformations", { game_id: gameId });
         });
 

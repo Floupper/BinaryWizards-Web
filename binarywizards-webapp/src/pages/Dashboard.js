@@ -31,11 +31,11 @@ export default function Dashboard() {
   }, [userId]);
 
   return (
-    <div className="min-h-screen bg-cover bg-center"
+    <div className="min-h-screen max-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
     >
       <Navbar />
-      <div className="p-6">
+      <div className="px-6">
         <div className="flex space-x-4 mb-4 text-xl lg:text-2xl">
           <button
             className={`px-6 py-3 rounded-md hover:bg-black hover:text-white ${activeTab === 'created' ? 'bg-black text-white' : 'bg-white text-black'}`}
@@ -52,7 +52,7 @@ export default function Dashboard() {
             Your Played Quizzes
           </button>
         </div>
-        <div className="quiz-list max-h-[43.75rem] w-full overflow-y-auto">
+        <div className="quiz-list max-h-[38rem] w-full overflow-y-auto">
           {activeTab === 'created' && (
             <>
               {isLoadingCreated ? (

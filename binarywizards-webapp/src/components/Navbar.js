@@ -35,7 +35,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="relative w-full flex justify-between items-center p-5 text-black">
+    <nav className="w-full flex justify-between items-center p-5 text-black">
       {/* Logo */}
       <div className="text-[2.5rem] font-semibold font-mogula md:text-[3.3rem]">
         <NavLink to="/" className="text-black">
