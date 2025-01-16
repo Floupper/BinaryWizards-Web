@@ -10,7 +10,7 @@ export default function HomeScreen() {
 
   return (
     <div
-      className="lg:min-h-screen flex flex-col items-center bg-cover bg-center"
+      className="min-h-screen flex flex-col items-center bg-cover bg-center"
       style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
     >
       <Navbar />

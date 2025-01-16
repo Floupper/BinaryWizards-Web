@@ -23,11 +23,11 @@ export default function Dashboard() {
   }, [userId]);
 
   return (
-    <div className="bg-[#F4F2EE] min-h-screen w-screen"
+    <div className="lg:min-h-screen flex flex-col items-center bg-cover bg-center"
       style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
-    >
+    > 
       <Navbar />
-      <div className="p-6 w-full">
+      <div className="p-6">
         <div className="flex space-x-4 mb-4 text-xl lg:text-2xl">
           <button
             className={`px-6 py-3 rounded-md hover:bg-black hover:text-white ${activeTab === 'created' ? 'bg-black text-white' : 'bg-white text-black'}`}

@@ -166,22 +166,17 @@ export default function MultiplayerQuestionScreen() {
 
   useEffect(() => {
     if (timeAnswer === null || timeAnswer <= 0) return;
-  
+
     const interval = setInterval(() => {
-      setTimeAnswer((prevTimeAnswer) => {
-        if (prevTimeAnswer <= 1000) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prevTimeAnswer - 1;
-      });
-    }, 1);
-  
-    return () => clearInterval(interval); 
+      setTimeAnswer((prevTimeAnswer) => Math.max(prevTimeAnswer - 0.46, 0));
+    }, 0.9);
+
+    return () => clearInterval(interval);
   }, [timeAnswer]);
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center"
+    <div
+      className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center"
       style={{
         backgroundImage: "url('/backgrounds/team_background.svg')",
       }}
@@ -195,7 +190,9 @@ export default function MultiplayerQuestionScreen() {
         className={`${correctAnswer === false ? "bg-red-500" : ""} ${
           correctAnswer === true ? "bg-green-500" : ""
         } ${
-          correctAnswer === null ? "bg-gradient-to-r from-orange-400 to-green-400" : ""
+          correctAnswer === null
+            ? "bg-gradient-to-r from-orange-400 to-green-400"
+            : ""
         } p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10`}
       >
         <div className="flex flex-col items-center space-y-6 p-6 bg-[#F4F2EE] rounded-lg shadow-md w-full">
@@ -212,25 +209,23 @@ export default function MultiplayerQuestionScreen() {
               type={questionType}
             />
           </div>
-          {remainingTime !== null && (
+          {remainingTime !== null && correctAnswer == null && (
             <div className={`text-5xl font-semibold ${getChronoColor()}`}>
-              {correctAnswer === null ? `${remainingTime}s` : null}       
-           </div>
+              {remainingTime}s
+            </div>
           )}
-          <div style={{width: '100%'}}>
+          <div style={{ width: "100%" }}>
             {correctAnswer !== null ? (
               <div
                 style={{
                   width: `${Math.min(120 - timeAnswer / 50, 100)}%`,
                 }}
                 className="h-3 bg-[#8B2DF1] rounded-xl"
-              />              
+              />
             ) : (
-              isAnswered ? (
-                <span className="text-center">Waiting for the chrono to finish...</span>
-              ) : (
-                <span className="text-center">Choose an option...</span>
-              )
+              <span className="text-center">
+                {isAnswered ? "Waiting for results..." : "Choose an option..."}
+              </span>
             )}
           </div>
         </div>

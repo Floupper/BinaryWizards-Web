@@ -161,7 +161,6 @@ export default function QuestionScreen() {
               onQuestionSelect={handleQuestionSelect}
               selectedQuestionId={selectedQuestionId}
               isAnswered={isAnswered}
-
             />
           </div>
           <button
