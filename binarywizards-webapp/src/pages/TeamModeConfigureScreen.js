@@ -50,9 +50,11 @@ export default function TeamModeConfigureScreen() {
 
   return (
     <div
-      className="flex flex-col h-screen"
+      className="min-h-screen"
       style={{
         backgroundImage: "url('/backgrounds/team_background.svg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
 

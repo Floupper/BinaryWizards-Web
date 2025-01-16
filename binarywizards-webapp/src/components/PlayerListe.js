@@ -8,6 +8,7 @@ import JoinQuizCard from "../components/JoinQuizCard";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import Navbar from "./Navbar";
+import { fetchUsername } from "../services/JoinQuizService";
 
 const SERVER_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 
@@ -24,6 +25,7 @@ export default function PlayersList({ game_mode }) {
   const [isGameOwner, setIsGameOwner] = useState(null);
 
   useEffect(() => {
+    fetchUsername();
     const savedTeam = localStorage.getItem(`team_${gameId}`);
     if (savedTeam) {
       setSelectedTeam(savedTeam);
@@ -165,8 +167,6 @@ export default function PlayersList({ game_mode }) {
     >
       <Navbar />
 
-
-
       {showTeamPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
@@ -193,7 +193,7 @@ export default function PlayersList({ game_mode }) {
       )}
 
       {!showTeamPopup && (
-        <div className="flex flex-wrap justify-center items-center space-y-8 lg:space-y-0 lg:space-x-8 overflow-hidden" style={{ minHeight: 'calc(90vh - 64px)' }}> {/* Aligner les sections au centre verticalement et horizontalement en prenant en compte la navbar */}
+        <div className="flex flex-wrap justify-center items-center space-y-8 lg:space-y-0 lg:space-x-8 overflow-hidden" style={{ minHeight: 'calc(90vh - 64px)' }}> 
           {/* Left Section */}
           <div className="w-full lg:w-2/5 flex flex-col items-center">
             <p className="text-4xl mb-4">Game Code:</p>
@@ -203,10 +203,10 @@ export default function PlayersList({ game_mode }) {
                 <FontAwesomeIcon icon={faCopy} />
               </button>
             </div>
-            <div className="mt-8"> {/* Ajout d'espace entre le code et le QR code */}
+            <div className="mt-8"> 
               <QRCodeCanvas
                 value={`${window.location.origin}/team-mode-join-team/${gameId}`}
-                size={184} /* Augmenter la taille du QR Code */
+                size={184} 
                 className="shadow-lg rounded-lg"
               />
               <p className="mt-4 text-xl text-gray-700">Scan this code to join!</p>
@@ -231,7 +231,7 @@ export default function PlayersList({ game_mode }) {
 
 
             <div className="mt-12 p-6 border-2 border-[#8B2DF1] rounded-lg bg-opacity-70 bg-transparent max-h-[500px] overflow-y-auto">
-              <div className="flex justify-between items-center mb-8"> {/* Positionnement des titres */}
+              <div className="flex justify-between items-center mb-8"> 
                 <h2 className="text-3xl">Teams</h2>
                 <div className="flex items-center space-x-4">
                   <span className="text-2xl">👤</span>
@@ -239,45 +239,47 @@ export default function PlayersList({ game_mode }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6"> {/* Ajout d'une grille */}
+              <div className="grid grid-cols-2 gap-6">
                 {teams.length > 0 ? (
-                  teams.map((team, index) => (
-                    <div
-                      key={index}
-                      className="border border-black rounded-lg overflow-hidden p-4"
-                    >
-                      <h3
-                        className="text-2xl bg-white text-black p-4 border-b border-black cursor-pointer hover:underline"
-                        onClick={() => handleSwitchTeam(team.name)}
+                  teams.map((team, index) => {
+                    const isUserTeam = team.name === localStorage.getItem(`team_${gameId}`);
+                    return (
+                      <div
+                        key={index}
+                        className={`border border-black rounded-lg overflow-hidden p-4 ${isUserTeam ? "border-4" : ""}`}
+                        style={isUserTeam ? { borderWidth: "0.30rem" } : {}}
                       >
-                        {team.name}
-                      </h3>
-                      <table className="w-full border-collapse">
-                        <tbody>
-                          {players[team.name] && players[team.name].length > 0 ? (
-                            players[team.name].map((player, playerIndex) => (
-                              <tr
-                                key={playerIndex}
-                                className="border-b border-black"
-                              >
-                                <td className="p-4 border-black bg-transparent text-black text-xl">
-                                  {player.username}
-                                </td>
+                        <h3
+                          className="text-2xl bg-white text-black p-4 border-b border-black cursor-pointer hover:underline"
+                          onClick={() => handleSwitchTeam(team.name)}
+                        >
+                          {team.name}
+                        </h3>
+                        <table className="w-full border-collapse">
+                          <tbody>
+                            {players[team.name] && players[team.name].length > 0 ? (
+                              players[team.name].map((player, playerIndex) => (
+                                <tr key={playerIndex} className="border-b border-black">
+                                  <td className="p-4 border-black bg-transparent text-black text-xl">
+                                    {player.username}
+                                  </td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td className="p-4 text-gray-500 text-xl">No players in this team.</td>
                               </tr>
-                            ))
-                          ) : (
-                            <tr>
-                              <td className="p-4 text-gray-500 text-xl">No players in this team.</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  ))
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    );
+                  })
                 ) : (
                   <p className="text-xl">No teams available at the moment.</p>
                 )}
               </div>
+
             </div>
 
             <style>{`
@@ -294,13 +296,6 @@ export default function PlayersList({ game_mode }) {
                    `}</style>
           </div>
         </div>
-
-
-
-
-
-
-
       )}
     </div>
   );
