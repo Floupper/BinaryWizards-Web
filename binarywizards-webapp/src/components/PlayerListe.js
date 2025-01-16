@@ -53,7 +53,9 @@ export default function PlayersList({ game_mode }) {
       });
 
       newSocket.on("connect", () => {
-        newSocket.emit("getGameInformations", { game_id: gameId });
+        if (localStorage.getItem("hasJoined") && localStorage.getItem("hasJoined") === gameId) {
+          newSocket.emit("getGameInformations", { game_id: gameId });
+        }
       });
 
       newSocket.on("teamSwitch", (data) => {
