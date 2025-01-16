@@ -35,7 +35,7 @@ export default function ScrumModeConfigureScreen() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-blue-100"
+    <div className="flex flex-col min-h-screen bg-gradient-to-br"
       style={{ backgroundImage: "url('/backgrounds/ScrumQuiz.svg')" }}
     >
       <Navbar />
