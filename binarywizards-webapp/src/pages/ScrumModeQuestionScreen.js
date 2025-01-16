@@ -25,6 +25,7 @@ export default function ScrumModeQuestionScreen() {
   const [correctOptionIndex, setCorrectOptionIndex] = useState(null);
   const [socket, setSocket] = useState(null);
   const [correctAnswer, setCorrectAnswer] = useState(null);
+  const [timeAnswer, setTimeAnswer] = useState(null);  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -76,6 +77,7 @@ export default function ScrumModeQuestionScreen() {
   };
 
   const handleAnswerSelect = (selectedOptionIndex) => {
+    console.log(selectedOptionIndex)
     if (!socket || isAnswered) return;
   
     setSelectedAnswer(selectedOptionIndex);
@@ -94,7 +96,7 @@ export default function ScrumModeQuestionScreen() {
     if (socket) {
       socket.on("answerResult", (data) => {
         setCorrectOptionIndex(data.correct_option_index);
-        setCorrectAnswer(socket.selectedOptionIndex === data.correct_option_index); // Utiliser la valeur temporaire
+        setCorrectAnswer(socket.selectedOptionIndex === data.correct_option_index);
         setIsAnswered(true);
       });
     }
@@ -110,6 +112,16 @@ export default function ScrumModeQuestionScreen() {
     category: questionCategory,
   };
 
+  useEffect(() => {
+      if (timeAnswer === null || timeAnswer <= 0) return;
+  
+      const interval = setInterval(() => {
+        setTimeAnswer((prevTimeAnswer) => Math.max(prevTimeAnswer - 0.46, 0));
+      }, 0.9);
+  
+      return () => clearInterval(interval);
+    }, [timeAnswer]);
+  
   const answerBgClass = correctAnswer === true
     ? "bg-green-500"
     : correctAnswer === false
@@ -140,6 +152,16 @@ export default function ScrumModeQuestionScreen() {
               correctOptionIndex={correctOptionIndex}
               type={questionType}
             />
+          </div>
+          <div style={{ width: "100%" }}>
+            {correctAnswer !== null && (
+              <div
+                style={{
+                  width: `${Math.min(120 - timeAnswer / 50, 100)}%`,
+                }}
+                className="h-3 bg-[#8B2DF1] rounded-xl"
+              />)
+            }
           </div>
         </div>
       </div>
