@@ -5,34 +5,16 @@ import "react-toastify/dist/ReactToastify.css";
 import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
-export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, questionId, quizId, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSaveQuestionEditedWhenChangingSelectedQuestion }) {
+export default function CreateQuizzQuestion({ reloadQuestionInfo, setReloadQuestionInfo,
 
+  questionInfo, setQuestionInfo,
+  quizId }) {
 
-
-  //Catégories disponibles
-
-  //Si la question est une édition
-  const [isEditing, setIsEditing] = useState(false);
   const [categories, setCategories] = useState([]);
-  useEffect(() => {
-    if (refreshQuizQuestionEditing) {
-      setRefreshQuizQuestions(false);
-      setIsEditing(false);
-      setQuestionInfo((prevState) => ({
-        ...prevState,
-        questionDifficulty: 'easy',
-        questionCategory: '',
-        questionText: 'Write your question',
-        questionType: 'text',
-        questionCorrectAnswer: 0,
-        questionOptions: ["", "", "", ""],
-        questionId: questionId,
-      }));
 
 
+  const [isEditing, setIsEditing] = useState(false);
 
-    }
-  }, [refreshQuizQuestionEditing]);
   useEffect(() => {
     CreateQuizService.fetchCategories()
       .then(data => setCategories(data))
@@ -40,52 +22,51 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
   }, []);
 
   useEffect(() => {
-
-    if (!questionId) return;
-
-    CreateQuizService.fetchQuestionDetails(quizId, questionId)
-      .then((data) => {
-        const question = data.question;
-        if (!question) {
-          toast.error('Error: Question not found.');
-          return;
-        }
-        if (!question.options || !Array.isArray(question.options)) {
-          toast.error('Error: Question options are missing or invalid.');
-          return;
-        }
+    if (!reloadQuestionInfo) return;
+    setReloadQuestionInfo(false);
 
 
-        // Mise à jour de questionInfo
-        setQuestionInfo((prevState) => ({
-          ...prevState,
-          questionText: question.question_text,
-          questionDifficulty: question.question_difficulty,
-          questionCategory: question.question_category,
-          questionType: question.question_type,
-          questionId: questionId,
-        }));
+    if (!questionInfo.isEditing && questionInfo.questionId) {
 
+      CreateQuizService.fetchQuestionDetails(quizId, questionInfo.questionId)
+        .then((data) => {
 
-        setQuestionInfo((prevState) => {
-          const questionOptions = question.options.map((option) => option.option_content || "");
-          const questionCorrectAnswer = question.options.findIndex((option) => option.is_correct_answer) || 0;
-          return {
-            ...prevState,
-            questionCorrectAnswer: questionCorrectAnswer,
-            questionOptions: questionOptions,
+          const question = data.question;
+          if (!question) {
+            toast.error('Error: Question not found.');
+            return;
           }
+          if (!question.options || !Array.isArray(question.options)) {
+            toast.error('Error: Question options are missing or invalid.');
+            return;
+          }
+          setQuestionInfo((prevState) => ({
+            ...prevState,
+            questionText: question.question_text,
+            questionDifficulty: question.question_difficulty,
+            questionCategory: question.question_category,
+            questionType: question.question_type,
+            questionId: question.question_id,
+
+          }));
+
+          setQuestionInfo((prevState) => {
+            const questionOptions = question.options.map((option) => option.option_content || "");
+            const questionCorrectAnswer = question.options.findIndex((option) => option.is_correct_answer) || 0;
+            return {
+              ...prevState,
+              questionCorrectAnswer: questionCorrectAnswer,
+              questionOptions: questionOptions,
+            }
+          });
+
+        })
+        .catch((error) => {
+          console.error('Error fetching question details:', error);
+          toast.error('An error occurred while fetching question details.');
         });
-
-
-      })
-      .catch((error) => {
-        console.error('Error fetching question details:', error);
-        toast.error('An error occurred while fetching question details.');
-      });
-  }, [questionId]);
-
-
+    }
+  }, [reloadQuestionInfo]);
 
   const handleEditClick = () => setIsEditing(true);
 
@@ -96,14 +77,10 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
     setIsEditing(false);
   };
 
-
-
   const handleOnDifficultyChange = (newDifficulty) => {
     setQuestionInfo((prevState) => ({ ...prevState, questionDifficulty: newDifficulty }));
 
   };
-
-
 
   const handleOnTypeQuestionChange = (newType) => {
     setQuestionInfo((prevState) => ({
@@ -115,12 +92,9 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
 
   return (
     <div>
-
       <div className="bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4] p-2 m-8 rounded-lg  ">
-
         <div className="flex flex-col flex-nowrap justify-center p-12 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[65vh] ">
 
-          {/* Editable Question */}
           <div className="flex items-center items-center justify-center text-center mb-6">
             {!isEditing ? (
               <h1
@@ -140,29 +114,20 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
               />
             )}
           </div>
-
           <div className="display:flex text-center justify-center text-black">
-
             <button className={`m-2  bg-white px-4 py-2 hover:text-white hover:bg-[#8B2DF1] rounded-lg ${questionInfo.questionType === "text" ? "border-2 border-[#8B2DF1]" : ""} `}
               onClick={() => handleOnTypeQuestionChange("text")}>Texte</button>
-
             <button className={`m-2  bg-white px-4 py-2 hover:text-white hover:bg-[#8B2DF1] rounded-lg ${questionInfo.questionType === "image" ? "border-2 border-[#8B2DF1]" : ""} `}
               onClick={() => handleOnTypeQuestionChange("image")}>Image</button>
-
             <button className={`m-2  bg-white px-4 py-2 hover:text-white hover:bg-[#8B2DF1] rounded-lg ${questionInfo.questionType === "audio" ? "border-2 border-[#8B2DF1]" : ""} `}
               onClick={() => handleOnTypeQuestionChange("audio")}>Audio</button>
-
-
           </div>
           <div className="flex overflow-auto justify-center max-h-64 ">
             <MultipleChoiceQuestion
-
               questionInfo={questionInfo}
               setQuestionInfo={setQuestionInfo}
             />
           </div>
-
-
           <div className=" pt-10 self-center justify-center">
             <div className="flex flex-row gap-2 items-baseline">
 
@@ -198,11 +163,9 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
                   ))}
                 </select>
               </div>
-
             </div>
           </div>
         </div>
-
       </div>
     </div >
   );

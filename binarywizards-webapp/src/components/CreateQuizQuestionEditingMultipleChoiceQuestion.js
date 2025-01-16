@@ -5,7 +5,7 @@ import CustomAudioPlayer from './CustomAudioPlayer';
 
 
 export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
-  const [file, setFile] = useState(null);
+
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
 
@@ -263,8 +263,8 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
         <button
           onClick={handleAddOption}
           className={`px-4 py-2 text-black bg-[#CDCCCC] rounded ${questionInfo.questionOptions.length >= 8
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-600"
+            ? " cursor-not-allowed"
+            : " hover:bg-[#DFDFDF]"
             }`}
           disabled={questionInfo.questionOptions.length >= 8}
         >
