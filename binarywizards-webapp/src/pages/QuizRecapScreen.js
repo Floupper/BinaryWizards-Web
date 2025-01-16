@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import RecapQuizService from '../services/RecapQuizService';
 import RecapQuizQuestion from '../components/RecapQuizQuestion';
 import Navbar from '../components/Navbar';
+import Spinner from '../components/Spinner';
 import { EmojiProvider, Emoji } from "react-apple-emojis";
 import emojiData from "react-apple-emojis/src/data.json";
 
@@ -54,7 +55,7 @@ const QuizRecapScreen = () => {
   if (!quizDetails) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F4F2EE]">
-        <p className="text-gray-500 text-lg">Loading...</p>
+        <Spinner />
       </div>
     );
   }
@@ -67,18 +68,18 @@ const QuizRecapScreen = () => {
       <div className="flex flex-col lg:flex-row items-start justify-center mt-8 space-y-8 lg:space-y-0 lg:space-x-20 w-full px-4">
         {/* Quiz Details */}
         <div className="p-6 rounded-xl w-full lg:w-1/3 border border-gray-300 shadow-lg bg-white relative">
-            {!quizDetails.is_public ? (<>
-              <EmojiProvider data={emojiData}>
-                <button
-                  className="absolute top-8 right-8 bg-transparent p-2 rounded-full hover:bg-white transition-all duration-300"
-                  onClick={() => navigate('/create-quiz', { state: { quizId } })}
-                  aria-label="Edit Quiz"
-                >
-                  <Emoji name="paintbrush" width={30} />
-                </button>
+          {!quizDetails.is_public ? (<>
+            <EmojiProvider data={emojiData}>
+              <button
+                className="absolute top-8 right-8 bg-transparent p-2 rounded-full hover:bg-white transition-all duration-300"
+                onClick={() => navigate('/create-quiz', { state: { quizId } })}
+                aria-label="Edit Quiz"
+              >
+                <Emoji name="paintbrush" width={30} />
+              </button>
             </EmojiProvider>
-            </>) : (<></>)
-            }
+          </>) : (<></>)
+          }
           <h2 className="text-2xl font-semibold bg-[#8B2DF1] text-white p-4 rounded-xl mb-4 break-words">{quizDetails.title}</h2>
           <div className='ml-2'>
             <p className="text-gray-700 mb-2">Difficulty: {renderDifficultyStars(quizDetails.difficulty)}</p>

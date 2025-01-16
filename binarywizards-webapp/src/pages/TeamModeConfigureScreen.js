@@ -7,6 +7,7 @@ import TeamModeService from "../services/TeamModeService";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../components/Spinner";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ export default function TeamModeConfigureScreen() {
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showTimerWarning, setShowTimerWarning] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInitializeGame = async () => {
     if (!selectedQuiz || teams.length === 0) {
@@ -29,6 +31,7 @@ export default function TeamModeConfigureScreen() {
       return;
     }
 
+    setIsLoading(true);
     const gameData = {
       mode: "team",
       difficulty_level: selectedTimer,
@@ -43,6 +46,8 @@ export default function TeamModeConfigureScreen() {
       navigate(`/team-mode-join-team/${response.game_id}`);
     } catch (error) {
       console.error("Error initializing game:", error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,7 +60,6 @@ export default function TeamModeConfigureScreen() {
         backgroundImage: "url('/backgrounds/TeamBackground.svg')",
       }}
     >
-
       <Navbar />
       <div className="flex flex-col items-center flex-grow text-center px-4">
         <h1 className="text-2xl sm:text-4xl underline decoration-[#8B2DF1] decoration-4 text-black mt-4">
@@ -87,12 +91,18 @@ export default function TeamModeConfigureScreen() {
 
           <button
             onClick={handleInitializeGame}
-            disabled={!isGameReady}
-            className={`py-2 px-3 sm:px-4 rounded-lg text-sm sm:text-base 
-    ${isGameReady ? "bg-black text-white hover:bg-gray-800" : "bg-gray-400 text-gray-700 cursor-not-allowed opacity-50"}
-  `}
+            disabled={!isGameReady || isLoading}
+            className={`py-2 px-3 sm:px-4 rounded-lg text-sm sm:text-base flex items-center justify-center
+              ${isGameReady && !isLoading ? "bg-black text-white hover:bg-gray-800" : "bg-gray-400 text-gray-700 cursor-not-allowed opacity-50"}
+            `}
           >
-            Initialize Game
+            {isLoading ? (
+              <>
+                <Spinner size="5" className="mr-2" />
+              </>
+            ) : (
+              "Initialize Game"
+            )}
           </button>
         </div>
       </div>

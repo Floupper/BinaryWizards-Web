@@ -24,7 +24,9 @@ export default function CreateQuiz() {
     navigate('/dashboard');
   }
   return (
-    <div className=" min-h-screen bg-cover bg-center bg-[#F4F2EE] min-h-screen w-screen">
+    <div
+      className="min-h-screen items-center bg-cover bg-center w-screen"
+      style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}>
       {quizIdRedicted === 'any' ? (
         <CreateQuizRegisteredPage quizIdParameter={quizId} setQuizIdRedicted={setQuizIdRedicted} />
       )

@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import JoinQuizCard from "../components/JoinQuizCard";
 
+import Spinner from "../components/Spinner";
 
 const queryClient = new QueryClient();
 
@@ -14,15 +15,29 @@ export default function ScrumModeConfigureScreen() {
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [maxPlayers, setMaxPlayers] = useState(2);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/signin");
-    }
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/signin");
+        return;
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
   }, [navigate]);
 
   const handleInitializeGame = async () => {
+    if (!selectedQuiz) {
+      alert("Please select a quiz first.");
+      return;
+    }
+
+    setIsInitializing(true);
     const gameData = {
       mode: "scrum",
       max_players: maxPlayers,
@@ -33,8 +48,18 @@ export default function ScrumModeConfigureScreen() {
       navigate(`/scrum-mode-lobby/${response.game_id}`);
     } catch (error) {
       console.error("Error initializing Scrum game:", error.message);
+    } finally {
+      setIsInitializing(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <Spinner size="8" className="text-black mb-4" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br"
@@ -43,7 +68,7 @@ export default function ScrumModeConfigureScreen() {
       <Navbar />
       <div className="flex flex-col justify-center items-center flex-grow p-4">
         <div className="flex flex-col bg-white p-20 rounded-xl gap-y-6">
-          <label className="block mb-2 font-semibold text-3xl text-center pb-4">Max Players</label>
+        <label className="block mb-2 font-semibold text-3xl text-center pb-4">Max Players</label>
           <input
             type="number"
             min="1"
@@ -56,26 +81,33 @@ export default function ScrumModeConfigureScreen() {
               <JoinQuizCard quiz={selectedQuiz} enableModal={false} />
             </div>
           )}
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-black text-white py-2 px-6 rounded-lg hover:bg-white hover:text-black border-2 border-black mt-14"
-          >
-            Select Quiz
-          </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-black text-white py-2 px-6 rounded-lg hover:bg-white hover:text-black border-2 border-black mt-14 transition"
+            disabled={isInitializing}
+            >
+              Select Quiz
+            </button>
 
           <button
             onClick={handleInitializeGame}
-            disabled={!selectedQuiz}
-            className={`py-2 px-6 rounded-lg border-2 border-black mt-4 ${selectedQuiz
-                ? "bg-black text-white hover:bg-white hover:text-black"
-                : "bg-gray-400 text-gray-700 cursor-not-allowed opacity-50"
-              }`}
+            disabled={!selectedQuiz || isInitializing}
+            className={`py-2 px-6 rounded-lg border-2 border-black transition flex items-center justify-center
+              ${!selectedQuiz || isInitializing
+                ? "bg-gray-400 text-gray-700 cursor-not-allowed opacity-50 hover:bg-gray-400 hover:text-gray-700"
+                : "bg-black text-white hover:bg-white hover:text-black"}`}
           >
-            Initialize Game
+            {isInitializing ? (
+              <>
+                <Spinner size="5" className="mr-2" />
+              </>
+            ) : (
+              "Initialize Game"
+            )}
           </button>
-
         </div>
       </div>
+
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl relative">

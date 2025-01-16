@@ -1,12 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Spinner from '../components/Spinner';
 import EmojiData from 'react-apple-emojis/src/data.json';
 import { Emoji, EmojiProvider } from 'react-apple-emojis';
 
 export default function HomeScreen() {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleNavigation = async (path, requiresAuth = false) => {
+    setIsLoading(true);
+    try {
+      if (requiresAuth && !token) {
+        navigate('/signin');
+      } else {
+        navigate(path);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F4F2EE]">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -19,7 +42,7 @@ export default function HomeScreen() {
         <div className="flex flex-wrap justify-center gap-8 w-full h-[22rem] xl:h-[28rem] h-max">
           {/* Singleplayer Button */}
           <button
-            onClick={() => navigate('/join-quiz')}
+            onClick={() => handleNavigation('/join-quiz')}
             className="flex flex-col items-center w-full sm:w-4/12 md:w-3/12 justify-between bg-white py-8 rounded-lg mb-6 transition duration-300 transform hover:scale-105 border-transparent border-[0.7rem] hover:border-[#FDD05C] shadow-md"
           >
             <div className="p-3 mt-[3rem]">
@@ -32,7 +55,7 @@ export default function HomeScreen() {
 
           {/* Scrum Button */}
           <button
-            onClick={() => (token ? navigate('/scrum-mode-configure') : navigate('/signin'))}
+            onClick={() => handleNavigation('/scrum-mode-configure', true)}
             className="flex flex-col items-center w-full sm:w-4/12 md:w-3/12 justify-between bg-white py-8 rounded-lg mb-6 transition duration-300 transform hover:scale-105 border-transparent border-[0.7rem] hover:border-[#417336] shadow-md"
           >
             <div className="flex gap-4 mt-[3rem]">
@@ -52,7 +75,7 @@ export default function HomeScreen() {
 
           {/* Team Button */}
           <button
-            onClick={() => (token ? navigate('/team-mode-configure') : navigate('/signin'))}
+            onClick={() => handleNavigation('/team-mode-configure', true)}
             className="flex flex-col items-center w-full sm:w-4/12 md:w-3/12 justify-between bg-white py-8 rounded-lg mb-6 transition duration-300 transform hover:scale-105 border-transparent border-[0.7rem] hover:border-[#F22828B2] shadow-md"
           >
             <div className="flex gap-4 mt-[3rem]">
