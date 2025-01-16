@@ -21,9 +21,11 @@ export default function ScrumModeJoinGame() {
   useEffect(() => {
 
     const token = localStorage.getItem("token");
+
+    console.log("token: " + token);
     if (!token) {
       console.error("No token found. Redirecting to signin.");
-      navigate(`/signin?redirect=/scrum-mode-join-game/${gameId}`);
+      navigate(`/signin?redirect=/scrum-mode-lobby/${gameId}`);
       return;
     }
 
@@ -34,12 +36,12 @@ export default function ScrumModeJoinGame() {
     });
 
     newSocket.on("connect", () => {
-      if (localStorage.getItem("hasJoined")!==gameId) {
+      if (localStorage.getItem("hasJoined") !== gameId) {
         newSocket.emit("joinGame", { game_id: gameId }, (response) => {
-            
-          
+
+
         });
-        localStorage.setItem("hasJoined", gameId); 
+        localStorage.setItem("hasJoined", gameId);
 
         newSocket.emit("getGameInformations", { game_id: gameId });
 
