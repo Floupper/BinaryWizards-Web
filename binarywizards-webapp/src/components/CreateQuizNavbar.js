@@ -94,7 +94,7 @@ export default function CreateQuizNavbar({ handleSubmitSave, quiz, setQuiz }) {
         {/* Public Checkbox */}
         <div className="flex flex-col sm:flex-row items-center sm:space-x-4 w-full sm:w-auto">
           <label htmlFor="quiz_checkbox" className="text-lg font-medium">
-            Public
+            Publish
           </label>
           <input
             type="checkbox"

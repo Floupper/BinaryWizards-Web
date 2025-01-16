@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SignupUser, checkUsernameAvailability } from '../services/SignupService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 function SignupScreen() {
@@ -10,6 +10,7 @@ function SignupScreen() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -41,7 +42,9 @@ function SignupScreen() {
       const token = await SignupUser(username, password);
       if (token) {
         localStorage.setItem('token', token);
-        navigate('/dashboard');
+        const redirectPath = searchParams.get('redirect') || '/dashboard';
+        navigate(redirectPath);
+        return;
       }
     } catch (error) {
       console.error('Error during sign up:', error);
@@ -126,7 +129,7 @@ function SignupScreen() {
           </button>
           <button
             type="button"
-            onClick={() => navigate('/signin')}
+            onClick={() => (searchParams.get('redirect') ? navigate('/signin?redirect=' + searchParams.get('redirect')) : navigate('/signin'))}
             className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
             disabled={isLoading}
           >

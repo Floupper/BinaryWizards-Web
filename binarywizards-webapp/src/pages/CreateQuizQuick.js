@@ -9,7 +9,6 @@ import Spinner from '../components/Spinner';
 
 export default function CreateQuizQuick() {
   const navigate = useNavigate();
-  const [isTimeCheck, setIsTimeCheck] = useState(false);
   const [selectedTimer, setSelectedTimer] = useState("none");
   const [categories, setCategories] = useState([]);
   const [difficulties, setDifficulties] = useState([]);
@@ -19,6 +18,7 @@ export default function CreateQuizQuick() {
   const [isLoading, setIsLoading] = useState(false);
 
   const timers = [
+    { value: "none", label: "None", color: "bg-gray-200" },
     { value: "easy", label: "30s", color: "bg-green-200" },
     { value: "medium", label: "15s", color: "bg-yellow-200" },
     { value: "hard", label: "5s", color: "bg-red-200" },
@@ -29,7 +29,7 @@ export default function CreateQuizQuick() {
       try {
         const categories = await CreateQuizService.fetchCategories();
         setCategories(categories);
-
+        handleSetTimer("none");
         const difficulties = await CreateQuizService.fetchDifficulties();
         setDifficulties(difficulties);
       } catch (error) {
@@ -148,55 +148,23 @@ export default function CreateQuizQuick() {
                 ))}
               </select>
             </div>
-            <div>
-              <div
-                onClick={() => setIsTimeCheck(!isTimeCheck)}
-                className={`flex items-center cursor-pointer space-x-2 px-4 py-2 rounded-xl border-2 transition-all duration-200 ease-in-out ${isTimeCheck ? "bg-blue-500 border-blue-500 text-white" : "bg-gray-200 border-gray-300"
-                  }`}
-              >
-                <div
-                  className={`w-6 h-6 rounded-full border-2 transition-all duration-200 ${isTimeCheck ? "bg-blue-500 border-blue-500" : "bg-white border-gray-400"
-                    } flex justify-center items-center`}
-                >
-                  {isTimeCheck && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-4 h-4 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  )}
-                </div>
-                <span>Time</span>
+            <div className="">
+              <h2 className="font-semibold mb-4 text-center">Select a Timer</h2>
+              <div className="flex items-center mb-6">
+                {timers.map((timer) => (
+                  <button
+                    key={timer.value}
+                    type="button"
+                    onClick={() => handleSetTimer(timer.value)}
+                    className={`w-full h-20 rounded-lg mx-2 flex items-center justify-center text-lg font-medium ${timer.color} ${selectedTimer === timer.value
+                        ? "ring-4 ring-offset-2 ring-red-500 ring-offset-white"
+                        : "border border-gray-300"
+                      }`}
+                  >
+                    {timer.label}
+                  </button>
+                ))}
               </div>
-              {isTimeCheck && (
-                <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-96 mt-4">
-                  <h2 className="font-semibold mb-4 text-center">Select a Timer</h2>
-                  <div className="flex justify-around items-center mb-6">
-                    {timers.map((timer) => (
-                      <button
-                        key={timer.value}
-                        type="button"
-                        onClick={() => handleSetTimer(timer.value)}
-                        className={`w-20 h-20 rounded-lg flex items-center justify-center text-lg font-medium ${timer.color} ${selectedTimer === timer.value
-                          ? "ring-4 ring-offset-2 ring-red-500 ring-offset-white"
-                          : "border border-gray-300"
-                          }`}
-                      >
-                        {timer.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
             <button
               type="button"

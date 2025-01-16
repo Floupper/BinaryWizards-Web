@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import Navbar from "../components/Navbar";
 import QuestionHUD from "../components/QuestionHUD";
 import QuestionChoiceMultiple from "../components/QuestionChoiceMultiple";
+import ChronoRound from "../components/ChronoRound";
 
 const SERVER_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -26,6 +27,10 @@ export default function ScrumModeQuestionScreen() {
   const [socket, setSocket] = useState(null);
   const [correctAnswer, setCorrectAnswer] = useState(null);
   const [timeAnswer, setTimeAnswer] = useState(null);  
+  const [timeAvailable, setTimeAvailable] = useState(null);
+  const [remainingTime, setRemainingTime] = useState(null);
+  const chronoInterval = useRef(null);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -74,7 +79,39 @@ export default function ScrumModeQuestionScreen() {
     setIsAnswered(false);
     setCorrectOptionIndex(null);
     setCorrectAnswer(null);
+    setTimeAvailable(data.question_timeout);
   };
+
+    useEffect(() => {
+      if (timeAvailable === null) return;
+  
+      const now = Date.now();
+      const endTime = now + timeAvailable;
+      const savedEndTime = localStorage.getItem(`endTime_${gameId}`);
+      const finalEndTime =
+        savedEndTime && parseInt(savedEndTime, 10) > now
+          ? parseInt(savedEndTime, 10)
+          : endTime;
+  
+      localStorage.setItem(`endTime_${gameId}`, finalEndTime);
+      updateRemainingTime(finalEndTime);
+  
+      clearInterval(chronoInterval.current);
+      chronoInterval.current = setInterval(() => {
+        updateRemainingTime(finalEndTime);
+      }, 1000);
+  
+      return () => clearInterval(chronoInterval.current);
+    }, [timeAvailable, gameId]);
+
+    const updateRemainingTime = (endTime) => {
+      const timeLeft = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+      setRemainingTime(timeLeft);
+
+      if (timeLeft <= 0) {
+        clearInterval(chronoInterval.current);
+      }
+    };
 
   const handleAnswerSelect = (selectedOptionIndex) => {
     console.log(selectedOptionIndex)
@@ -98,6 +135,7 @@ export default function ScrumModeQuestionScreen() {
         setCorrectOptionIndex(data.correct_option_index);
         setCorrectAnswer(socket.selectedOptionIndex === data.correct_option_index);
         setIsAnswered(true);
+        setTimeAnswer(data.time_remaining/1000);
       });
     }
   }, [socket]);
@@ -113,14 +151,17 @@ export default function ScrumModeQuestionScreen() {
   };
 
   useEffect(() => {
-      if (timeAnswer === null || timeAnswer <= 0) return;
-  
+   console.log(timeAnswer)
+    if (timeAnswer === null || timeAnswer <= 0) return;
       const interval = setInterval(() => {
-        setTimeAnswer((prevTimeAnswer) => Math.max(prevTimeAnswer - 0.46, 0));
-      }, 0.9);
-  
-      return () => clearInterval(interval);
-    }, [timeAnswer]);
+      setTimeAnswer((prevTimeAnswer) => {
+        const newTime = Math.max(prevTimeAnswer - timeAnswer / 100, 0); 
+        if (newTime === 0) clearInterval(interval);
+        return newTime;
+      });
+    }, 10);
+    return () => clearInterval(interval); 
+  }, [timeAnswer]);
   
   const answerBgClass = correctAnswer === true
     ? "bg-green-500"
@@ -154,14 +195,16 @@ export default function ScrumModeQuestionScreen() {
             />
           </div>
           <div style={{ width: "100%" }}>
-            {correctAnswer !== null && (
-              <div
+            {isAnswered && correctAnswer !== null ? (
+                <div
                 style={{
-                  width: `${Math.min(120 - timeAnswer / 50, 100)}%`,
+                  width: `${Math.min(100 - timeAnswer / 5 * 100, 100)}%`,
                 }}
                 className="h-3 bg-[#8B2DF1] rounded-xl"
-              />)
-            }
+              />
+            ) : (
+              <ChronoRound remainingTime={remainingTime / 30 * 100} />
+            )}
           </div>
         </div>
       </div>

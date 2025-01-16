@@ -72,18 +72,16 @@ const CustomAudioPlayer = ({ src, deleteAudio, option_id, setOnSelected }) => {
 
             <div className="flex items-center justify-between w-full mb-2">
                 <button
-                    onClick={togglePlayPause}
-                    className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
-                    aria-label={isPlaying ? "Pause audio" : "Play audio"}
+                    onClick={(event) => togglePlayPause(event)}
+                    className="px-4 py-2 text-white bg-[#8B2DF1] rounded-lg hover:bg-blue-600 focus:outline-none"
                 >
                     {isPlaying ? "Pause" : "Play"}
                 </button>
 
                 {setOnSelected && (
                     <button
-                        onClick={handleSelected}
-                        className="px-4 mx-2 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
-                        aria-label="Select this option"
+                        onClick={() => handleSelected()}
+                        className="px-4 mx-2 py-2 text-white bg-[#8B2DF1] rounded-lg hover:bg-blue-600 focus:outline-none"
                     >
                         Select
                     </button>

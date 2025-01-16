@@ -46,13 +46,17 @@ export default function TeamModeConfigureScreen() {
     }
   };
 
+  const isGameReady = selectedQuiz && teams.length > 0 && selectedTimer !== "none";
+
   return (
     <div
-  className="flex flex-col h-screen"
-  style={{
-    backgroundImage: "url('/backgrounds/team_background.svg')",
-  }}
->
+      className="min-h-screen"
+      style={{
+        backgroundImage: "url('/backgrounds/team_background.svg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
 
       <Navbar />
       <div className="flex flex-col items-center flex-grow text-center px-4">
@@ -85,7 +89,10 @@ export default function TeamModeConfigureScreen() {
 
           <button
             onClick={handleInitializeGame}
-            className="bg-black text-white py-2 px-3 sm:px-4 rounded-lg hover:bg-gray-800 text-sm sm:text-base"
+            disabled={!isGameReady}
+            className={`py-2 px-3 sm:px-4 rounded-lg text-sm sm:text-base 
+    ${isGameReady ? "bg-black text-white hover:bg-gray-800" : "bg-gray-400 text-gray-700 cursor-not-allowed opacity-50"}
+  `}
           >
             Initialize Game
           </button>
@@ -93,11 +100,11 @@ export default function TeamModeConfigureScreen() {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-4xl">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-red-500 hover:text-red-700"
+              className="absolute top-4 right-4 text-red-500 hover:text-red-700 focus:outline-none"
             >
               Close
             </button>

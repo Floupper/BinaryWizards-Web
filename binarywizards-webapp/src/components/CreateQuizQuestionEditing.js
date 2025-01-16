@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
-export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, questionId, quizId, refreshQuizQuestionEditing, setRefreshQuizQuestions }) {
+export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, questionId, quizId, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSaveQuestionEditedWhenChangingSelectedQuestion }) {
 
 
 
@@ -17,10 +17,7 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
   useEffect(() => {
     if (refreshQuizQuestionEditing) {
       setRefreshQuizQuestions(false);
-
-
       setIsEditing(false);
-
       setQuestionInfo((prevState) => ({
         ...prevState,
         questionDifficulty: 'easy',
@@ -29,6 +26,7 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
         questionType: 'text',
         questionCorrectAnswer: 0,
         questionOptions: ["", "", "", ""],
+        questionId: questionId,
       }));
 
 
@@ -42,6 +40,7 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
   }, []);
 
   useEffect(() => {
+
     if (!questionId) return;
 
     CreateQuizService.fetchQuestionDetails(quizId, questionId)
@@ -64,6 +63,7 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
           questionDifficulty: question.question_difficulty,
           questionCategory: question.question_category,
           questionType: question.question_type,
+          questionId: questionId,
         }));
 
 
