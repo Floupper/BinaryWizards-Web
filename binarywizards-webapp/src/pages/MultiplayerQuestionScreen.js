@@ -180,7 +180,7 @@ export default function MultiplayerQuestionScreen() {
     <div
       className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center"
       style={{
-        backgroundImage: "url('/backgrounds/team_background.svg')",
+        backgroundImage: "url('/backgrounds/TeamBackground.svg')",
       }}
     >
       <Navbar />
