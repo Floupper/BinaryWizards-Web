@@ -4,6 +4,8 @@ import JoinQuizSearchQuiz from "../components/JoinQuizSearchQuiz";
 import ScrumModeService from "../services/ScrumModeService";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import JoinQuizCard from "../components/JoinQuizCard";
+
 
 const queryClient = new QueryClient();
 
@@ -41,29 +43,39 @@ export default function ScrumModeConfigureScreen() {
       <Navbar />
       <div className="flex flex-col justify-center items-center flex-grow p-4">
         <div className="flex flex-col bg-white p-20 rounded-xl gap-y-6">
-            <label className="block mb-2 font-semibold text-3xl text-center pb-4">Max Players</label>
-            <input
-              type="number"
-              min="1"
-              value={maxPlayers}
-              onChange={(e) => setMaxPlayers(parseInt(e.target.value, 10))}
-              className="w-6/12 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  self-center"
-            />
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-black text-white py-2 px-6 rounded-lg hover:bg-white hover:text-black border-2 border-black mt-14"
-            >
-              Select Quiz
-            </button>
+          <label className="block mb-2 font-semibold text-3xl text-center pb-4">Max Players</label>
+          <input
+            type="number"
+            min="1"
+            value={maxPlayers}
+            onChange={(e) => setMaxPlayers(parseInt(e.target.value, 10))}
+            className="w-6/12 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  self-center"
+          />
+          {selectedQuiz && (
+            <div className="mt-4 sm:mt-6">
+              <JoinQuizCard quiz={selectedQuiz} enableModal={false} />
+            </div>
+          )}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-black text-white py-2 px-6 rounded-lg hover:bg-white hover:text-black border-2 border-black mt-14"
+          >
+            Select Quiz
+          </button>
 
-            <button
-              onClick={handleInitializeGame}
-              className="bg-black text-white py-2 px-6 rounded-lg hover:bg-white hover:text-black border-2 border-black"
-            >
-              Initialize Game
-            </button>
-          </div>
+          <button
+            onClick={handleInitializeGame}
+            disabled={!selectedQuiz}
+            className={`py-2 px-6 rounded-lg border-2 border-black mt-4 ${selectedQuiz
+                ? "bg-black text-white hover:bg-white hover:text-black"
+                : "bg-gray-400 text-gray-700 cursor-not-allowed opacity-50"
+              }`}
+          >
+            Initialize Game
+          </button>
+
         </div>
+      </div>
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
@@ -73,6 +85,9 @@ export default function ScrumModeConfigureScreen() {
             >
               Close
             </button>
+
+
+
             <QueryClientProvider client={queryClient}>
               <JoinQuizSearchQuiz
                 onQuizSelect={(quiz) => {
