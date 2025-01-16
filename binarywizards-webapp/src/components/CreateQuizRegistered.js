@@ -265,52 +265,62 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             />
           </Modal>
         </div>
-        <div className="grid min-grid-rows-[70vh_1fr_2fr] grid-flow-col pl-4 m-4">
-          <div
-            className="flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 mr-5 bg-white rounded-md p-4 shadow-lg h-[60vh]">
-            <div
-              className="flex items-center flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-500 p-0">
-              <div className="flex flex-col w-[35vh]">
-                {quizQuestions.map((question) => (
-                  <QuestionInContainer
-                    key={question.question_id}
-                    question_text={question.question_text}
-                    question_id={question.question_id}
-                    question_index={question.question_index || 0}
-                    setIdQuestionSelected={setIdQuestionSelected}
-                    setTypeOfScreen={setTypeOfScreen}
-                    handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
-                    handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}
-                  />
-                ))}
-                {TypeOfScreen === 'create' ?
-                  <QuestionInContainerDefault />
-                  : <div></div>}
-              </div></div>
-          </div>
-          <div className="flex justify-center items-center">
-            <div className="flex flex-col justify-center w-[30vh] gap-y-2 bg-white rounded-md m-2 p-4 shadow-lg">
-              <button
-                onClick={handleSubmitCreateQuestion}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-black hover:text-white"
-              >
-                Create question
-              </button>
-              <button
-                onClick={handleSubmitImportTrivia}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-black hover:text-white"
-              >
-                Import questions from Trivia
-              </button>
 
+
+
+
+        <div className=" flex flex-row pl-4 ">
+          <div className="flex flex-col gap-4 max-w-min">
+            <div
+              className="flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500  bg-white rounded-md p-4 shadow-lg h-[60vh] ">
+              <div
+                className="flex items-center flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-500 p-0 max-w-min">
+                <div className="flex flex-col w-[35vh]">
+                  {quizQuestions.map((question) => (
+                    <QuestionInContainer
+                      key={question.question_id}
+                      question_text={question.question_text}
+                      question_id={question.question_id}
+                      question_index={question.question_index || 0}
+                      setIdQuestionSelected={setIdQuestionSelected}
+                      setTypeOfScreen={setTypeOfScreen}
+                      handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
+                      handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}
+                    />
+                  ))}
+                  {TypeOfScreen === 'create' ?
+                    <QuestionInContainerDefault />
+                    : <div></div>}
+                </div></div>
+            </div>
+            <div className="flex max-h-max align-items-center flex-col gap-4">
+              <div className="flex  flex-col justify-center w-[40vh] gap-y-2 bg-white rounded-md  p-4 shadow-lg">
+                <button
+                  onClick={handleSubmitCreateQuestion}
+                  className="px-4 py-2  text-gray-800 rounded-lg bg-black text-white hover:bg-white hover:text-black hover:border-black border"
+                >
+                  Create question
+                </button>
+                <button
+                  onClick={handleSubmitImportTrivia}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-white hover:border-black border "
+                >
+                  Import questions from Trivia
+                </button>
+
+              </div>
             </div>
           </div>
+
           {/*  CreateQuizQuestionEditing */}
 
-          <div className="flex flex-col row-span-2 col-start-2 col-span-2 rounded-lg pr-10">
-            <ProgressBar progress={progress} />
-            <div>
+          <div className="flex w-full flex-col rounded-lg px-5 ">
+            <div className=" flex align-items-center justify-center my-2">
+              <ProgressBar progress={progress} />
+            </div>
+            <div className="s-full">
               <CreateQuizzQuestionEditing
+
                 questionInfo={questionInfo}
                 setQuestionInfo={setQuestionInfo}
                 TypeOfScreen={TypeOfScreen}

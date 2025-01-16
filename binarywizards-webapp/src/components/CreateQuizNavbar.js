@@ -45,7 +45,7 @@ export default function CreateQuizNavbar({ handleSubmitSave, quiz, setQuiz }) {
   };
 
   return (
-    <nav className="flex items-center justify-between py-4 px-4 bg-white text-black m-3 border-2 rounded-2xl  border-2 border-[#8A2BF2] ">
+    <nav className="flex items-center justify-between py-4 px-4 bg-white text-black mx-2 border-2 rounded-2xl  border-2 border-[#8A2BF2] ">
 
 
 

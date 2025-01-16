@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
+import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
-
-export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions, handleSelectedQuestionAfterCreate }) {
+export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, questionId, quizId, refreshQuizQuestionEditing, setRefreshQuizQuestions }) {
 
 
 
@@ -13,7 +13,7 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, Typ
 
   //Si la question est une édition
   const [isEditing, setIsEditing] = useState(false);
-
+  const [categories, setCategories] = useState([]);
   useEffect(() => {
     if (refreshQuizQuestionEditing) {
       setRefreshQuizQuestions(false);
@@ -35,6 +35,11 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, Typ
 
     }
   }, [refreshQuizQuestionEditing]);
+  useEffect(() => {
+    CreateQuizService.fetchCategories()
+      .then(data => setCategories(data))
+      .catch(error => toast.info('Error fetching categories:', error));
+  }, []);
 
   useEffect(() => {
     if (!questionId) return;
@@ -93,7 +98,10 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, Typ
 
 
 
+  const handleOnDifficultyChange = (newDifficulty) => {
+    setQuestionInfo((prevState) => ({ ...prevState, questionDifficulty: newDifficulty }));
 
+  };
 
 
 
@@ -109,7 +117,7 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, Typ
     <div>
 
       <div className="bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4] p-2 rounded-lg  ">
-        <div className="flex flex-col flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[50vh] ">
+        <div className="flex flex-col flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[65vh] ">
           {/* Editable Question */}
           <div className="flex items-center items-center justify-center text-center mb-6">
             {!isEditing ? (
@@ -141,12 +149,48 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, Typ
             <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
               onClick={() => handleOnTypeQuestionChange("audio")}>Audio</button>
           </div>
-          <div className="flex  justify-center">
+          <div className="flex overflow-auto justify-center max-h-64 ">
             <MultipleChoiceQuestion
 
               questionInfo={questionInfo}
               setQuestionInfo={setQuestionInfo}
             />
+          </div>
+          <div className="flex gap-2 items-baseline">
+
+            <div className="flex items-baseline space-x-4">
+              <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
+                Difficulty question
+              </label>
+              <DifficultyQuizStars
+                className="flex-grow"
+                initialDifficulty={questionInfo.questionDifficulty}
+                onDifficultyChange={handleOnDifficultyChange}
+              />
+            </div>
+            <span className="text-2xl text-gray-500">|</span>
+            {/* Category Selection */}
+            <div className="flex items-baseline space-x-4">
+              <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
+                Category
+              </label>
+              <select
+                id="category"
+                value={questionInfo.questionCategory}
+                onChange={(e) => setQuestionInfo((prevState) => ({ ...prevState, questionCategory: e.target.value }))}
+                className="p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
           </div>
         </div >
       </div>

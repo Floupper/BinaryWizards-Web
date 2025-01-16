@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import CreateQuizService from '../services/CreateQuizService';
 import CustomAudioPlayer from './CustomAudioPlayer';
-import DifficultyQuizStars from './GlobalQuizDifficultyStars';
+
 
 export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
   const [file, setFile] = useState(null);
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
-  const [categories, setCategories] = useState([]);
+
 
   if (!questionInfo.questionOptions || questionInfo.questionOptions.length === 0) {
     setQuestionInfo((prevState) => ({
@@ -19,11 +19,6 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
     }));
   }
 
-  useEffect(() => {
-    CreateQuizService.fetchCategories()
-      .then(data => setCategories(data))
-      .catch(error => toast.info('Error fetching categories:', error));
-  }, []);
 
 
   const handleChangeAnswerText = (event, index) => {
@@ -141,10 +136,7 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
       console.error(error);
     }
   };
-  const handleOnDifficultyChange = (newDifficulty) => {
-    setQuestionInfo((prevState) => ({ ...prevState, questionDifficulty: newDifficulty }));
 
-  };
 
 
   return (
@@ -170,8 +162,8 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                 value={option || ""}
                 onChange={(e) => handleChangeAnswerText(e, id)}
                 placeholder={`Option ${id + 1}`}
-                className={`p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${questionInfo.questionCorrectAnswer === id
-                  ? "border-4 border-[#417336] bg-white"
+                className={`p-3 border  rounded-md focus:ring-blue-500 focus:border-blue-500 ${questionInfo.questionCorrectAnswer === id
+                  ? "border-4 border-[#417336] "
                   : "border-2 border-gray-300"
                   }`}
               />
@@ -300,42 +292,7 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
 
         )}
       </div>
-      <div className="flex gap-2 items-baseline">
 
-        <div className="flex items-baseline space-x-4">
-          <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
-            Difficulty question
-          </label>
-          <DifficultyQuizStars
-            className="flex-grow"
-            initialDifficulty={questionInfo.questionDifficulty}
-            onDifficultyChange={handleOnDifficultyChange}
-          />
-        </div>
-        <span className="text-2xl text-gray-500">|</span>
-        {/* Category Selection */}
-        <div className="flex items-baseline space-x-4">
-          <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
-            Category
-          </label>
-          <select
-            id="category"
-            value={questionInfo.questionCategory}
-            onChange={(e) => setQuestionInfo((prevState) => ({ ...prevState, questionCategory: e.target.value }))}
-            className="p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.name}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-      </div>
     </div>
   );
 }
