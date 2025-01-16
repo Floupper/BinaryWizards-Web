@@ -11,7 +11,6 @@ export default function EndScreen() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Extraction des paramètres d'état ou valeurs par défaut
   const { 
     difficulty_level, 
     correct_answers_nb, 
@@ -21,14 +20,12 @@ export default function EndScreen() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // Rediriger si des données essentielles sont absentes
   useEffect(() => {
     if (!correct_answers_nb || !nb_questions_total || !quizId) {
       navigate("/");
     }
   }, [correct_answers_nb, nb_questions_total, quizId, navigate]);
 
-  // Gestion de la redémarrage du quiz
   const handleRestartQuiz = async () => {
     if (!quizId) return;
 

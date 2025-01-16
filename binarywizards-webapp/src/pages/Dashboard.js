@@ -23,7 +23,9 @@ export default function Dashboard() {
   }, [userId]);
 
   return (
-    <div className="bg-[#F4F2EE] min-h-screen w-screen">
+    <div className="bg-[#F4F2EE] min-h-screen w-screen"
+      style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
+    >
       <Navbar />
       <div className="p-6 w-full">
         <div className="flex space-x-4 mb-4 text-xl lg:text-2xl">

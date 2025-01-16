@@ -51,13 +51,15 @@ export default function CreatedQuizCard({ quiz, route }) {
         >
           <FaInfo />
         </button>
-        <button
+        {quiz.is_public ? (
+          <button
           onClick={handlePlayClick}
           className="text-3xl hover:text-green-700 transition-colors duration-200"
           title="Play Quiz"
-        >
-          <FaPlay />
-        </button>
+          >
+            <FaPlay />
+          </button>
+        ) : null}
       </div>
       {isModalOpen && (
         <TimeModal closeModal={closeModal} quiz_id={quiz.id} />
