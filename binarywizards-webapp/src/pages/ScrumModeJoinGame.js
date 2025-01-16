@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import Navbar from "../components/Navbar";
 import { fetchUsername } from "../services/JoinQuizService";
+import Spinner from "../components/Spinner";
 
 const SERVER_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 
@@ -19,51 +20,67 @@ export default function ScrumModeJoinGame() {
   const [quizDetails, setQuizDetails] = useState(null);
   const [isGameOwner, setIsGameOwner] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isStarting, setIsStarting] = useState(false);
 
   useEffect(() => {
-    fetchUsername();
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate(`/signin?redirect=/scrum-mode-lobby/${gameId}`);
-      return;
-    }
+    const initializeGame = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate(`/signin?redirect=/scrum-mode-lobby/${gameId}`);
+          return;
+        }
 
-    const newSocket = io(SERVER_URL, {
-      extraHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+        await fetchUsername();
+        const newSocket = io(SERVER_URL, {
+          extraHeaders: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-    newSocket.on("connect", () => {
-      if (localStorage.getItem("hasJoined") !== gameId) {
-        newSocket.emit("joinGame", { game_id: gameId });
-        localStorage.setItem("hasJoined", gameId);
+        newSocket.on("connect", () => {
+          if (localStorage.getItem("hasJoined") !== gameId) {
+            newSocket.emit("joinGame", { game_id: gameId });
+            localStorage.setItem("hasJoined", gameId);
+          }
+          newSocket.emit("getGameInformations", { game_id: gameId });
+        });
+
+        newSocket.on("gameInformations", (data) => {
+          setQuizDetails(data.quizzes || null);
+          setIsGameOwner(data.is_game_owner || false);
+          setIsLoading(false);
+        });
+
+        newSocket.on("playerJoined", (data) => {
+          if (data?.playerList) {
+            setPlayers(data.playerList);
+            localStorage.setItem(`players_${gameId}`, JSON.stringify(data.playerList));
+          }
+        });
+
+        newSocket.on("gameStarted", () => {
+          setIsStarting(true);
+          setTimeout(() => {
+            navigate(`/scrum-mode-question/${gameId}`);
+          }, 500);
+        });
+
+        setSocket(newSocket);
+        return () => newSocket.disconnect();
+      } catch (error) {
+        console.error("Error initializing game:", error);
+        setIsLoading(false);
       }
-      newSocket.emit("getGameInformations", { game_id: gameId });
-    });
+    };
 
-    newSocket.on("gameInformations", (data) => {
-      setQuizDetails(data.quizzes || null);
-      setIsGameOwner(data.is_game_owner || false);
-    });
-
-    newSocket.on("playerJoined", (data) => {
-      if (data?.playerList) {
-        setPlayers(data.playerList);
-        localStorage.setItem(`players_${gameId}`, JSON.stringify(data.playerList));
-      }
-    });
-
-    newSocket.on("gameStarted", () => {
-      navigate(`/scrum-mode-question/${gameId}`);
-    });
-
-    setSocket(newSocket);
-    return () => newSocket.disconnect();
+    initializeGame();
   }, [gameId, navigate]);
 
   const handleStartGame = () => {
     if (socket) {
+      setIsStarting(true);
       socket.emit("startGame", { game_id: gameId });
     }
   };
@@ -71,6 +88,14 @@ export default function ScrumModeJoinGame() {
   const handleCopyGameCode = () => {
     navigator.clipboard.writeText(gameId).then(() => alert("Game code copied!"));
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <Spinner size="8" className="text-black mb-4" />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -96,8 +121,19 @@ export default function ScrumModeJoinGame() {
             <p className="mt-4 text-xl text-gray-700">Scan this code to join!</p>
           </div>
           {isGameOwner && (
-            <button onClick={handleStartGame} className="mt-10 bg-[#8B2DF1] text-white py-6 px-12 rounded-lg text-xl hover:bg-[#7A24E1]">
-              Start Game
+            <button
+              onClick={handleStartGame}
+              disabled={isStarting}
+              className={`mt-10 bg-[#8B2DF1] text-white py-6 px-12 rounded-lg text-xl transition
+                ${isStarting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[#7A24E1]'}`}
+            >
+              {isStarting ? (
+                <div className="flex items-center">
+                  <Spinner size="5" className="mr-2" />
+                </div>
+              ) : (
+                "Start Game"
+              )}
             </button>
           )}
         </div>
@@ -137,7 +173,6 @@ export default function ScrumModeJoinGame() {
               ) : (
                 <p className="text-xl text-gray-500">No players have joined yet.</p>
               )}
-
             </div>
           </div>
         </div>
