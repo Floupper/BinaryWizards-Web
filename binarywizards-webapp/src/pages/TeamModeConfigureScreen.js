@@ -57,9 +57,7 @@ export default function TeamModeConfigureScreen() {
     <div
       className="min-h-screen"
       style={{
-        backgroundImage: "url('/backgrounds/team_background.svg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundImage: "url('/backgrounds/TeamBackground.svg')",
       }}
     >
       <Navbar />
