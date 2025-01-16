@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createGameWithQuizId } from '../services/JoinQuizService';
 import Navbar from '../components/Navbar';
+import Spinner from '../components/Spinner';
 
 export default function CreateQuizQuick() {
   const navigate = useNavigate();
@@ -150,14 +151,12 @@ export default function CreateQuizQuick() {
             <div>
               <div
                 onClick={() => setIsTimeCheck(!isTimeCheck)}
-                className={`flex items-center cursor-pointer space-x-2 px-4 py-2 rounded-xl border-2 transition-all duration-200 ease-in-out ${
-                  isTimeCheck ? "bg-blue-500 border-blue-500 text-white" : "bg-gray-200 border-gray-300"
-                }`}
+                className={`flex items-center cursor-pointer space-x-2 px-4 py-2 rounded-xl border-2 transition-all duration-200 ease-in-out ${isTimeCheck ? "bg-blue-500 border-blue-500 text-white" : "bg-gray-200 border-gray-300"
+                  }`}
               >
                 <div
-                  className={`w-6 h-6 rounded-full border-2 transition-all duration-200 ${
-                    isTimeCheck ? "bg-blue-500 border-blue-500" : "bg-white border-gray-400"
-                  } flex justify-center items-center`}
+                  className={`w-6 h-6 rounded-full border-2 transition-all duration-200 ${isTimeCheck ? "bg-blue-500 border-blue-500" : "bg-white border-gray-400"
+                    } flex justify-center items-center`}
                 >
                   {isTimeCheck && (
                     <svg
@@ -187,11 +186,10 @@ export default function CreateQuizQuick() {
                         key={timer.value}
                         type="button"
                         onClick={() => handleSetTimer(timer.value)}
-                        className={`w-20 h-20 rounded-lg flex items-center justify-center text-lg font-medium ${timer.color} ${
-                          selectedTimer === timer.value
-                            ? "ring-4 ring-offset-2 ring-red-500 ring-offset-white"
-                            : "border border-gray-300"
-                        }`}
+                        className={`w-20 h-20 rounded-lg flex items-center justify-center text-lg font-medium ${timer.color} ${selectedTimer === timer.value
+                          ? "ring-4 ring-offset-2 ring-red-500 ring-offset-white"
+                          : "border border-gray-300"
+                          }`}
                       >
                         {timer.label}
                       </button>
@@ -203,34 +201,14 @@ export default function CreateQuizQuick() {
             <button
               type="button"
               onClick={handleSubmit}
-              className={`w-full bg-black text-white py-2 rounded-md transition duration-300 ${
-                isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
-              }`}
+              className={`w-full bg-black text-white py-2 rounded-md transition duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+                }`}
               disabled={isLoading}
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
-                  <svg
-                    className="animate-spin h-5 w-5 mr-3 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v8H4z"
-                    ></path>
-                  </svg>
-                  Loading...
+                  <Spinner />
+                  <span>Loading...</span>
                 </div>
               ) : (
                 'Start'

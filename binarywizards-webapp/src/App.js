@@ -22,37 +22,40 @@ import ScrumModeConfigureScreen from './pages/ScrumModeConfigureScreen.js';
 import ScrumModeJoinGame from './pages/ScrumModeJoinGame.js';
 import ScrumModeQuestionScreen from './pages/ScrumModeQuestionScreen.js';
 import ScrumEndScreen from './pages/ScrumEndScreen.js';
+import { LoadingProvider } from './LoadingContext';
 
 function App() {
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomeScreen />} />
-          <Route path="/join-quiz" element={<JoinQuiz />} />
-          <Route path="/create-quiz" element={<CreateQuiz />} />
-          <Route path="/edit-quiz" element={<CreateQuiz />} />
-          <Route path="/signin" element={<ConnectScreen />} />
-          <Route path="/signup" element={<SignupScreen />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/history-game-play/:quizId" element={<HistoryGamePlay />} />
-          <Route path="/dashboard/detail-create-quiz/:quizId" element={<QuizRecapScreen />} />
-          <Route path="/question" element={<Navigate to="/" replace />} />
-          <Route path="/question/:id" element={<QuestionScreen />} />
-          <Route path="/end" element={<EndScreen />} />
-          <Route path="/quiz-created/:quizId" element={<QuizCreated />} />
-          <Route path="/quick-quiz" element={< CreateQuizQuick />} />
-          <Route path="/team-mode-configure" element={<TeamModeConfigureScreen />} />
-          <Route path="/team-mode-join-team/:gameId" element={<TeamModeJoinTeam />} />
-          <Route path="/team-question/:gameId" element={<MultiplayerQuestionScreen />} /> 
-          <Route path="/team-end" element={<TeamEndScreen />} />
-          <Route path="/scrum-mode-configure" element={<ScrumModeConfigureScreen />} />
-          <Route path="/scrum-mode-lobby/:gameId" element={<ScrumModeJoinGame />} />
-          <Route path="/scrum-mode-question/:gameId" element={<ScrumModeQuestionScreen />} />
-          <Route path="/scrum-end" element={<ScrumEndScreen />} />
-        </Routes>
-      </Router>
-      <ToastContainer />
+      <LoadingProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<HomeScreen />} />
+            <Route path="/join-quiz" element={<JoinQuiz />} />
+            <Route path="/create-quiz" element={<CreateQuiz />} />
+            <Route path="/edit-quiz" element={<CreateQuiz />} />
+            <Route path="/signin" element={<ConnectScreen />} />
+            <Route path="/signup" element={<SignupScreen />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/history-game-play/:quizId" element={<HistoryGamePlay />} />
+            <Route path="/dashboard/detail-create-quiz/:quizId" element={<QuizRecapScreen />} />
+            <Route path="/question" element={<Navigate to="/" replace />} />
+            <Route path="/question/:id" element={<QuestionScreen />} />
+            <Route path="/end" element={<EndScreen />} />
+            <Route path="/quiz-created/:quizId" element={<QuizCreated />} />
+            <Route path="/quick-quiz" element={< CreateQuizQuick />} />
+            <Route path="/team-mode-configure" element={<TeamModeConfigureScreen />} />
+            <Route path="/team-mode-join-team/:gameId" element={<TeamModeJoinTeam />} />
+            <Route path="/team-question/:gameId" element={<MultiplayerQuestionScreen />} />
+            <Route path="/team-end" element={<TeamEndScreen />} />
+            <Route path="/scrum-mode-configure" element={<ScrumModeConfigureScreen />} />
+            <Route path="/scrum-mode-lobby/:gameId" element={<ScrumModeJoinGame />} />
+            <Route path="/scrum-mode-question/:gameId" element={<ScrumModeQuestionScreen />} />
+            <Route path="/scrum-end" element={<ScrumEndScreen />} />
+          </Routes>
+        </Router>
+        <ToastContainer />
+      </LoadingProvider>
     </>
   );
 }
