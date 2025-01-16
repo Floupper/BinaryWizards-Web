@@ -48,7 +48,7 @@ export default function JoinQuizResumeGame() {
   }, [hasNextPage, fetchNextPage, handleScroll]);
 
   return (
-    <div className="mx-auto px-4 xl:px-20 py-6 w-full">
+    <div className="mx-auto px-4 xl:px-20 p-6 w-full">
       {/* Game List */}
       <div
         className="rounded-lg overflow-y-auto my-6 bg-gray-100 p-6 border-4 border-[#8B2DF1] h-[30rem]"
@@ -84,7 +84,7 @@ export default function JoinQuizResumeGame() {
         {!isLoading &&
           (!data?.pages ||
             data.pages.flatMap((page) => page.unfinished_games || []).length === 0) && (
-            <div className="flex justify-center items-center h-20">
+            <div className="flex justify-center items-center mb-2">
               <span className="text-lg text-gray-500">
                 No games found.
               </span>

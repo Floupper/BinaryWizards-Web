@@ -70,8 +70,9 @@ export default function QuestionScreen() {
     try {
       setLoading(true);
       const data = await GetQuestion(id);
-
+      console.log('presque à la fin')
       if (data.game_finished) {
+        console.log('à la fin')
         setScore(data.correct_answers_nb);
         navigate("/end", {
           state: {
@@ -151,7 +152,7 @@ export default function QuestionScreen() {
           <div className="text-center">Loading...</div>
         </div>
       )}
-      <div className={`${correctAnswer === false ? 'bg-red-500' : ''} ${correctAnswer === true ? 'bg-green-500' : ''} ${correctAnswer === null ? 'bg-gradient-to-r from-orange-400 to-green-400' : ''} p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10`}>
+      <div className={`${correctAnswer === false ? 'bg-red-500' : ''} ${correctAnswer === true ? 'bg-green-500' : ''} ${correctAnswer === null ? 'bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4]' : ''} p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10`}>
         <div className="flex flex-col items-center space-y-6 p-6 bg-[#F4F2EE] rounded-lg shadow-md w-full">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-center text-black">{questionText}</h1>
           <div className="flex justify-center w-full">

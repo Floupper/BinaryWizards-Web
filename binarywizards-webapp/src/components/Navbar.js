@@ -87,30 +87,37 @@ export default function Navbar() {
           </NavLink>
         </li>
 
-        {/* Create Quiz */}
-        <li className="flex items-center mr-5">
-          <NavLink
-            to="/create-quiz"
-            className={`flex items-center text-black hover:scale-105 ${isActiveLink("/create-quiz") ? "underline underline-offset-8" : ""}`} // Surbrillance conditionnelle
-            style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
-          >
-            {token ? (
-              <>
-                <EmojiProvider data={emojiData}>
-                  <Emoji name="paintbrush" width={20} />
-                </EmojiProvider>
-                <span className="ml-2">Create Quiz</span>
-              </>
-            ) : (
-              <>
-                <EmojiProvider data={emojiData}>
-                  <Emoji name="bomb" width={20} />
-                </EmojiProvider>
-                <span className="ml-2">Quick Quiz</span>
-              </>
-            )}
-          </NavLink>
-        </li>
+        {token ? (
+          <li className="flex items-center mr-5">
+            <NavLink
+              to="/create-quiz"
+              className={`flex items-center text-black hover:scale-105 ${
+                isActiveLink("/create-quiz") ? "underline underline-offset-8" : ""
+              }`} // Surbrillance conditionnelle
+              style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+            >
+              <EmojiProvider data={emojiData}>
+                <Emoji name="paintbrush" width={20} />
+              </EmojiProvider>
+              <span className="ml-2">Create Quiz</span>
+            </NavLink>
+          </li>
+        ) : (
+          <li className="flex items-center mr-5">
+            <NavLink
+              to="/quick-quiz"
+              className={`flex items-center text-black hover:scale-105 ${
+                isActiveLink("/quick-quiz") ? "underline underline-offset-8" : ""
+              }`}
+              style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+            >
+              <EmojiProvider data={emojiData}>
+                <Emoji name="bomb" width={20} />
+              </EmojiProvider>
+              <span className="ml-2">Quick Quiz</span>
+            </NavLink>
+          </li>
+        )}
 
         {token ? (
           <>

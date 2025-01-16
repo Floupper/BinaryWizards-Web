@@ -44,7 +44,7 @@ function App() {
           <Route path="/quick-quiz" element={< CreateQuizQuick />} />
           <Route path="/team-mode-configure" element={<TeamModeConfigureScreen />} />
           <Route path="/team-mode-join-team/:gameId" element={<TeamModeJoinTeam />} />
-          <Route path="/team-question/:gameId" element={<MultiplayerQuestionScreen />} /> 
+          <Route path="/team-question/:gameId" element={<MultiplayerQuestionScreen />} />
           <Route path="/team-end" element={<TeamEndScreen />} />
           <Route path="/scrum-mode-configure" element={<ScrumModeConfigureScreen />} />
           <Route path="/scrum-mode-lobby/:gameId" element={<ScrumModeJoinGame />} />

@@ -91,7 +91,7 @@ export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal }) {
     };
 
     return (
-        <div className="flex flex-col items-center p-8 mx-auto">
+        <div className="flex flex-col items-center p-6 mx-auto">
             <label htmlFor="title" className="mb-2 font-medium">Title or Description</label>
             <input
                 type="text"
@@ -147,7 +147,7 @@ export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal }) {
 
             {/* Quiz List */}
             <div
-                className="rounded-lg overflow-y-auto max-h-60 my-6 bg-gray-100 p-6 border-4 border-[#8B2DF1]"
+                className="rounded-lg overflow-y-auto max-h-60 my-6 bg-gray-100 p-6 border-4 border-[#8B2DF1] w-full"
                 ref={quizListRef}
             >
                 {data?.pages?.flatMap((page) => page?.quizzes || []).map((item) => (
