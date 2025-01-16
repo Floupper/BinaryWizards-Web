@@ -131,7 +131,6 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
         };
       });
 
-      toast.success(`${type === "audio" ? "Audio" : "Image"} uploadé avec succès !`);
     } catch (error) {
       toast.error(`Erreur lors de l'upload du fichier ${type}.`);
       console.error(error);
