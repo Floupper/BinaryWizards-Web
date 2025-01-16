@@ -59,7 +59,7 @@ export default function MultiplayerQuestionScreen() {
     socket.on("answerResult", (data) => {
       setIdCorrectAnswers(data.correct_option_index);
       setIsAnswered(true);
-      setTimeAnswer(data.time_remaining);
+      setTimeAnswer(data.time_remaining/1000);
 
       setCorrectAnswer(selectedId === data.correct_option_index);
     });
@@ -166,12 +166,14 @@ export default function MultiplayerQuestionScreen() {
 
   useEffect(() => {
     if (timeAnswer === null || timeAnswer <= 0) return;
-
-    const interval = setInterval(() => {
-      setTimeAnswer((prevTimeAnswer) => Math.max(prevTimeAnswer - 0.46, 0));
-    }, 0.9);
-
-    return () => clearInterval(interval);
+      const interval = setInterval(() => {
+      setTimeAnswer((prevTimeAnswer) => {
+        const newTime = Math.max(prevTimeAnswer - timeAnswer / 100, 0); 
+        if (newTime === 0) clearInterval(interval);
+        return newTime;
+      });
+    }, 10);
+    return () => clearInterval(interval); 
   }, [timeAnswer]);
 
   return (
@@ -218,7 +220,7 @@ export default function MultiplayerQuestionScreen() {
             {correctAnswer !== null ? (
               <div
                 style={{
-                  width: `${Math.min(120 - timeAnswer / 50, 100)}%`,
+                  width: `${Math.min(100 - timeAnswer / 5 * 100, 100)}%`,
                 }}
                 className="h-3 bg-[#8B2DF1] rounded-xl"
               />

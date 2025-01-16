@@ -41,7 +41,7 @@ const TimeModal = ({ closeModal, quiz, quiz_id }) => {
             <button
               key={index}
               onClick={() => setSelectedTimer(timer.value)}
-              className={`w-20 h-20 rounded-lg flex items-center justify-center text-lg font-medium ${timer.color} ${
+              className={`w-full h-16 rounded-lg mx-2 flex items-center justify-center text-lg font-medium ${timer.color} ${
                 selectedTimer === timer.value
                   ? "ring-4 ring-offset-2 ring-red-500 ring-offset-white"
                   : "border border-gray-300"
