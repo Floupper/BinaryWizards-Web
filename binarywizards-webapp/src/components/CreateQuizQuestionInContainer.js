@@ -61,7 +61,7 @@ export function QuestionInContainerDefault() {
       <div className="text-lg font-semibold text-gray-800">Question</div>
       <div className="flex items-start gap-2">
         <div
-          className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-r from-${color1} from-10% via-${color2} via-30% to-${color3} rounded-lg p-2 shadow-lg border-[#8B2DF1] border-2`}
+          className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-r from-${color1}  via-${color2} to-${color3} rounded-lg p-2 shadow-lg border-[#8B2DF1] border-2`}
         >
           <div className="text-l text-white text-center">Your question</div>
           <div className="flex justify-center items-center w-full h-12 overflow-hidden">

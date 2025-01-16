@@ -116,13 +116,15 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
   return (
     <div>
 
-      <div className="bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4] p-2 rounded-lg  ">
-        <div className="flex flex-col flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[65vh] ">
+      <div className="bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4] p-2 m-8 rounded-lg  ">
+
+        <div className="flex flex-col flex-nowrap justify-center p-12 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[65vh] ">
+
           {/* Editable Question */}
           <div className="flex items-center items-center justify-center text-center mb-6">
             {!isEditing ? (
               <h1
-                className="text-2xl font-semibold text-gray-800 cursor-pointer hover:underline "
+                className="text-4xl font-semibold text-gray-800 cursor-pointer hover:underline "
                 onClick={handleEditClick}
               >
                 {questionInfo.questionText}
@@ -139,15 +141,18 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
             )}
           </div>
 
-          <div className="display:flex text-center justify-center">
-            <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
+          <div className="display:flex text-center justify-center text-black">
+
+            <button className={`m-2  bg-white px-4 py-2 hover:text-white hover:bg-[#8B2DF1] rounded-lg ${questionInfo.questionType === "text" ? "border-2 border-[#8B2DF1]" : ""} `}
               onClick={() => handleOnTypeQuestionChange("text")}>Texte</button>
 
-            <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
+            <button className={`m-2  bg-white px-4 py-2 hover:text-white hover:bg-[#8B2DF1] rounded-lg ${questionInfo.questionType === "image" ? "border-2 border-[#8B2DF1]" : ""} `}
               onClick={() => handleOnTypeQuestionChange("image")}>Image</button>
 
-            <button className='m-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 '
+            <button className={`m-2  bg-white px-4 py-2 hover:text-white hover:bg-[#8B2DF1] rounded-lg ${questionInfo.questionType === "audio" ? "border-2 border-[#8B2DF1]" : ""} `}
               onClick={() => handleOnTypeQuestionChange("audio")}>Audio</button>
+
+
           </div>
           <div className="flex overflow-auto justify-center max-h-64 ">
             <MultipleChoiceQuestion
@@ -156,43 +161,48 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
               setQuestionInfo={setQuestionInfo}
             />
           </div>
-          <div className="flex gap-2 items-baseline">
 
-            <div className="flex items-baseline space-x-4">
-              <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
-                Difficulty question
-              </label>
-              <DifficultyQuizStars
-                className="flex-grow"
-                initialDifficulty={questionInfo.questionDifficulty}
-                onDifficultyChange={handleOnDifficultyChange}
-              />
-            </div>
-            <span className="text-2xl text-gray-500">|</span>
-            {/* Category Selection */}
-            <div className="flex items-baseline space-x-4">
-              <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
-                Category
-              </label>
-              <select
-                id="category"
-                value={questionInfo.questionCategory}
-                onChange={(e) => setQuestionInfo((prevState) => ({ ...prevState, questionCategory: e.target.value }))}
-                className="p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="" disabled>
-                  Select a category
-                </option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.name}>
-                    {category.name}
+
+          <div className=" pt-10 self-center justify-center">
+            <div className="flex flex-row gap-2 items-baseline">
+
+              <div className="flex  items-baseline space-x-4">
+                <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
+                  Difficulty question
+                </label>
+                <DifficultyQuizStars
+                  className="flex-grow"
+                  initialDifficulty={questionInfo.questionDifficulty}
+                  onDifficultyChange={handleOnDifficultyChange}
+                />
+              </div>
+              <span className="text-2xl text-gray-500">|</span>
+              {/* Category Selection */}
+              <div className="flex items-baseline space-x-4">
+                <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
+                  Category
+                </label>
+                <select
+                  id="category"
+                  value={questionInfo.questionCategory}
+                  onChange={(e) => setQuestionInfo((prevState) => ({ ...prevState, questionCategory: e.target.value }))}
+                  className="p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="" disabled>
+                    Select a category
                   </option>
-                ))}
-              </select>
-            </div>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
+            </div>
           </div>
-        </div >
+        </div>
+
       </div>
     </div >
   );

@@ -184,9 +184,9 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                     />
                     <label
                       htmlFor={`fileInput-${id}`}
-                      className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
+                      className="px-4 py-2 bg-white text-black  rounded cursor-pointer hover:text-white hover:bg-[#8B2DF1]"
                     >
-                      Importer une image
+                      Import image
                     </label>
                   </>
                 ) : (
@@ -216,9 +216,9 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                     />
                     <label
                       htmlFor={`audioInput-${id}`}
-                      className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
+                      className="px-4 py-2 bg-white text-black  rounded cursor-pointer hover:text-white hover:bg-[#8B2DF1]"
                     >
-                      Importer un fichier audio
+                      Import audio
                     </label>
                   </>
                 ) : (
