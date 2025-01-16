@@ -209,7 +209,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     }
 
     if (!questionId) {
-      console.log("here");
+
       setQuestionInfo(editingQuestionInfo);
     }
     else {
