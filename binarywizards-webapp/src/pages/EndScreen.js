@@ -23,10 +23,10 @@ export default function EndScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!correct_answers_nb || !nb_questions_total || !quizId) {
+    if (!nb_questions_total || !quizId) {
       navigate("/");
     }
-  }, [correct_answers_nb, nb_questions_total, quizId, navigate]);
+  }, [correct_answers_nb, nb_questions_total, quizId]);
 
   const handleRestartQuiz = async () => {
     if (!quizId) return;

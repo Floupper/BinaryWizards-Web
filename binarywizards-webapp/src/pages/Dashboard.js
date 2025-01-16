@@ -31,7 +31,7 @@ export default function Dashboard() {
   }, [userId]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-cover bg-center"
+    <div className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
     >
       <Navbar />
