@@ -50,9 +50,11 @@ export default function TeamModeConfigureScreen() {
 
   return (
     <div
-      className="flex flex-col h-screen"
+      className="min-h-screen"
       style={{
         backgroundImage: "url('/backgrounds/team_background.svg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
 
@@ -98,11 +100,11 @@ export default function TeamModeConfigureScreen() {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-4xl">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-red-500 hover:text-red-700"
+              className="absolute top-4 right-4 text-red-500 hover:text-red-700 focus:outline-none"
             >
               Close
             </button>

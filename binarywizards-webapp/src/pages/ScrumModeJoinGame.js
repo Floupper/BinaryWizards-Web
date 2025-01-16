@@ -5,6 +5,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import Navbar from "../components/Navbar";
+import { fetchUsername } from "../services/JoinQuizService";
 
 const SERVER_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 
@@ -20,6 +21,7 @@ export default function ScrumModeJoinGame() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
+    fetchUsername();
     const token = localStorage.getItem("token");
     if (!token) {
       navigate(`/signin?redirect=/scrum-mode-lobby/${gameId}`);
@@ -80,7 +82,6 @@ export default function ScrumModeJoinGame() {
       }}
     >
       <Navbar />
-
       <div className="flex flex-wrap justify-center items-center space-y-8 lg:space-y-0 lg:space-x-8 overflow-hidden" style={{ minHeight: 'calc(90vh - 64px)' }}>
         <div className="w-full lg:w-2/5 flex flex-col items-center">
           <p className="text-4xl mb-4">Game Code:</p>
@@ -121,14 +122,22 @@ export default function ScrumModeJoinGame() {
             </div>
             <div className="grid grid-cols-2 gap-6">
               {players.length > 0 ? (
-                players.map((player, index) => (
-                  <div key={index} className="border border-black rounded-lg overflow-hidden p-4 bg-white text-black text-xl">
-                    {player}
-                  </div>
-                ))
+                players.map((player, index) => {
+                  const isCurrentUser = player === localStorage.getItem("username");
+                  return (
+                    <div
+                      key={index}
+                      className={`border ${isCurrentUser ? "border-4" : "border"} border-black rounded-lg overflow-hidden p-4 bg-white text-black text-xl`}
+                      style={isCurrentUser ? { borderWidth: "0.30rem" } : {}}
+                    >
+                      {player}
+                    </div>
+                  );
+                })
               ) : (
                 <p className="text-xl text-gray-500">No players have joined yet.</p>
               )}
+
             </div>
           </div>
         </div>
