@@ -79,13 +79,13 @@ export default function MultiplayerQuestionScreen() {
 
     const now = Date.now();
     const endTime = now + timeAvailable * 1000;
-    const savedEndTime = localStorage.getItem(`endTime_${gameId}`);
+    const savedEndTime = localStorage.getItem(`endTime`);
     const finalEndTime =
       savedEndTime && parseInt(savedEndTime, 10) > now
         ? parseInt(savedEndTime, 10)
         : endTime;
 
-    localStorage.setItem(`endTime_${gameId}`, finalEndTime);
+    localStorage.setItem(`endTime`, finalEndTime);
     updateRemainingTime(finalEndTime);
 
     clearInterval(chronoInterval.current);

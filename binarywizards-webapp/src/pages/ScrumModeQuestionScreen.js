@@ -68,7 +68,7 @@ export default function ScrumModeQuestionScreen() {
 
   const handleNewQuestion = (data) => {
     setRemainingTime(null);
-    localStorage.removeItem(`endTime_${gameId}`);
+    localStorage.removeItem(`endTime`);
     clearInterval(chronoInterval.current);
 
     setQuestionText(data.question_text);
@@ -92,13 +92,13 @@ export default function ScrumModeQuestionScreen() {
 
     const now = Date.now();
     const endTime = now + timeAvailable;
-    const savedEndTime = localStorage.getItem(`endTime_${gameId}`);
+    const savedEndTime = localStorage.getItem(`endTime`);
     const finalEndTime =
       savedEndTime && parseInt(savedEndTime, 10) > now
         ? parseInt(savedEndTime, 10)
         : endTime;
 
-    localStorage.setItem(`endTime_${gameId}`, finalEndTime);
+    localStorage.setItem(`endTime`, finalEndTime);
     updateRemainingTime(finalEndTime);
 
     clearInterval(chronoInterval.current);

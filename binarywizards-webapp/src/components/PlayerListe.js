@@ -27,8 +27,10 @@ export default function PlayersList({ game_mode }) {
 
   useEffect(() => {
     fetchUsername();
-    const savedTeam = localStorage.getItem(`team_${gameId}`);
-    if (savedTeam) {
+    const savedTeam = localStorage.getItem(`team`);
+    const gameIdStorage = localStorage.getItem("hasJoined");
+
+    if (savedTeam && gameIdStorage === gameId) {
       setSelectedTeam(savedTeam);
       setShowTeamPopup(false);
     } else {
@@ -48,6 +50,10 @@ export default function PlayersList({ game_mode }) {
         extraHeaders: {
           Authorization: `Bearer ${userToken}`,
         },
+      });
+
+      newSocket.on("connect", () => {
+        newSocket.emit("getGameInformations", { game_id: gameId });
       });
 
       newSocket.on("teamSwitch", (data) => {
@@ -137,7 +143,7 @@ export default function PlayersList({ game_mode }) {
       setSelectedTeam(teamName);
       setShowTeamPopup(false);
       localStorage.setItem("hasJoined", gameId);
-      localStorage.setItem(`team_${gameId}`, teamName);
+      localStorage.setItem(`team`, teamName);
     }
   };
 
@@ -151,7 +157,7 @@ export default function PlayersList({ game_mode }) {
     const gameUrl = `${window.location.origin}/team-mode-join-team/${gameId}`;
     navigator.clipboard.writeText(gameUrl).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 600); 
+      setTimeout(() => setCopied(false), 600);
     });
   };
 
@@ -160,7 +166,7 @@ export default function PlayersList({ game_mode }) {
       socket.emit("switchTeam", { game_id: gameId, new_team_name: newTeamName });
 
       setSelectedTeam(newTeamName);
-      localStorage.setItem(`team_${gameId}`, newTeamName);
+      localStorage.setItem(`team`, newTeamName);
     }
   };
 
@@ -252,7 +258,7 @@ export default function PlayersList({ game_mode }) {
               <div className="grid grid-cols-2 gap-6">
                 {teams.length > 0 ? (
                   teams.map((team, index) => {
-                    const isUserTeam = team.name === localStorage.getItem(`team_${gameId}`);
+                    const isUserTeam = team.name === localStorage.getItem(`team`);
                     return (
                       <div
                         key={index}
