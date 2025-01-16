@@ -68,7 +68,7 @@ export default function ScrumModeConfigureScreen() {
       <Navbar />
       <div className="flex flex-col justify-center items-center flex-grow p-4">
         <div className="flex flex-col bg-white p-20 rounded-xl gap-y-6">
-        <label className="block mb-2 font-semibold text-3xl text-center pb-4">Max Players</label>
+          <label className="block mb-2 font-semibold text-3xl text-center pb-4">Max Players</label>
           <input
             type="number"
             min="1"
@@ -81,13 +81,13 @@ export default function ScrumModeConfigureScreen() {
               <JoinQuizCard quiz={selectedQuiz} enableModal={false} />
             </div>
           )}
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-black text-white py-2 px-6 rounded-lg hover:bg-white hover:text-black border-2 border-black mt-14 transition"
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-black text-white py-2 px-6 rounded-lg hover:bg-white hover:text-black border-2 border-black mt-14 transition"
             disabled={isInitializing}
-            >
-              Select Quiz
-            </button>
+          >
+            Select Quiz
+          </button>
 
           <button
             onClick={handleInitializeGame}
