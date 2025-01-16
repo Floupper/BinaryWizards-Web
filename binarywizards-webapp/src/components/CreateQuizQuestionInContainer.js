@@ -11,7 +11,7 @@ export default function QuestionInContainer({
     selectQuestion(question_id);
   }
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col pt-5 items-center gap-2">
       <div className="flex flex-row items-center gap-2 text-lg font-semibold text-gray-800">
         <button
           id={question_id}

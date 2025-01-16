@@ -200,6 +200,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
         isEditing: true, // Remplace la propriété isEditing
       });
       */
+
       setEditingQuestionInfo({
         ...questionInfo, // Copie toutes les propriétés de editingQuestionInfo
         questionId: '', // Remplace la propriété questionId
@@ -208,7 +209,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     }
 
     if (!questionId) {
-
+      console.log("here");
       setQuestionInfo(editingQuestionInfo);
     }
     else {
@@ -288,9 +289,11 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
       if (!questionInfo.questionId) {
         closeQuestionInContainerDefault();
+
       }
 
       resetQuestionInfo();
+
 
       refreshQuizQuestions();
       return true;
@@ -318,9 +321,9 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   const handleSubmitCreateQuestion = async (event) => {
     try {
-      console.log(questionInfo);
+
       if (questionInfo.isEditing || questionInfo.questionId) {
-        console.log("submit");
+
         await handleSubmitActualQuestion();
       }
       setTypeOfScreen('create');
@@ -328,6 +331,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       setIdQuestionSelected('');
       setQuestionListReload(true);
       setNewQuestion(true);
+
 
       setEditingQuestionInfo({
         questionText: 'Write your question',
@@ -338,6 +342,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
         questionCorrectAnswer: 0,
         isEditing: true,
       })
+
       selectQuestion('');
     } catch (error) {
     }
@@ -379,12 +384,12 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       if (idQuestionSelected || newQuestion) {
 
         if (await handleSubmitActualQuestion()) {
-          console.log("here1");
+
           await handleSubmitSaveQuiz();
         }
       }
       else {
-        console.log("here2");
+
         await handleSubmitSaveQuiz();
       }
 
