@@ -22,6 +22,19 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     questionCorrectAnswer: 0,
   });
 
+
+  const [editingQuestionInfo, setEditingQuestionInfo] = useState(
+    {
+      questionText: 'Write your question',
+      questionOptions: ["", "", "", ""],
+      questionType: 'text',
+      questionDifficulty: 'easy',
+      questionCategory: '',
+      questionCorrectAnswer: 0,
+    }
+  );
+
+
   const [quizId, setQuizId] = useState(quizIdParameter || '');
 
   const [isTriviaModalOpen, setTrivialModalOpen] = useState(false);
@@ -47,6 +60,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     description: '',
     isPublic: false,
   });
+
+  const [newQuestion, setNewQuestion] = useState(false);
 
   const [refreshQuizQuestionEditing, setRefreshQuizQuestions] = useState('false');
 
@@ -88,8 +103,13 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   //Met à jour la barre de progression
   useEffect(() => {
-    if (quizQuestions.length > 0) {
-      const progressValue = ((idQuestionSelectedForProgress + 1) / quizQuestions.length) * 100;
+
+    if (idQuestionSelectedForProgress === -1) {
+      setProgress(100);
+    }
+    else if (quizQuestions.length > 0) {
+      const progressValue = ((idQuestionSelectedForProgress + 1) / (quizQuestions.length + (newQuestion ? 1 : 0))) * 100;
+
       setProgress(progressValue);
     }
     else {
@@ -99,6 +119,20 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
 
 
+  const handleDeleteQuestionInContainerDefault = () => {
+    setTypeOfScreen('edit');
+    setIdQuestionSelected('');
+    setNewQuestion(false);
+    setQuestionInfo({
+      questionText: 'Write your question',
+      questionOptions: ["", "", "", ""],
+      questionType: 'text',
+      questionDifficulty: 'easy',
+      questionCategory: '',
+      questionCorrectAnswer: 0,
+    });
+
+  }
 
   const refreshQuizQuestions = () => {
     if (quizId) {
@@ -111,8 +145,10 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   };
 
 
+
   const handleSelectedQuestionAfterCreate = (questionId) => {
     setTypeOfScreen('edit');
+    setNewQuestion(false);
     setIdQuestionSelected(questionId);
   };
 
@@ -124,6 +160,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     setTypeOfScreen('create');
     setRefreshQuizQuestions(true);
     setIdQuestionSelected('');
+    setNewQuestion(true);
   };
 
   const handleSubmitImportTrivia = (event) => {
@@ -133,20 +170,21 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
   //Submit de la question
   const handleSubmitActualQuestion = async () => {
-    if (!questionInfo.questionCategory) {
+    const currentQuestionInfo = TypeOfScreen === 'edit' ? questionInfo : editingQuestionInfo;
+
+    if (!currentQuestionInfo.questionCategory) {
       toast.error("Please select a category.");
       return;
     }
-    if (!questionInfo.questionText) {
+    if (!currentQuestionInfo.questionText) {
       toast.error("Please enter a question.");
       return;
-
     }
-    if (!questionInfo.questionDifficulty) {
+    if (!currentQuestionInfo.questionDifficulty) {
       toast.error("Please select a difficulty.");
       return;
     }
-    if (questionInfo.questionOptions.some(choice => !choice || !choice.trim())) {
+    if (currentQuestionInfo.questionOptions.some(choice => !choice || !choice.trim())) {
       toast.error("Please ensure all choices are filled out.");
       return;
     }
@@ -155,21 +193,25 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
       const options = [];
       options.push(
         ...questionInfo.questionOptions.map((choice, index) => ({
-          option_content: choice,
-          is_correct_answer: questionInfo.questionCorrectAnswer === index,
+          option_content: TypeOfScreen === 'edit' ? choice : editingQuestionInfo.questionOptions[index],
+          is_correct_answer:
+            TypeOfScreen === 'edit'
+              ? questionInfo.questionCorrectAnswer === index
+              : editingQuestionInfo.questionCorrectAnswer === index,
           option_index: index,
-
         }))
       );
 
       const requestBody = {
-        question_text: questionInfo.questionText,
-        question_difficulty: questionInfo.questionDifficulty,
-        question_category: questionInfo.questionCategory,
-        question_type: questionInfo.questionType,
+        question_text: TypeOfScreen === 'edit' ? questionInfo.questionText : editingQuestionInfo.questionText,
+        question_difficulty: TypeOfScreen === 'edit' ? questionInfo.questionDifficulty : editingQuestionInfo.questionDifficulty,
+        question_category: TypeOfScreen === 'edit' ? questionInfo.questionCategory : editingQuestionInfo.questionCategory,
+        question_type: TypeOfScreen === 'edit' ? questionInfo.questionType : editingQuestionInfo.questionType,
         options: options,
       };
 
+
+      console.log(requestBody);
       const action = TypeOfScreen === "edit"
         ? CreateQuizService.updateQuestion
         : CreateQuizService.createQuestion;
@@ -239,6 +281,7 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     CreateQuizService.deleteQuestion(quizId, questionId)
       .then(() => {
         toast.info('Question deleted successfully!');
+        setIdQuestionSelected('');
         refreshQuizQuestions();
       })
       .catch(error => {
@@ -288,8 +331,13 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                       handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}
                     />
                   ))}
-                  {TypeOfScreen === 'create' ?
-                    <QuestionInContainerDefault />
+                  {(newQuestion) ?
+                    <QuestionInContainerDefault
+                      deleteNewQuestion={handleDeleteQuestionInContainerDefault}
+                      setIdQuestionSelected={setIdQuestionSelected}
+                      setTypeOfScreen={setTypeOfScreen}
+                      handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}
+                    />
                     : <div></div>}
                 </div></div>
             </div>
@@ -315,24 +363,31 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
           {/*  CreateQuizQuestionEditing */}
 
           <div className="flex w-full flex-col rounded-lg px-5 ">
-            <div className=" flex align-items-center justify-center my-2">
-              <ProgressBar progress={progress} />
-            </div>
-            <div className="s-full">
-              <CreateQuizzQuestionEditing
+            {(newQuestion || idQuestionSelected) && (
+              <>
+                <div className=" flex align-items-center justify-center my-2">
+                  <ProgressBar progress={progress} />
+                </div>
+                <div className="s-full">
 
-                questionInfo={questionInfo}
-                setQuestionInfo={setQuestionInfo}
-                TypeOfScreen={TypeOfScreen}
-                quizId={quizId}
-                questionId={idQuestionSelected}
-                refreshQuizQuestions={refreshQuizQuestions}
-                refreshQuizQuestionEditing={refreshQuizQuestionEditing}
-                setRefreshQuizQuestions={setRefreshQuizQuestions}
-                handleSelectedQuestionAfterCreate={handleSelectedQuestionAfterCreate}
-              />
-            </div>
+                  <CreateQuizzQuestionEditing
+                    questionInfo={TypeOfScreen === 'edit' ? questionInfo : editingQuestionInfo}
+                    setQuestionInfo={TypeOfScreen === 'edit' ? setQuestionInfo : setEditingQuestionInfo}
+                    TypeOfScreen={TypeOfScreen}
+                    quizId={quizId}
+                    questionId={idQuestionSelected}
+                    refreshQuizQuestions={refreshQuizQuestions}
+                    refreshQuizQuestionEditing={refreshQuizQuestionEditing}
+                    setRefreshQuizQuestions={setRefreshQuizQuestions}
+                    handleSelectedQuestionAfterCreate={handleSelectedQuestionAfterCreate}
+                  />
 
+                </div>
+
+
+              </>
+
+            )}
           </div>
         </div>
       </div>

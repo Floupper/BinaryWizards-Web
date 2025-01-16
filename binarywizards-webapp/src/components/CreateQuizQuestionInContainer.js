@@ -7,13 +7,7 @@ export default function QuestionInContainer({
   handleSubmitDeleteQuestion,
   handleSelectedQuestionProgressBar,
 }) {
-  const colors = [
-    "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]",
-    "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]",
-    "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]",
-    "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]",
-    "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]",
-  ];
+  const colors = "from-[#EFDEB3] via-[#8A2BF2] to-[#377DC9]";
 
   const backgroundClass = colors[question_index % colors.length];
 
@@ -38,7 +32,7 @@ export default function QuestionInContainer({
 
       <div className="flex items-start gap-2">
         <div
-          className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-r ${backgroundClass} rounded-lg p-2 shadow-lg cursor-pointer border-[#8B2DF1] border-2`}
+          className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-b ${colors} rounded-lg p-2 shadow-lg cursor-pointer border-[#8B2DF1] border-2`}
           onClick={handleEdit}
         >
           <div className="text-l text-white text-center">{question_text}</div>
@@ -51,17 +45,32 @@ export default function QuestionInContainer({
   );
 }
 
-export function QuestionInContainerDefault() {
-  const colors = "from-[#EFDEB3] to-[#8A2BF2] to-[#377DC9]";
-  const color1 = "[#EFDEB3]";
-  const color2 = "[#8A2BF2]";
-  const color3 = "[#377DC9]";
+export function QuestionInContainerDefault({ deleteNewQuestion, setIdQuestionSelected, handleSelectedQuestionProgressBar, setTypeOfScreen }) {
+  const colors = "from-[#EFDEB3] via-[#8A2BF2] to-[#377DC9]";
+
+  const handleEdit = () => {
+    setTypeOfScreen("create");
+    setIdQuestionSelected('');
+    handleSelectedQuestionProgressBar(-1);
+  };
+
+
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="text-lg font-semibold text-gray-800">Question</div>
+      <div className="flex flex-row items-center gap-2 text-lg font-semibold text-gray-800">
+        {deleteNewQuestion && (
+          <button
+            className="text-gray-500 text-2xl transition-transform bg-transparent border-none hover:bg-transparent"
+            onClick={() => deleteNewQuestion()}
+          >
+            🗑️
+          </button>)}
+        Question</div>
+
       <div className="flex items-start gap-2">
         <div
-          className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-r from-${color1}  via-${color2} to-${color3} rounded-lg p-2 shadow-lg border-[#8B2DF1] border-2`}
+          className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-b ${colors} cursor-pointer rounded-lg p-2 shadow-lg border-[#8B2DF1] border-2`}
+          onClick={() => handleEdit('')}
         >
           <div className="text-l text-white text-center">Your question</div>
           <div className="flex justify-center items-center w-full h-12 overflow-hidden">

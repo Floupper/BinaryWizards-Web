@@ -17,10 +17,7 @@ export default function CreateQuizzQuestion({ questionInfo, setQuestionInfo, que
   useEffect(() => {
     if (refreshQuizQuestionEditing) {
       setRefreshQuizQuestions(false);
-
-
       setIsEditing(false);
-
       setQuestionInfo((prevState) => ({
         ...prevState,
         questionDifficulty: 'easy',

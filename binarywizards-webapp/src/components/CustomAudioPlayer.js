@@ -56,14 +56,14 @@ const CustomAudioPlayer = ({ src, deleteAudio, option_id, setOnSelected }) => {
                 {/* Bouton Lecture/Pause */}
                 <button
                     onClick={(event) => togglePlayPause(event)}
-                    className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                    className="px-4 py-2 text-white bg-[#8B2DF1] rounded-lg hover:bg-blue-600 focus:outline-none"
                 >
                     {isPlaying ? "Pause" : "Lecture"}
                 </button>
                 {setOnSelected && (
                     <button
                         onClick={() => handleSelected()}
-                        className="px-4 mx-2 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                        className="px-4 mx-2 py-2 text-white bg-[#8B2DF1] rounded-lg hover:bg-blue-600 focus:outline-none"
                     >
                         Sélectionner
                     </button>
