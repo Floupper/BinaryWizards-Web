@@ -6,6 +6,7 @@ import { createGameWithQuizId } from "../services/JoinQuizService";
 import Navbar from "../components/Navbar";
 import { EmojiProvider, Emoji } from "react-apple-emojis";
 import emojiData from "react-apple-emojis/src/data.json";
+import ConfettiComponent from "../animations/ConfettiComponent";
 
 export default function EndScreen() {
   const navigate = useNavigate();
@@ -130,6 +131,9 @@ export default function EndScreen() {
             </p>
           )}
         </div>
+      </div>
+      <div>
+        <ConfettiComponent width={window.innerWidth} height={window.innerHeight} />
       </div>
     </div>
   );

@@ -182,7 +182,7 @@ export default function MultiplayerQuestionScreen() {
       }}
     >
       <Navbar />
-      <div className="mb-6 w-full sm:w-10/12 md:w-8/12 lg:w-6/12">
+      <div className="mb-6 w-full sm:w-10/12 ">
         <QuestionHUD party_parameters={paramHUD} />
       </div>
 

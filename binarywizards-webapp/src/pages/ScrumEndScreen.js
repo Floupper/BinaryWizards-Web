@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { EmojiProvider, Emoji } from "react-apple-emojis";
 import emojiData from "react-apple-emojis/src/data.json";
+import ConfettiComponent from "../animations/ConfettiComponent";
 
 export default function ScrumEndScreen() {
   const location = useLocation();
@@ -83,6 +84,9 @@ export default function ScrumEndScreen() {
             </button>
           </div>
         </div>
+      </div>
+      <div>
+        <ConfettiComponent width={window.innerWidth} height={window.innerHeight} />
       </div>
     </div>
   );
