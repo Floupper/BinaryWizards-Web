@@ -127,9 +127,15 @@ export default function PlayersList({ game_mode }) {
 
   const handleJoinTeam = (teamName) => {
     if (socket) {
+
+      if (localStorage.getItem("hasJoined") && localStorage.getItem("hasJoined") !== gameId) {
+        socket.emit("leaveGame", { game_id: localStorage.getItem("hasJoined") });
+      }
+
       socket.emit("joinGame", { game_id: gameId, team_name: teamName });
       setSelectedTeam(teamName);
       setShowTeamPopup(false);
+      localStorage.setItem("hasJoined", gameId);
       localStorage.setItem(`team_${gameId}`, teamName);
     }
   };
@@ -190,7 +196,7 @@ export default function PlayersList({ game_mode }) {
       )}
 
       {!showTeamPopup && (
-        <div className="flex flex-wrap justify-center items-center space-y-8 lg:space-y-0 lg:space-x-8 overflow-hidden" style={{ minHeight: 'calc(90vh - 64px)' }}> 
+        <div className="flex flex-wrap justify-center items-center space-y-8 lg:space-y-0 lg:space-x-8 overflow-hidden" style={{ minHeight: 'calc(90vh - 64px)' }}>
           {/* Left Section */}
           <div className="w-full lg:w-2/5 flex flex-col items-center">
             <p className="text-4xl mb-4">Game Code:</p>
@@ -200,10 +206,10 @@ export default function PlayersList({ game_mode }) {
                 <FontAwesomeIcon icon={faCopy} />
               </button>
             </div>
-            <div className="mt-8"> 
+            <div className="mt-8">
               <QRCodeCanvas
                 value={`${window.location.origin}/team-mode-join-team/${gameId}`}
-                size={184} 
+                size={184}
                 className="shadow-lg rounded-lg"
               />
               <p className="mt-4 text-xl text-gray-700">Scan this code to join!</p>
@@ -228,7 +234,7 @@ export default function PlayersList({ game_mode }) {
 
 
             <div className="mt-12 p-6 border-2 border-[#8B2DF1] rounded-lg bg-opacity-70 bg-transparent max-h-[500px] overflow-y-auto">
-              <div className="flex justify-between items-center mb-8"> 
+              <div className="flex justify-between items-center mb-8">
                 <h2 className="text-3xl">Teams</h2>
                 <div className="flex items-center space-x-4">
                   <span className="text-2xl">👤</span>
