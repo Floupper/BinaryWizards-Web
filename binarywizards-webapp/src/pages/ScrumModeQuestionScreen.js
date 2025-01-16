@@ -26,12 +26,12 @@ export default function ScrumModeQuestionScreen() {
   const [correctOptionIndex, setCorrectOptionIndex] = useState(null);
   const [socket, setSocket] = useState(null);
   const [correctAnswer, setCorrectAnswer] = useState(null);
-  const [timeAnswer, setTimeAnswer] = useState(null);  
+  const [timeAnswer, setTimeAnswer] = useState(null);
   const [timeAvailable, setTimeAvailable] = useState(null);
   const [maxTimeAnswer, setMaxTimeAnswer] = useState(null);
   const [remainingTime, setRemainingTime] = useState(null);
   const chronoInterval = useRef(null);
-  
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -67,6 +67,10 @@ export default function ScrumModeQuestionScreen() {
   }, [gameId, navigate]);
 
   const handleNewQuestion = (data) => {
+    setRemainingTime(null);
+    localStorage.removeItem(`endTime_${gameId}`);
+    clearInterval(chronoInterval.current);
+
     setQuestionText(data.question_text);
     setOptions(data.options);
     setQuestionIndex(data.question_index);
@@ -83,61 +87,61 @@ export default function ScrumModeQuestionScreen() {
     setTimeAvailable(data.question_timeout);
   };
 
-    useEffect(() => {
-      if (timeAvailable === null) return;
-  
-      const now = Date.now();
-      const endTime = now + timeAvailable;
-      const savedEndTime = localStorage.getItem(`endTime_${gameId}`);
-      const finalEndTime =
-        savedEndTime && parseInt(savedEndTime, 10) > now
-          ? parseInt(savedEndTime, 10)
-          : endTime;
-  
-      localStorage.setItem(`endTime_${gameId}`, finalEndTime);
+  useEffect(() => {
+    if (timeAvailable === null) return;
+
+    const now = Date.now();
+    const endTime = now + timeAvailable;
+    const savedEndTime = localStorage.getItem(`endTime_${gameId}`);
+    const finalEndTime =
+      savedEndTime && parseInt(savedEndTime, 10) > now
+        ? parseInt(savedEndTime, 10)
+        : endTime;
+
+    localStorage.setItem(`endTime_${gameId}`, finalEndTime);
+    updateRemainingTime(finalEndTime);
+
+    clearInterval(chronoInterval.current);
+    chronoInterval.current = setInterval(() => {
       updateRemainingTime(finalEndTime);
-  
+    }, 1000);
+
+    return () => clearInterval(chronoInterval.current);
+  }, [timeAvailable, gameId]);
+
+  const updateRemainingTime = (endTime) => {
+    const timeLeft = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+    setRemainingTime(timeLeft);
+
+    if (timeLeft <= 0) {
       clearInterval(chronoInterval.current);
-      chronoInterval.current = setInterval(() => {
-        updateRemainingTime(finalEndTime);
-      }, 1000);
-  
-      return () => clearInterval(chronoInterval.current);
-    }, [timeAvailable, gameId]);
-
-    const updateRemainingTime = (endTime) => {
-      const timeLeft = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
-      setRemainingTime(timeLeft);
-
-      if (timeLeft <= 0) {
-        clearInterval(chronoInterval.current);
-      }
-    };
+    }
+  };
 
   const handleAnswerSelect = (selectedOptionIndex) => {
     console.log(selectedOptionIndex)
     if (!socket || isAnswered) return;
-  
+
     setSelectedAnswer(selectedOptionIndex);
     setIsAnswered(true);
-  
+
     socket.emit("sendAnswer", {
       game_id: gameId,
       question_index: questionIndex,
       option_index: selectedOptionIndex,
     });
-  
-    socket.selectedOptionIndex = selectedOptionIndex; 
+
+    socket.selectedOptionIndex = selectedOptionIndex;
   };
-  
+
   useEffect(() => {
     if (socket) {
       socket.on("answerResult", (data) => {
         setCorrectOptionIndex(data.correct_option_index);
         setCorrectAnswer(socket.selectedOptionIndex === data.correct_option_index);
         setIsAnswered(true);
-        setTimeAnswer(data.time_remaining/1000);
-        setMaxTimeAnswer(data.time_remaining/1000);
+        setTimeAnswer(data.time_remaining / 1000);
+        setMaxTimeAnswer(data.time_remaining / 1000);
       });
     }
   }, [socket]);
@@ -154,26 +158,26 @@ export default function ScrumModeQuestionScreen() {
 
   useEffect(() => {
     if (timeAnswer === null || timeAnswer <= 0) return;
-  
+
     const interval = setInterval(() => {
       setTimeAnswer((prevTimeAnswer) => {
         const newTime = Math.max(prevTimeAnswer - 0.01, 0);
         return newTime;
       });
-    }, 10); 
-  
+    }, 10);
+
     return () => clearInterval(interval);
   }, [timeAnswer]);
-  
+
   const answerBgClass = correctAnswer === true
     ? "bg-green-500"
     : correctAnswer === false
-    ? "bg-red-500"
-    : "bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4]";
+      ? "bg-red-500"
+      : "bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4]";
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-[#F4F2EE] flex flex-col items-center"
-      style={{ backgroundImage: "url('/backgrounds/ScrumQuiz.svg')" }}  
+      style={{ backgroundImage: "url('/backgrounds/ScrumQuiz.svg')" }}
     >
       <Navbar />
       <div className="mb-6 w-full sm:w-10/12 md:w-8/12 lg:w-6/12">
@@ -193,16 +197,17 @@ export default function ScrumModeQuestionScreen() {
               selectedOptionIndex={selectedAnswer}
               isAnswered={isAnswered}
               correctOptionIndex={correctOptionIndex}
+              isCorrect={selectedAnswer !== null && selectedAnswer == correctOptionIndex}
               type={questionType}
             />
           </div>
           <div style={{ width: "100%" }}>
             {isAnswered && correctAnswer !== null ? (
-                <div
+              <div
                 style={{
                   width: `${Math.min(120 - timeAnswer / maxTimeAnswer * 100, 100)}%`,
                 }}
-                className="h-3 bg-[#8B2DF1] rounded-xl"
+                className={`h-3 rounded-xl ${correctAnswer ? 'bg-green-500' : 'bg-red-500'}`}
               />
             ) : (
               <ChronoRound remainingTime={remainingTime / 30 * 100} />
