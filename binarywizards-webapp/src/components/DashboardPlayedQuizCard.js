@@ -5,7 +5,6 @@ import { parseISO } from 'date-fns';
 import TimeModal from './TimeModal';
 
 export default function PlayedQuizCard({ quiz }) {
-  console.log(quiz)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const date = new parseISO(quiz.date_game_creation);
   const closeModal = () => {
