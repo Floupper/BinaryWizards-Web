@@ -29,6 +29,7 @@ export default function ConnectScreen() {
         localStorage.setItem('token', token);
         const redirectPath = searchParams.get('redirect') || '/dashboard';
         navigate(redirectPath);
+        return;
       }
     } catch (error) {
       console.error('Error during submission:', error);
@@ -68,9 +69,8 @@ export default function ConnectScreen() {
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <button
             type="submit"
-            className={`w-full bg-black text-white py-3 rounded-lg mb-4 transition ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
-            }`}
+            className={`w-full bg-black text-white py-3 rounded-lg mb-4 transition ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+              }`}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -103,7 +103,7 @@ export default function ConnectScreen() {
           </button>
           <button
             type="button"
-            onClick={() => navigate('/signup')}
+            onClick={() => (searchParams.get('redirect') ? navigate('/signup?redirect=' + searchParams.get('redirect')) : navigate('/signup'))}
             className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
             disabled={isLoading}
           >
@@ -111,6 +111,6 @@ export default function ConnectScreen() {
           </button>
         </form>
       </div>
-    </div>
+    </div >
   );
 }

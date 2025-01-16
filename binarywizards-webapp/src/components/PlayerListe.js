@@ -224,10 +224,10 @@ export default function PlayersList({ game_mode }) {
 
           {/* Right Section */}
           <div className="w-full lg:w-2/5">
-          <p className="text-4xl mb-4">Game Details :</p>
+            <p className="text-4xl mb-4">Game Details :</p>
 
-          {quizDetails && <JoinQuizCard quiz={quizDetails} enableModal={false} className="w-full" />}
-            
+            {quizDetails && <JoinQuizCard quiz={quizDetails} enableModal={false} className="w-full" />}
+
 
 
             <div className="mt-12 p-6 border-2 border-[#8B2DF1] rounded-lg bg-opacity-70 bg-transparent max-h-[500px] overflow-y-auto">

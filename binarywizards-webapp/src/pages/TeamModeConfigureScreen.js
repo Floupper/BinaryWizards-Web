@@ -46,13 +46,15 @@ export default function TeamModeConfigureScreen() {
     }
   };
 
+  const isGameReady = selectedQuiz && teams.length > 0 && selectedTimer !== "none";
+
   return (
     <div
-  className="flex flex-col h-screen"
-  style={{
-    backgroundImage: "url('/backgrounds/team_background.svg')",
-  }}
->
+      className="flex flex-col h-screen"
+      style={{
+        backgroundImage: "url('/backgrounds/team_background.svg')",
+      }}
+    >
 
       <Navbar />
       <div className="flex flex-col items-center flex-grow text-center px-4">
@@ -85,7 +87,10 @@ export default function TeamModeConfigureScreen() {
 
           <button
             onClick={handleInitializeGame}
-            className="bg-black text-white py-2 px-3 sm:px-4 rounded-lg hover:bg-gray-800 text-sm sm:text-base"
+            disabled={!isGameReady}
+            className={`py-2 px-3 sm:px-4 rounded-lg text-sm sm:text-base 
+    ${isGameReady ? "bg-black text-white hover:bg-gray-800" : "bg-gray-400 text-gray-700 cursor-not-allowed opacity-50"}
+  `}
           >
             Initialize Game
           </button>
