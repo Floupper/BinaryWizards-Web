@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { EmojiProvider, Emoji } from "react-apple-emojis";
 import emojiData from "react-apple-emojis/src/data.json";
 
@@ -7,142 +7,177 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSignout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
+  const handleSignin = () => {
+    navigate("/signin");
+  };
+
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
+  };
+
+  const isActiveLink = (path) => {
+    return location.pathname === path || location.pathname.startsWith(path);
+  };
+
+  const isPlayActive = () => {
+    return !(
+      location.pathname.startsWith("/create-quiz") ||
+      location.pathname.startsWith("/quick-quiz") ||
+      location.pathname.startsWith("/dashboard")
+    );
   };
 
   return (
-    <nav className="relative w-full flex justify-between items-center p-5 text-black ">
-      <div className="text-[3.09rem] font-bold font-mogula">
-        <NavLink
-          to="/"
-          className={({ isActive }) => (isActive ? "text-black" : "")}
-        >
-          Quiz
+    <nav className="w-full flex justify-between items-center p-5 text-black">
+      {/* Logo */}
+      <div className="text-[2.5rem] font-semibold font-mogula md:text-[3.3rem]">
+        <NavLink to="/" className="text-black">
+          Mogula
         </NavLink>
       </div>
+
+      {/* Mobile Menu Button */}
       <button
-        className="md:hidden text-2xl bg-black text-white p-2 w-14 rounded focus:outline-none focus:ring-0 hover:bg-black hover:text-white"
+        className="lg:hidden z-20 text-3xl bg-black text-white p-2 w-14 rounded focus:outline-none hover:bg-black hover:text-white"
         onClick={toggleMenu}
       >
         ☰
       </button>
+
+      {/* Navigation Links */}
       <ul
-        className={`mr-2 md:flex md:items-center md:gap-5 list-none ${isOpen
-          ? "flex flex-col items-center justify-center absolute top-full left-0 w-full p-5 bg-white"
-          : "hidden md:flex"
+        className={`lg:flex lg:items-center lg:gap-5 list-none transition-all duration-300 ease-in-out ${isOpen
+            ? "z-10 flex flex-col absolute top-0 right-[-1rem] h-[100vh] pt-[8rem] gap-y-5 p-8 bg-white shadow-lg rounded-3xl transform lg:static lg:p-0 md:shadow-none transition-all duration-500 ease-out"
+            : "hidden lg:flex"
           }`}
       >
-
-        <li className="flex items-center">
-          <NavLink
-            to="/"
-            className={
-              (({ isActive }) => (isActive ? "text-black" : "text-black"),
-                "flex items-center")
-            }
-            style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
-          >
-            <EmojiProvider data={emojiData}>
-              <Emoji name="waving-hand" width={20} />
-            </EmojiProvider>
-            Play
-          </NavLink>
-        </li>
-        <li className="flex items-center">
+        {/* Download */}
+        <li className="flex items-center mr-5">
           <a
-            href="https://expo.dev/artifacts/eas/5gEMQTEd1ZfvhicxFnmkjT.apk"
+            href="https://expo.dev/artifacts/eas/swUAoGz9kXsf3cZjTwnxeS.apk"
             download
-            className="flex items-center text-black"
+            className={`flex items-center text-black hover:scale-105`}
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
             <EmojiProvider data={emojiData}>
               <Emoji name="mobile-phone-with-arrow" width={20} />
             </EmojiProvider>
-            Download
+            <span className="ml-2">Download</span>
           </a>
         </li>
-        <li className="flex items-center">
+        {/* Play */}
+        <li className="flex items-center mr-5">
           <NavLink
-            to="/create-quiz"
-            className={
-              (({ isActive }) => (isActive ? "text-black" : "text-black"),
-                "flex items-center")
-            }
+            to="/"
+            className={`flex items-center text-black hover:scale-105 ${isPlayActive() ? "underline underline-offset-8" : ""}`}
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
           >
             <EmojiProvider data={emojiData}>
-              <Emoji name="paintbrush" width={20} />
+              <Emoji name="waving-hand" width={20} />
             </EmojiProvider>
-            Create Quiz
+            <span className="ml-2">Play</span>
           </NavLink>
         </li>
 
-
         {token ? (
-          <>
-            <li className="flex items-center">
+          <li className="flex items-center mr-5">
+            <NavLink
+              to="/create-quiz"
+              className={`flex items-center text-black hover:scale-105 ${isActiveLink("/create-quiz") ? "underline underline-offset-8" : ""
+                }`} // Surbrillance conditionnelle
+              style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+            >
               <EmojiProvider data={emojiData}>
                 <Emoji name="paintbrush" width={20} />
               </EmojiProvider>
-              <NavLink
-                to="/quick-quiz"
-                className={({ isActive }) =>
-                  isActive ? "text-black" : "text-black"
-                }
-                style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
-              >
-                Create quick Quiz
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/dashboard"
-                className={({ isActive }) =>
-                  isActive ? "text-black" : "text-black"
-                }
-                style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
-              >
-                Dashboard
-              </NavLink>
-            </li>
-            <li>
-              <button
-                onClick={handleSignout}
-                className="bg-black text-white p-3 m-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0 "
-                style={{
-                  fontFamily: "Helvetica",
-                  fontSize: "1.401rem",
-                  borderRadius: "1.778rem",
-                }}
-              >
-                Sign out
-              </button>
-            </li>
+              <span className="ml-2">Create Quiz</span>
+            </NavLink>
+          </li>
+        ) : (
+          <li className="flex items-center mr-5">
+            <NavLink
+              to="/quick-quiz"
+              className={`flex items-center text-black hover:scale-105 ${isActiveLink("/quick-quiz") ? "underline underline-offset-8" : ""
+                }`}
+              style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+            >
+              <EmojiProvider data={emojiData}>
+                <Emoji name="bomb" width={20} />
+              </EmojiProvider>
+              <span className="ml-2">Quick Quiz</span>
+            </NavLink>
+          </li>
+        )}
+
+        {token ? (
+          <>
+            {/* Profile */}
+            <div className="flex flex-col lg:flex-row gap-y-4">
+              {/* Create Quick Quiz */}
+              <li className="flex items-center mr-5">
+                <NavLink
+                  to="/quick-quiz"
+                  className={`flex items-center text-black hover:scale-105 ${isActiveLink("/quick-quiz") ? "underline underline-offset-8" : ""}`} // Surbrillance conditionnelle
+                  style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+                >
+                  <EmojiProvider data={emojiData}>
+                    <Emoji name="bomb" width={20} />
+                  </EmojiProvider>
+                  <span className="ml-2">Quick Quiz</span>
+                </NavLink>
+              </li>
+
+              {/* Dashboard */}
+              <li className="flex items-center mr-5">
+                <NavLink
+                  to="/dashboard"
+                  className={`flex items-center text-black hover:scale-105 ${isActiveLink("/dashboard") ? "underline underline-offset-8" : ""}`} // Surbrillance conditionnelle
+                  style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
+                >
+                  <EmojiProvider data={emojiData}>
+                    <Emoji name="bust-in-silhouette" width={20} />
+                  </EmojiProvider>
+                  <span className="ml-2">Dashboard</span>
+                </NavLink>
+              </li>
+
+              {/* Sign Out */}
+              <li className="flex items-center lg:mr-5 mb-3 md:mb-0">
+                <button
+                  onClick={handleSignout}
+                  className="border-2 border-black text-black rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
+                  style={{
+                    fontFamily: "Helvetica",
+                    fontSize: "1.2rem",
+                    borderRadius: "1.778rem",
+                  }}
+                >
+                  Sign Out
+                </button>
+              </li>
+            </div>
           </>
         ) : (
-          <li>
-            <NavLink
-              to="/signin"
-              className={({ isActive }) =>
-                isActive
-                  ? "bg-black text-white p-4 m-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0"
-                  : "bg-black text-white p-4 m-2 rounded hover:bg-black hover:text-white focus:outline-none focus:ring-0"
-              }
+          /* Sign In */
+          <li className="flex items-center mb-3 md:mb-0">
+            <button
+              onClick={handleSignin}
+              className="border-2 border-black text-black rounded w-36 h-16 hover:bg-black hover:text-white focus:outline-none"
               style={{
                 fontFamily: "Helvetica",
-                fontSize: "1.401rem",
+                fontSize: "1.2rem",
                 borderRadius: "1.778rem",
               }}
             >
-              Sign in
-            </NavLink>
+              Sign In
+            </button>
           </li>
         )}
       </ul>

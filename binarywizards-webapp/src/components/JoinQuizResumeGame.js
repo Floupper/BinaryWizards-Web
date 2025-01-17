@@ -6,14 +6,6 @@ import ResumGameCard from "./ResumGameCard";
 export default function JoinQuizResumeGame() {
   const gameListRef = useRef(null);
 
-  useEffect(() => {
-    handleSearch();
-  }, []);
-
-  const handleSearch = () => {
-    refetch();
-  };
-
   const {
     data,
     isLoading,
@@ -23,10 +15,14 @@ export default function JoinQuizResumeGame() {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['unfinished_games'],
-    queryFn: ({ pageParam = 1 }) => HistoryGamePlayService.getStartedGames({page: pageParam}),
+    queryFn: ({ pageParam = 1 }) => HistoryGamePlayService.getStartedGames({ page: pageParam }),
     getNextPageParam: (lastPage) => lastPage?.nextPage ?? undefined,
-    enabled: false,
+    enabled: false, // Disabled until you call handleSearch()
   });
+
+  useEffect(() => {
+    refetch(); // Trigger refetch on mount
+  }, [refetch]);
 
   const handleScroll = () => {
     if (gameListRef.current) {
@@ -49,44 +45,49 @@ export default function JoinQuizResumeGame() {
         listElement.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [hasNextPage, fetchNextPage]);
+  }, [hasNextPage, fetchNextPage, handleScroll]);
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h2 className="text-2xl font-bold mb-4">Resume Game</h2>
-
-      {isLoading && (
-        <div className="flex justify-center items-center h-20">
-          <span className="text-gray-500">Loading...</span>
-        </div>
-      )}
-
+    <div className="mx-auto px-4 xl:px-20 p-6 w-full">
+      {/* Game List */}
       <div
-        className="game-list overflow-y-auto border border-gray-300 rounded-lg p-4 mx-auto w-[37.5rem]"
+        className="rounded-lg overflow-y-auto my-6 bg-gray-100 p-6 border-4 border-[#8B2DF1] h-[30rem]"
         ref={gameListRef}
       >
-        {data?.pages
-          ?.flatMap((page) => page.unfinished_games || [])
-          .map((item) => (
-            <ResumGameCard
-              key={item.game_id}
-              quiz={item}
-              route={`/question/${item.game_id}`}
-            />
-          ))}
-
-        {isFetchingNextPage && (
+        {/* Loader */}
+        {isLoading && (
           <div className="flex justify-center items-center h-20">
-            <span className="text-gray-500">Loading more...</span>
+            <span className="text-lg text-gray-500 animate-pulse">
+              Loading...
+            </span>
           </div>
         )}
 
+        {data?.pages?.flatMap((page) => page.unfinished_games || []).map((item) => (
+          <ResumGameCard
+            key={item.game_id}
+            quiz={item}
+            route={`/question/${item.game_id}`}
+          />
+        ))}
+
+        {/* Loading More */}
+        {isFetchingNextPage && (
+          <div className="flex justify-center items-center h-20">
+            <span className="text-lg text-gray-500 animate-pulse">
+              Loading more...
+            </span>
+          </div>
+        )}
+
+        {/* No Games Found */}
         {!isLoading &&
           (!data?.pages ||
-            data.pages.flatMap((page) => page.unfinished_games || []).length ===
-              0) && (
-            <div className="flex justify-center items-center h-20">
-              <span className="text-gray-500">No games found.</span>
+            data.pages.flatMap((page) => page.unfinished_games || []).length === 0) && (
+            <div className="flex justify-center items-center mb-2">
+              <span className="text-lg text-gray-500">
+                No games found.
+              </span>
             </div>
           )}
       </div>

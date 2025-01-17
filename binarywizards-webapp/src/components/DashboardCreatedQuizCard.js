@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createGameWithQuizId } from '../services/JoinQuizService';
-import { toast } from 'react-toastify';
+import TimeModal from './TimeModal';
+import { FaPlay, FaInfo } from 'react-icons/fa';
 
 export const renderDifficultyStars = (difficulty) => {
   switch (difficulty.toLowerCase()) {
@@ -17,35 +17,53 @@ export const renderDifficultyStars = (difficulty) => {
 };
 
 export default function CreatedQuizCard({ quiz, route }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleCardClick = () => {
-    if (route === `/question/`) {
-      createGameWithQuizId(quiz.quiz_id)
-        .then(data => {
-          if (data?.game_id) {
-            navigate(`${route}${data.game_id}`);
-          } else {
-            toast.error('Game creation failed.');
-          }
-        })
-        .catch(error => {
-          toast.error('Error creating game:', error);
-        });
-    } else {
-      navigate(route);
-    }
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handlePlayClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleInfoClick = () => {
+    navigate(route);
   };
 
   return (
-    <div className="created-quiz-card p-4 bg-white border-2 border-gray-300 rounded-[32px] cursor-pointer hover:bg-gray-100 flex items-end w-[90rem] h-[10.063rem]" onClick={handleCardClick}>
-      <div className="quiz-info flex items-end justify-between w-full h-full">
-        <div className="flex quiz-title bg-white/50 rounded-[32px] p-2 border-2 border-black w-[25%] h-full items-center justify-center">
-          <h3 className="text-lg font-bold text-black text-center break-all">Title: {quiz.title}</h3>
-        </div>
-        <p className="text-sm">Difficulty: {renderDifficultyStars(quiz.difficulty)}</p>
-        <p className="text-sm"> {quiz.total_questions} Questions</p>
+    <div className="created-quiz-card bg-white shadow-lg rounded-3xl border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col items-center justify-between w-[16rem] h-[18rem] p-6 m-3">
+      <div className="quiz-title bg-[#8B2DF1] text-white font-semibold rounded-lg px-4 py-2 mb-4 text-center w-full">
+        <h3 className="text-2xl font-semibold">{quiz.title}</h3>
       </div>
+      <div className='flex flex-col h-full justify-center'>
+        <p className="text-lg mb-2 text-gray-700">
+          Difficulty: <span>{renderDifficultyStars(quiz.difficulty)}</span>
+        </p>
+        <p className="text-lg mb-4 text-gray-700">{quiz.total_questions} Questions</p>
+      </div>
+      <div className="flex justify-between items-center w-full mt-auto">
+        <button
+          onClick={handleInfoClick}
+          className="text-3xl text-blue-500 hover:text-blue-700 transition-colors duration-200"
+          title="More Info"
+        >
+          <FaInfo />
+        </button>
+        {quiz.is_public ? (
+          <button
+          onClick={handlePlayClick}
+          className="text-3xl hover:text-green-700 transition-colors duration-200"
+          title="Play Quiz"
+          >
+            <FaPlay />
+          </button>
+        ) : null}
+      </div>
+      {isModalOpen && (
+        <TimeModal closeModal={closeModal} quiz_id={quiz.id} />
+      )}
     </div>
   );
 }

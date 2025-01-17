@@ -1,57 +1,73 @@
+export default function QuestionInContainer({
+  question_id,
+  question_text = "No text",
+  question_index,
+  handleSubmitDeleteQuestion,
+  selectQuestion,
+}) {
+  const color = "from-[#EFDEB3] via-[#8A2BF2] to-[#377DC9]";
 
-
-export default function QuestionInContainer({ setTypeOfScreen, question_id, question_text, question_index, question_difficulty, question_category, setIdQuestionSelected, setModalOpen, handleSubmitDeleteQuestion, handleSelectedQuestionProgressBar }) {
-  const handleSubmitEditQuestion = () => {
-    setTypeOfScreen('edit');
-    setIdQuestionSelected(question_id);
-    handleSelectedQuestionProgressBar(question_index);
-    setModalOpen(true);
-
+  const handleSelectQuestion = () => {
+    selectQuestion(question_id);
   };
 
-  const colors = [
-    'from-[#ff7f50] to-[#87cefa]',  // Color 1
-    'from-[#f39c12] to-[#d35400]',  // Color 2
-    'from-[#8e44ad] to-[#2980b9]',  // Color 3
-    'from-[#1abc9c] to-[#16a085]',  // Color 4
-    'from-[#e74c3c] to-[#c0392b]',  // Color 5
-  ];
-
-  const backgroundClass = colors[question_index % colors.length];
-
-
-
   return (
-    <div className="flex flex-col items-center gap-2 ">
-
-      <div className="flex flex-row text-lg font-bold text-gray-800 gap-2">
+    <div className="flex flex-col pt-5 items-center gap-4">
+      {/* Header */}
+      <div className="flex flex-row items-center gap-2 text-lg font-semibold text-gray-800">
         <button
           id={question_id}
-          className=" flex justify-self-end m-0 p-0 text-grey-500 text-2xl transition-transform bg-transparent border-none hover:bg-transparent"
-          onClick={handleSubmitDeleteQuestion}
+          className="text-gray-500 text-2xl transition-transform bg-transparent border-none hover:bg-transparent"
+          onClick={() => handleSubmitDeleteQuestion(question_id)}
         >
           🗑️
         </button>
-        Question {question_index + 1}</div>
+        <span className="text-center">Question {question_index + 1}</span>
+      </div>
+
+      {/* Question Box */}
       <div className="flex items-start gap-2">
-        {/*  */}
         <div
-          className={`flex flex-col w-[30vh] h-[15vh] items-center justify-center  bg-gradient-to-r ${backgroundClass} rounded-lg p-2 shadow-lg cursor-pointer border-[#8B2DF1] border-2`}
-          onClick={handleSubmitEditQuestion}
+          className={`flex flex-col w-8/12 sm:w-[70vw] md:w-[40vw] lg:w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-b ${color} rounded-lg p-2 shadow-lg cursor-pointer border-[#8B2DF1] border-2`}
+          onClick={() => handleSelectQuestion()}
         >
-          <div className="text-l text-white text-center text-l">
-            {question_text || 'Write your question'}
-          </div>
+          <div className="text-base sm:text-lg text-white text-center">{question_text}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function QuestionInContainerDefault({
+  handleSubmitDeleteNewQuestion,
+  selectQuestion,
+}) {
+  const color = "from-[#EFDEB3] via-[#8A2BF2] to-[#377DC9]";
+
+  return (
+    <div className="flex flex-col pt-5 items-center gap-4">
+      {/* Header */}
+      <div className="flex flex-row items-center gap-2 text-lg font-semibold text-gray-800">
+        <button
+          className="text-gray-500 text-2xl transition-transform bg-transparent border-none hover:bg-transparent"
+          onClick={() => handleSubmitDeleteNewQuestion()}
+        >
+          🗑️
+        </button>
+        <span className="text-center">New Question</span>
+      </div>
+
+      {/* New Question Box */}
+      <div className="flex items-start gap-2">
+        <div
+          className={`flex flex-col w-[90vw] sm:w-[70vw] md:w-[40vw] lg:w-[30vh] h-[15vh] items-center justify-center bg-gradient-to-b ${color} cursor-pointer rounded-lg p-2 shadow-lg border-[#8B2DF1] border-2`}
+          onClick={() => selectQuestion('')}
+        >
+          <div className="text-base sm:text-lg text-white text-center">Your question</div>
           <div className="flex justify-center items-center w-full h-12 overflow-hidden">
-            <div className="text-4xl transform scale-90">🌍</div>
+            <div className="text-4xl transform scale-90">✍️</div>
           </div>
         </div>
-
-
-
-
-
-
       </div>
     </div>
   );

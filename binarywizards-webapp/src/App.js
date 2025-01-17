@@ -11,19 +11,25 @@ import QuizRecapScreen from './pages/QuizRecapScreen.js';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EndScreen from './pages/EndScreen';
-import Navbar from './components/Navbar';
 import QuizCreated from './pages/CreateQuizCreated.js';
 import CreateQuizQuick from './pages/CreateQuizQuick.js';
-
+import HomeScreen from './pages/HomeScreen.js';
+import TeamModeConfigureScreen from './pages/TeamModeConfigureScreen.js';
+import TeamModeJoinTeam from './pages/TeamModeJoinTeam.js';
+import MultiplayerQuestionScreen from './pages/MultiplayerQuestionScreen.js';
+import TeamEndScreen from './pages/TeamEndScreen.js';
+import ScrumModeConfigureScreen from './pages/ScrumModeConfigureScreen.js';
+import ScrumModeJoinGame from './pages/ScrumModeJoinGame.js';
+import ScrumModeQuestionScreen from './pages/ScrumModeQuestionScreen.js';
+import ScrumEndScreen from './pages/ScrumEndScreen.js';
 
 function App() {
-
   return (
     <>
       <Router>
-
         <Routes>
-          <Route path="/" element={<JoinQuiz />} />
+          <Route path="/" element={<HomeScreen />} />
+          <Route path="/join-quiz" element={<JoinQuiz />} />
           <Route path="/create-quiz" element={<CreateQuiz />} />
           <Route path="/edit-quiz" element={<CreateQuiz />} />
           <Route path="/signin" element={<ConnectScreen />} />
@@ -36,8 +42,15 @@ function App() {
           <Route path="/end" element={<EndScreen />} />
           <Route path="/quiz-created/:quizId" element={<QuizCreated />} />
           <Route path="/quick-quiz" element={< CreateQuizQuick />} />
+          <Route path="/team-mode-configure" element={<TeamModeConfigureScreen />} />
+          <Route path="/team-mode-join-team/:gameId" element={<TeamModeJoinTeam />} />
+          <Route path="/team-question/:gameId" element={<MultiplayerQuestionScreen />} />
+          <Route path="/team-end" element={<TeamEndScreen />} />
+          <Route path="/scrum-mode-configure" element={<ScrumModeConfigureScreen />} />
+          <Route path="/scrum-mode-lobby/:gameId" element={<ScrumModeJoinGame />} />
+          <Route path="/scrum-mode-question/:gameId" element={<ScrumModeQuestionScreen />} />
+          <Route path="/scrum-end" element={<ScrumEndScreen />} />
         </Routes>
-
       </Router>
       <ToastContainer />
     </>

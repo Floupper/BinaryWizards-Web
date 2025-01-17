@@ -26,6 +26,23 @@ const CreateQuizService = {
     }
   },
 
+  updateImage: async (image) => {
+    try {
+      return axiosInstance.post(`/upload/image`, image, { headers: { 'Content-Type': 'multipart/form-data', }, }).then((response) => response.data);
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error updating image');
+    }
+  },
+
+
+  updateAudio: async (audio) => {
+    try {
+      return axiosInstance.post(`/upload/audio`, audio, { headers: { 'Content-Type': 'multipart/form-data', }, }).then((response) => response.data);
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error updating audio');
+    }
+  },
+
   updateQuestion: (questionData, quizId, questionId) => {
     try {
       return axiosInstance.post(`/quiz/${quizId}/${questionId}`, questionData).then((response) => response.data);
@@ -34,6 +51,8 @@ const CreateQuizService = {
     }
   },
 
+
+
   createQuestion: (questionData, quizId) => {
     try {
       return axiosInstance.post(`/quiz/${quizId}/create_question`, questionData).then((response) => response.data);
@@ -41,6 +60,16 @@ const CreateQuizService = {
       throw new Error('Error creating the question');
     }
   },
+
+
+  AICreateChoices: async (questionData) => {
+    try {
+      return axiosInstance.post(`/question/complete_options`, questionData,).then((response) => response.data);
+    } catch (error) {
+      throw new Error('Error asking AI to complete the choices');
+    }
+  },
+
 
   deleteQuestion: (quizId, questionId) => {
     try {

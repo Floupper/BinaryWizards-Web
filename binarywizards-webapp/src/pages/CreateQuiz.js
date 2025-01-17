@@ -16,30 +16,25 @@ export default function CreateQuiz() {
 
   useEffect(() => {
     if (!userId) {
-      toast.info("no user id");
       navigate('/quick-quiz');
     }
   }, []);
 
   if (quizIdRedicted !== 'any') {
     navigate('/dashboard');
-
   }
   return (
-    <div className=" min-h-screen bg-cover bg-center bg-[#F4F2EE] ">
+    <div
+      className="items-center bg-cover bg-center w-screen min-h-screen"
+      style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}>
       {quizIdRedicted === 'any' ? (
-
         <CreateQuizRegisteredPage quizIdParameter={quizId} setQuizIdRedicted={setQuizIdRedicted} />
-
       )
         : (
           <div>
             <QuizCreated></QuizCreated>
           </div>
         )}
-    </div>
+    </ div>
   );
 }
-
-
-

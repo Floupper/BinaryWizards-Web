@@ -1,42 +1,61 @@
 import React, { useEffect, useState } from 'react';
 import CreateQuizService from '../services/CreateQuizService';
 import Modal from 'react-modal';
-import CreateQuizzQuestion from './CreateQuizQuestionEditing';
+import CreateQuizzQuestionEditing from './CreateQuizQuestionEditing';
 import { toast } from "react-toastify";
-import QuestionInContainer from './CreateQuizQuestionInContainer';
+import QuestionInContainer, { QuestionInContainerDefault } from './CreateQuizQuestionInContainer';
 import ImportQuestionTrivia from './CreateQuizImportQuestionTrivia';
 import CreateQuizNavbar from './CreateQuizNavbar';
 import ProgressBar from './ProgressBar';
+import Navbar from './Navbar';
 
 Modal.setAppElement('#root');
 
-
-
 export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRedicted }) {
+  const [quizId, setQuizId] = useState(quizIdParameter || ''); //Quiz Id 
+  const [isTriviaModalOpen, setTrivialModalOpen] = useState(false);  //Trivia Modal
+  const [progress, setProgress] = useState(0); //Progress bar data
 
+  const [questionInfo, setQuestionInfo] = useState({
+    questionText: 'Write your question',
+    questionOptions: ["", "", "", ""],
+    questionType: 'text',
+    questionDifficulty: 'easy',
+    questionCategory: '',
+    questionCorrectAnswer: 0,
+    questionId: '',
+    isEditing: false
+  });
 
-  const [quizId, setQuizId] = useState(quizIdParameter || '');
-  //Modal of editing/creating question
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [isTriviaModalOpen, setTrivialModalOpen] = useState(false);
-  const [pageTitle, setPageTitle] = useState('Change a Quiz');
+  const [editingQuestionInfo, setEditingQuestionInfo] = useState(
+    {
+      questionText: 'Write your question',
+      questionOptions: ["", "", "", ""],
+      questionType: 'text',
+      questionDifficulty: 'easy',
+      questionCategory: '',
+      questionCorrectAnswer: 0,
+      isEditing: true,
+    }
+  );
+
+  const [reloadQuestionInfo, setReloadQuestionInfo] = useState(false);
   const [TypeOfScreen, setTypeOfScreen] = useState('create');
+  const [questionListReload, setQuestionListReload] = useState(true);
+
+
   //diffilcies fetching from the API
-  //#######   API      ########
-  const [difficulties, setDifficulties] = useState([]);
-  const [quizTitle, setQuizTitle] = useState('');
-  const [quizDescription, setQuizDescription] = useState('');
-  const [quizDifficulty, setQuizDifficulty] = useState('');
-  const [quizIsPublic, setQuizIsPublic] = useState('');
+  //#######   API      ######## 
   const [quizQuestions, setQuizQuestions] = useState([]);
 
   //########   LOCAL    ########
   //Public or private (local -> API)
-  const [isPublicQuiz, setIsPublicQuiz] = useState(false);
+
   //Id of the question selected, for passing data
   const [idQuestionSelected, setIdQuestionSelected] = useState('');
   const [idQuestionSelectedForProgress, setIdQuestionSelectedForProgress] = useState(0);
-  const [progress, setProgress] = useState(0);
+
+
 
 
   //NAVBAR
@@ -48,66 +67,102 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     isPublic: false,
   });
 
-  const [refreshQuizQuestionEditing, setRefreshQuizQuestions] = useState('false');
+  const [newQuestion, setNewQuestion] = useState(false);
 
+  const [refreshQuizQuestionEditing, setRefreshQuizQuestions] = useState('false');
 
   let initialized = false;
 
+
+
+  //Init du quizz et des catégories
   useEffect(() => {
-
-
     if (initialized) return;
     initialized = true;
 
-
-    CreateQuizService.fetchDifficulties()
-      .then(data => setDifficulties(data))
-      .catch(error => toast.info('Error fetching difficulties:', error));
-
     if (quizId === '') {
-      setPageTitle('Create a Quiz');
       CreateQuizService.initQuiz()
         .then(data => setQuizId(data.quiz_id))
         .catch(error => toast.info('Error initializing quiz:', error));
     }
-  }, []);
-
-  useEffect(() => {
-
-    if (quizQuestions.length > 0) {
-      const progressValue = ((idQuestionSelectedForProgress + 1) / quizQuestions.length) * 100;
-      setProgress(progressValue);
-    }
-    else {
-      setProgress(100);
-    }
-
-  }, [idQuestionSelectedForProgress, quizQuestions]);
+  }, []
+  );
 
 
+
+  //Récupère les données du quiz si c'est une modification de quiz/lorsqu'on crée le quiz
   useEffect(() => {
     if (quizId) {
       CreateQuizService.fetchQuizDetails(quizId)
         .then(data => {
-          setQuizQuestions(data.quiz.questions || []);
-          setQuizTitle(data.quiz.title || '');
-          setQuizIsPublic(data.quiz.is_public || false);
-          setQuizDifficulty(data.quiz.difficulty || '');
+          const questions = data.quiz.questions || [];
 
-          setQuiz((prevQuiz) => ({
+          setQuizQuestions(questions);
+
+          if (questions.length === 0) {
+            setNewQuestion(true);
+            selectQuestion('');
+          }
+
+          setQuiz(prevQuiz => ({
             ...prevQuiz,
             description: data.quiz.description,
             title: data.quiz.title,
             isPublic: data.quiz.is_public,
             difficulty: data.quiz.difficulty,
           }));
-
-
-
         })
         .catch(error => toast.info('Error fetching quiz details:', error));
     }
   }, [quizId]);
+
+
+  useEffect(() => {
+    if (questionInfo.isEditing) {
+      setProgress(100);
+    }
+    else if (quizQuestions.length > 0) {
+      const currentIndex = quizQuestions.findIndex(
+        (q) => q.question_id === questionInfo.questionId
+      );
+
+      // Étape 2 : Calculer la progression
+      // Si la question actuelle n'est pas trouvée, currentIndex sera -1 (on ignore dans ce cas)
+      const totalQuestions = quizQuestions.length + (newQuestion ? 1 : 0);
+      const progressValue =
+        currentIndex >= 0
+          ? ((currentIndex + 1) / totalQuestions) * 100
+          : 0; // Si pas trouvé, progression = 0
+      setProgress(progressValue);
+    }
+
+  }, [questionInfo.questionId]);
+
+  const handleDeleteQuestionInContainerDefault = () => {
+    selectLastQuestion();
+    closeQuestionInContainerDefault();
+    resetQuestionInfo();
+  }
+
+  const selectLastQuestion = () => {
+    if (quizQuestions.length > 0) {
+      const lastQuestion = quizQuestions[quizQuestions.length - 1];
+      setIdQuestionSelected(lastQuestion.question_id);
+    }
+    else {
+      setIdQuestionSelected('');
+    }
+    setReloadQuestionInfo(true);
+  }
+
+  const closeQuestionInContainerDefault = () => {
+    setNewQuestion(false);
+    setQuestionListReload(true);
+  };
+  const createQuestionInContainerDefault = () => {
+    setNewQuestion(true);
+    setQuestionListReload(true);
+  };
 
   const refreshQuizQuestions = () => {
     if (quizId) {
@@ -119,49 +174,189 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
     }
   };
 
-  useEffect(() => {
-    if (quizIsPublic) {
-      setIsPublicQuiz(quizIsPublic)
-    }
-  }, [quizIsPublic]);
-
-
-
   const handleSelectedQuestionProgressBar = (questionId) => {
-
     setIdQuestionSelectedForProgress(questionId);
   };
-  const resetCreateQuestionForm = () => {
-    setRefreshQuizQuestions(false);
-    setTypeOfScreen('create');
-    setIdQuestionSelected('');
+
+  const selectQuestion = async (questionId) => {
+
+
+    if (questionInfo.questionId) {
+
+      if (await handleSubmitActualQuestion()) {
+
+      }
+      else {
+
+        return;
+      }
+
+    }
+    if (!questionInfo.questionId && questionId) {
+
+      /*setQuestionInfo({
+        ...editingQuestionInfo, // Copie toutes les propriétés de editingQuestionInfo
+        questionId: questionId, // Remplace la propriété questionId
+        isEditing: true, // Remplace la propriété isEditing
+      });
+      */
+
+      setEditingQuestionInfo({
+        ...questionInfo, // Copie toutes les propriétés de editingQuestionInfo
+        questionId: '', // Remplace la propriété questionId
+        isEditing: true, // Remplace la propriété isEditing
+      });
+    }
+
+    if (!questionId) {
+
+      setQuestionInfo(editingQuestionInfo);
+    }
+    else {
+
+      setQuestionInfo((prevState) => {
+        return {
+          ...prevState,
+          questionId: questionId,
+          isEditing: false,
+        }
+      });
+
+    }
+    setReloadQuestionInfo(true);
+
   }
-  const handleSubmitCreateQuestion = (event) => {
-    setTypeOfScreen('create');
-    setRefreshQuizQuestions(true);
-    setIdQuestionSelected('');
-  };
+
+
   const handleSubmitImportTrivia = (event) => {
     setTrivialModalOpen(true);
-
   };
 
-  const handleChangeIsPublicQuiz = (event) => {
-    setIsPublicQuiz(event.target.checked);
+  //Submit de la question
+  const handleSubmitActualQuestion = async () => {
+    // questionInfo.questionId ;
+
+    if (quiz.isPublic) {
+      if (!questionInfo.questionCategory || !questionInfo.questionText || !questionInfo.questionDifficulty || questionInfo.questionOptions.some(choice => !choice || !choice.trim())) {
+        toast.error("Finish the question before publish quizz.");
+        return false;
+      }
+    }
+
+
+    else {
+      if (!questionInfo.questionText) {
+        toast.error("Please enter a question.");
+        return false;
+      }
+      if (questionInfo.questionOptions.some(choice => !choice || !choice.trim())) {
+        toast.error("Please ensure all choices are filled out.");
+        return false;
+      }
+      if (!questionInfo.questionDifficulty) {
+        toast.error("Please select a difficulty.");
+        return false;
+      }
+      if (!questionInfo.questionCategory) {
+        toast.error("Please select a category.");
+        return false;
+      }
+    }
+
+    try {
+      const options = [];
+      options.push(
+        ...questionInfo.questionOptions.map((choice, index) => ({
+          option_content: questionInfo.questionOptions[index],
+          is_correct_answer: questionInfo.questionCorrectAnswer === index,
+          option_index: index,
+        }))
+      );
+
+      const requestBody = {
+        question_text: questionInfo.questionText,
+        question_difficulty: questionInfo.questionDifficulty,
+        question_category: questionInfo.questionCategory,
+        question_type: questionInfo.questionType,
+        options: options,
+      };
+
+      const action = questionInfo.questionId
+        ? CreateQuizService.updateQuestion
+        : CreateQuizService.createQuestion;
+
+      const data = await action(requestBody, quizId, questionInfo.questionId);
+
+      if (!questionInfo.questionId) {
+        closeQuestionInContainerDefault();
+
+      }
+
+      resetQuestionInfo();
+
+
+      refreshQuizQuestions();
+      return true;
+    } catch (error) {
+
+      toast.error(
+        `Error ${TypeOfScreen ? "updating" : "creating"} question: ${error.message || "Unknown error"
+        }`
+      );
+    }
   };
 
 
-  const handleSubmitSave = () => {
+  const resetQuestionInfo = () => {
+    setQuestionInfo({
+      questionText: 'Write your question',
+      questionOptions: ["", "", "", ""],
+      questionType: 'text',
+      questionDifficulty: 'easy',
+      questionCategory: '',
+      questionCorrectAnswer: 0,
+      questionId: '',
+    });
+  }
 
+  const handleSubmitCreateQuestion = async (event) => {
+    try {
+
+      if (questionInfo.isEditing || questionInfo.questionId) {
+
+        await handleSubmitActualQuestion();
+      }
+      setTypeOfScreen('create');
+      setRefreshQuizQuestions(true);
+      setIdQuestionSelected('');
+      setQuestionListReload(true);
+      setNewQuestion(true);
+
+
+      setEditingQuestionInfo({
+        questionText: 'Write your question',
+        questionOptions: ["", "", "", ""],
+        questionType: 'text',
+        questionDifficulty: 'easy',
+        questionCategory: '',
+        questionCorrectAnswer: 0,
+        isEditing: true,
+      })
+
+      selectQuestion('');
+    } catch (error) {
+    }
+
+  };
+  //Met à jour le quiz & la question en cours 
+  const handleSubmitSaveQuiz = () => {
     if (!quiz.title) {
-      toast.info('Please select a title.');
-
+      toast.info('Please select a quiz title.');
       return;
     }
 
-
     if (!quiz.difficulty) {
-      toast.info('Please select a difficulty.');
+      toast.info('Please select a quiz difficulty.');
       return;
     }
 
@@ -174,31 +369,58 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
 
     CreateQuizService.createQuiz(quizData, quizId)
       .then(() => {
-        toast.info('Quiz created successfully! ');
-        setQuizIdRedicted(quizId);
+
+        if (quiz.isPublic) { toast.info('Quiz created successfully! '); setQuizIdRedicted(quizId) };
       })
       .catch(error => {
         toast.info(error.message);
       });
+
   };
+
+  const handleSubmitSave = async () => {
+    try {
+
+      if (idQuestionSelected || newQuestion) {
+
+        if (await handleSubmitActualQuestion()) {
+
+          await handleSubmitSaveQuiz();
+        }
+      }
+      else {
+
+        await handleSubmitSaveQuiz();
+      }
+
+    } catch (error) {
+      // Gérez les erreurs, si nécessaire
+      console.error('Erreur lors de la soumission des deux fonctions:', error);
+    }
+  };
+
 
   const handleSubmitDeleteQuestion = (questionId) => {
     CreateQuizService.deleteQuestion(quizId, questionId)
       .then(() => {
-        toast.info('Question deleted successfully!');
+
+        setIdQuestionSelected('');
+        setQuestionListReload(true);
         refreshQuizQuestions();
       })
       .catch(error => {
         toast.error('Error deleting question:', error.message);
       });
+    resetQuestionInfo();
   };
 
   return (
     <div className="CreateQuiz p-0 m-0">
-      {/*  */}
-
-      <CreateQuizNavbar handleSubmitSave={handleSubmitSave} quiz={quiz} setQuiz={setQuiz} />
-      <div className="CreateQuiz-container  flex flex-col gap-4 ">
+      <Navbar />
+      <div className="flex flex-col gap-2">
+        <CreateQuizNavbar handleSubmitSave={handleSubmitSave} quiz={quiz} setQuiz={setQuiz} />
+  
+        {/* Trivia Modal */}
         <div className="trivia modal">
           <Modal
             isOpen={isTriviaModalOpen}
@@ -213,77 +435,75 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             />
           </Modal>
         </div>
-
-
-        <div className=" grid min-grid-rows-[70vh_1fr_2fr] grid-flow-col max-h-[70vh] pl-4">
-
-          <div className=" flex flex-col max-h-30 
-           gap-4 overflow-y-auto  scrollbar-thin scrollbar-thumb-gray-500 mr-5 ">
-            <div className="flex items-center  flex-col gap-4  scrollbar-thin scrollbar-thumb-gray-500 p-0">
-
-              <div className="flex flex-col gap-4 w-[35vh]">
+  
+        <div className="flex flex-col lg:flex-row lg:pl-4">
+          {/* Left Sidebar */}
+          <div className="flex flex-col gap-4 lg:max-w-[40%] lg:overflow-y-auto mx-4">
+            <div className="flex flex-col gap-4 bg-white rounded-md p-4 shadow-lg h-[40vh] md:h-[55vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500">
+              <div className="flex flex-col p-6">
                 {quizQuestions.map((question) => (
                   <QuestionInContainer
-
                     key={question.question_id}
                     question_text={question.question_text}
-                    question_difficulty={question.question_difficulty}
-                    question_category={question.question_category}
                     question_id={question.question_id}
                     question_index={question.question_index || 0}
-                    setIdQuestionSelected={setIdQuestionSelected}
-                    setModalOpen={setModalOpen}
-                    setTypeOfScreen={setTypeOfScreen}
+                    selectQuestion={selectQuestion}
                     handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
-                    handleSelectedQuestionProgressBar={handleSelectedQuestionProgressBar}
                   />
                 ))}
+                {newQuestion && (
+                  <QuestionInContainerDefault
+                    handleSubmitDeleteNewQuestion={handleDeleteQuestionInContainerDefault}
+                    selectQuestion={selectQuestion}
+                  />
+                )}
               </div>
             </div>
-
-          </div>
-          <div className="size-full flex justify-center items-center pr-4 mr-5 ">
-            <div className="flex flex-col justify-center  w-[30vh] row-span-1 row-start-2 col-end-1 ">
-
-
+  
+            {/* Buttons */}
+            <div className="flex flex-col justify-center items-center gap-2 bg-white rounded-md p-4 shadow-lg">
               <button
                 onClick={handleSubmitCreateQuestion}
-                className="text-white bg-black px-4 py-2 rounded-lg hover:bg-black"
+                className="w-full px-4 py-2 text-white bg-black rounded-lg hover:bg-white hover:text-black hover:border-black border"
               >
-                Create question
+                Create Question
               </button>
               <button
                 onClick={handleSubmitImportTrivia}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-blue-600"
+                className="w-full px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-white hover:border-black border"
               >
-                Import questions from Trivia
+                Import Questions from Trivia
               </button>
-
             </div>
           </div>
-          {/*  CreateQuizQuestionEditing */}
-
-          <div className="flex flex-col  row-span-2 col-start-2 col-span-2 rounded-lg pr -10">
-            <ProgressBar progress={progress} />
-
-            <div>
-
-              <CreateQuizzQuestion
-                TypeOfScreen={TypeOfScreen}
-                quizId={quizId}
-                questionId={idQuestionSelected}
-                refreshQuizQuestions={refreshQuizQuestions}
-                refreshQuizQuestionEditing={refreshQuizQuestionEditing}
-                setRefreshQuizQuestions={setRefreshQuizQuestions}
-              />
-            </div>
+  
+          {/* Question Editing */}
+          <div className="flex flex-col rounded-lg md:px-5 mt-4 lg:mt-0 md:w-11/12">
+            {(questionInfo.isEditing || questionInfo.questionId) && (
+              <>
+                <div className="flex justify-center md:my-2">
+                  <ProgressBar progress={progress} />
+                </div>
+                <div className="w-full">
+                  <CreateQuizzQuestionEditing
+                    setReloadQuestionInfo={setReloadQuestionInfo}
+                    reloadQuestionInfo={reloadQuestionInfo}
+                    questionInfo={questionInfo}
+                    setQuestionInfo={setQuestionInfo}
+                    setQuestionListReload={setQuestionListReload}
+                    TypeOfScreen={TypeOfScreen}
+                    quizId={quizId}
+                    questionId={idQuestionSelected}
+                    refreshQuizQuestions={refreshQuizQuestions}
+                    refreshQuizQuestionEditing={refreshQuizQuestionEditing}
+                    setRefreshQuizQuestions={setRefreshQuizQuestions}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
-
-
-
       </div>
-
     </div>
   );
 }

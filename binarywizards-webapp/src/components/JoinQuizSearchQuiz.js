@@ -3,11 +3,9 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { fetchSearchedQuiz } from '../services/JoinQuizService';
 import CreateQuizService from '../services/CreateQuizService';
-import DashboardCreatedQuizCard from './DashboardCreatedQuizCard';
-
 import JoinQuizCard from './JoinQuizCard';
 
-export default function JoinQuizSearchQuiz() {
+export default function JoinQuizSearchQuiz({ onQuizSelect, enableModal }) {
     const [text, setText] = useState('');
     const [selectedDifficulty, setSelectedDifficulty] = useState("all");
     const [difficulties, setDifficulties] = useState([]);
@@ -20,7 +18,7 @@ export default function JoinQuizSearchQuiz() {
             .then((data) => {
                 setDifficulties(['all', ...data]);
             })
-            .catch(error => toast.error(`Error fetching difficulties : ${error.message}`));
+            .catch(error => toast.error(`Error fetching difficulties: ${error.message}`));
     }, []);
 
     const {
@@ -67,7 +65,7 @@ export default function JoinQuizSearchQuiz() {
                 listElement.removeEventListener('scroll', handleScroll);
             }
         };
-    }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
+    }, [hasNextPage, fetchNextPage, isFetchingNextPage, handleScroll]);
 
     const handleTextChange = (value) => {
         setText(value);
@@ -93,88 +91,86 @@ export default function JoinQuizSearchQuiz() {
     };
 
     return (
-        <div className="flex flex-col items-center p-8 w-full">
-            <h2 className="text-2xl font-bold text-white mb-6">Browse Quiz</h2>
+        <div className="flex flex-col items-center p-6 mx-auto">
+            <label htmlFor="title" className="mb-2 font-medium">Title or Description</label>
             <input
                 type="text"
-                className="p-4 text-lg border-2 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                className="p-4 text-lg border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-[30rem] transition-all duration-200"
                 placeholder="Enter the text to search for a quiz"
                 value={text}
                 onChange={(e) => handleTextChange(e.target.value)}
             />
-            <h2 className="text-lg text-white font-semibold mb-2">Select the number of questions</h2>
-            <div className="flex space-x-4">
-                <div className="flex flex-col">
-                    <label htmlFor="minQuestions" className="mb-2 text-white">Min</label>
+            <div className="flex flex-col sm:flex-row gap-x-4 mt-4 sm:mt-2 w-full sm:w-auto">
+                <div className="flex flex-col w-full sm:w-1/2">
+                    <label htmlFor="minQuestions" className="ml-2 mb-2 font-medium">Min Questions</label>
                     <input
                         id="minQuestions"
                         type="number"
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
                         value={minQuestions}
                         onChange={(e) => handleMinChange(e.target.value)}
                         placeholder="Min"
                     />
                 </div>
-                <div className="flex flex-col">
-                    <label htmlFor="maxQuestions" className="mb-2 text-white">Max</label>
+                <div className="flex flex-col w-full sm:w-1/2 mt-4 sm:mt-0">
+                    <label htmlFor="maxQuestions" className="ml-2 mb-2 font-medium">Max Questions</label>
                     <input
                         id="maxQuestions"
                         type="number"
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
                         value={maxQuestions}
                         onChange={(e) => handleMaxChange(e.target.value)}
                         placeholder="Max"
                     />
                 </div>
             </div>
-            <select
-                value={selectedDifficulty}
-                onChange={(e) => setSelectedDifficulty(e.target.value)}
-                className="mt-4 p-2 text-lg border-2 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-            >
-                <option value="" disabled>
-                    Select difficulty
-                </option>
-                {difficulties.map((difficulty) => (
-                    <option key={difficulty} value={difficulty}>
-                        {difficulty}
-                    </option>
-                ))}
-            </select>
+            <div className="w-full sm:w-1/2 flex flex-col justify-center mt-4 sm:mt-0">
+                <label htmlFor="difficulty" className="text-center mb-2 font-medium">Difficulty</label>
+                <select
+                    value={selectedDifficulty}
+                    onChange={(e) => setSelectedDifficulty(e.target.value)}
+                    className="p-3 text-lg border-2 border-gray-300 rounded-lg focus:ring-indigo-500 transition-all duration-200 text-black"
+                >
+                    <option value="" disabled>Select difficulty</option>
+                    {difficulties.map((difficulty) => (
+                        <option key={difficulty} value={difficulty} className="text-gray-700">{difficulty}</option>
+                    ))}
+                </select>
+            </div>
 
-            {isLoading && <div className="text-lg text-gray-600 mb-4">Loading...</div>}
+            {/* Loading Indicator */}
+            {isLoading && (
+                <div className="text-lg text-gray-400 my-6 animate-pulse">
+                    Loading...
+                </div>
+            )}
 
+            {/* Quiz List */}
             <div
-                className="w-full p-2 rounded-lg overflow-y-auto max-h-60"
+                className="rounded-lg overflow-y-auto max-h-60 my-6 bg-gray-100 p-6 border-4 border-[#8B2DF1] w-full"
                 ref={quizListRef}
             >
                 {data?.pages?.flatMap((page) => page?.quizzes || []).map((item) => (
                     <JoinQuizCard
+                        enableModal={enableModal}
                         key={item.quiz_id}
                         quiz={item}
-                        route={'/question/'}
-                        className="mb-4"
+                        onQuizSelect={onQuizSelect}
                     />
                 ))}
 
                 {isFetchingNextPage && (
-                    <div className="text-lg text-gray-600 mt-3">Load more...</div>
+                    <div className="text-lg text-gray-400 mt-3 text-center animate-pulse">
+                        Load more...
+                    </div>
                 )}
 
-                {!isLoading &&
-                    (!data?.pages || data.pages.flatMap((page) => page?.quizzes || []).length === 0) && (
-                        <div className="text-lg text-gray-600 text-center mt-3">No quiz found.</div>
-                    )}
+                {!isLoading && (!data?.pages || data.pages.flatMap((page) => page?.quizzes || []).length === 0) && (
+                    <div className="text-lg text-gray-400 text-center mt-3">
+                        No quiz found.
+                    </div>
+                )}
             </div>
-
-            {!isFetchingNextPage && hasNextPage && (
-                <button
-                    onClick={() => fetchNextPage()}
-                    className="mt-3 px-6 py-2 bg-[#8B2DF1] text-white rounded-md hover:bg-[#7322c3] focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                    Load more
-                </button>
-            )}
         </div>
     );
 }

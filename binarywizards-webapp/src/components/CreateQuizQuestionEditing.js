@@ -3,329 +3,204 @@ import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MultipleChoiceQuestion } from './CreateQuizQuestionEditingMultipleChoiceQuestion';
-import BooleanChoiceQuestion from './CreateQuizQuestionEditingBooleanChoice';
 import DifficultyQuizStars from './GlobalQuizDifficultyStars';
 
-export default function CreateQuizzQuestion({ TypeOfScreen, questionId, quizId, refreshQuizQuestions, refreshQuizQuestionEditing, setRefreshQuizQuestions }) {
+export default function CreateQuizzQuestion({ reloadQuestionInfo, setReloadQuestionInfo,
 
-
-  const [selectedOptionInput, setSelectedOptionInput] = useState({
-    type: 'boolean',
-    choices: ['', '', '', ''],
-    correctAnswerBoolean: 0,
-    correctAnswerMultiple: 0
-  });
+  questionInfo, setQuestionInfo,
+  quizId }) {
 
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [quizDifficulty, setQuizDifficulty] = useState('easy');
-  const [difficulties, setDifficulties] = useState([]);
-  const [difficulty, setDifficulty] = useState('');
-
-  const [answerText, setAnswerText] = useState([]);
-  const [responceIndex, setResponseIndex] = useState(null);
-
-  const [questionData, setQuestionData] = useState();
 
 
-  const [questionType, setQuestionType] = useState('boolean');
-  const [questionOptions, setQuestionOptions] = useState();
-
-  const [questionText, setQuestionText] = useState('Write your question');
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (refreshQuizQuestionEditing) {
-      setRefreshQuizQuestions(false);
-
-      setQuestionText('Write your question');
-      setSelectedOptionInput({
-        type: 'boolean',
-        choices: ['', '', '', ''],
-        correctAnswerBoolean: 0,
-        correctAnswerMultiple: 0
-      });
-      setIsEditing(false);
-      setQuestionData();
-      setQuizDifficulty('easy');
-      setSelectedCategory('');
-
-    }
-  }, [refreshQuizQuestionEditing]);
-
-
-  useEffect(() => {
-
     CreateQuizService.fetchCategories()
       .then(data => setCategories(data))
       .catch(error => toast.info('Error fetching categories:', error));
-
-    CreateQuizService.fetchDifficulties()
-      .then(data => setDifficulties(data))
-      .catch(error => toast.info('Error fetching difficulties:', error));
-
   }, []);
 
   useEffect(() => {
-    if (questionId) {
-      CreateQuizService.fetchQuestionDetails(quizId, questionId)
-        .then(data => {
-          setQuestionData(data.question);
-          setQuestionOptions(data.question.options);
-          setQuestionType(data.question.question_type);
-          setQuestionText(data.question.question_text);
-          setQuizDifficulty(data.question.question_difficulty);
-          setSelectedCategory(data.question.question_category);
-
-          setSelectedOptionInput((prevState) => {
-            const isMultiple = data.question.question_type === 'multiple';
+    if (!reloadQuestionInfo) return;
+    setReloadQuestionInfo(false);
 
 
-            const choices = isMultiple
-              ? data.question.options.map((option) => option.option_text)
-              : ['', '', '', ''];
+    if (!questionInfo.isEditing && questionInfo.questionId) {
 
+      CreateQuizService.fetchQuestionDetails(quizId, questionInfo.questionId)
+        .then((data) => {
 
-            const correctAnswerBoolean = !isMultiple
-              ? data.question.options.find((option) => option.is_correct_answer)?.option_text === 'True'
-                ? 1
-                : 0
-              : null;
+          const question = data.question;
+          if (!question) {
+            toast.error('Error: Question not found.');
+            return;
+          }
+          if (!question.options || !Array.isArray(question.options)) {
+            toast.error('Error: Question options are missing or invalid.');
+            return;
+          }
+          setQuestionInfo((prevState) => ({
+            ...prevState,
+            questionText: question.question_text,
+            questionDifficulty: question.question_difficulty,
+            questionCategory: question.question_category,
+            questionType: question.question_type,
+            questionId: question.question_id,
 
+          }));
+
+          setQuestionInfo((prevState) => {
+            const questionOptions = question.options.map((option) => option.option_content || "");
+            const questionCorrectAnswer = question.options.findIndex((option) => option.is_correct_answer) || 0;
             return {
               ...prevState,
-              type: data.question.question_type,
-              choices: choices,
-              correctAnswerMultiple: isMultiple
-                ? data.question.options.findIndex((option) => option.is_correct_answer)
-                : null,
-              correctAnswerBoolean,
-            };
+              questionCorrectAnswer: questionCorrectAnswer,
+              questionOptions: questionOptions,
+            }
           });
-        })
 
-        .catch(error => toast.info('Error fetching question details:', error));
+        })
+        .catch((error) => {
+          console.error('Error fetching question details:', error);
+          toast.error('An error occurred while fetching question details.');
+        });
     }
-  }, [questionId]);
+  }, [reloadQuestionInfo]);
 
   const handleEditClick = () => setIsEditing(true);
 
   const handleBlur = () => {
-    if (!questionText.trim()) {
-      setQuestionText("Write your question");
+    if (!questionInfo.questionText.trim()) {
+      setQuestionInfo((prevState) => ({ ...prevState, questionText: 'Write your question' }));
     }
     setIsEditing(false);
   };
 
-  const handleSubmit = async () => {
-    if (!selectedCategory) {
-      toast.error("Please select a category.");
-      return;
-    }
-
-    if (!questionText) {
-      toast.error("Please enter a question.");
-      return;
-
-    }
-
-    if (!quizDifficulty) {
-      toast.error("Please select a difficulty.");
-      return;
-    }
-    if (questionType === "multiple" && selectedOptionInput.choices.some(choice => !choice.trim())) {
-      toast.error("Please ensure all choices are filled out.");
-      return;
-    }
-
-    try {
-
-      const options = [];
-
-      if (questionType === 'boolean') {
-
-        options.push(
-          {
-            option_text: "True",
-            is_correct_answer: selectedOptionInput.correctAnswerBoolean === 1,
-          },
-          {
-            option_text: "False",
-            is_correct_answer: selectedOptionInput.correctAnswerBoolean === 0,
-          }
-        );
-      } else if (questionType === 'multiple') {
-
-        options.push(
-          ...selectedOptionInput.choices.map((choice, index) => ({
-            option_text: choice,
-            is_correct_answer: selectedOptionInput.correctAnswerMultiple === index,
-          }))
-        );
-      } else {
-        throw new Error("Invalid question type");
-      }
-
-      const requestBody = {
-        question_text: questionText,
-        question_difficulty: quizDifficulty,
-        question_category: selectedCategory,
-        question_type: questionType,
-        options: options,
-      };
-
-
-
-      const action = TypeOfScreen === "edit"
-        ? CreateQuizService.updateQuestion
-        : CreateQuizService.createQuestion;
-
-
-      await action(requestBody, quizId, questionId);
-
-
-      toast.success(
-        `Question successfully ${TypeOfScreen ? "updated" : "created"}!`
-      );
-      refreshQuizQuestions();
-    } catch (error) {
-
-      toast.error(
-        `Error ${TypeOfScreen ? "updating" : "creating"} question: ${error.message || "Unknown error"
-        }`
-      );
-
-    }
-  };
-
   const handleOnDifficultyChange = (newDifficulty) => {
-    setQuizDifficulty(newDifficulty)
+    setQuestionInfo((prevState) => ({ ...prevState, questionDifficulty: newDifficulty }));
 
   };
 
+  const handleOnTypeQuestionChange = (newType) => {
+    setQuestionInfo((prevState) => ({
+      ...prevState, questionType: newType,
+      questionOptions: prevState.questionOptions.map(() => (""))
+    }));
+
+  };
 
   return (
-    <div>
-      <div className="bg-gradient-to-r from-orange-400 to-green-400 p-2 rounded-lg  ">
-        <div className="flex flex-col flex-nowrap justify-center p-6 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md  h-[50vh] ">
-          {/* Editable Question */}
-          <div className="flex items-center items-center justify-center text-center mb-6">
+    <div className="p-4">
+      <div className="bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4] p-4 md:m-4 rounded-lg">
+        <div className="flex flex-col justify-center p-4 sm:p-8 lg:p-12 bg-cover bg-center bg-[#F4F2EE] rounded-lg shadow-md h-full lg:h-[60vh]">
+          {/* Question Title */}
+          <div className="flex items-center justify-center text-center mb-6">
             {!isEditing ? (
               <h1
-                className="text-2xl font-bold text-gray-800 cursor-pointer hover:underline "
+                className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-800 cursor-pointer hover:underline"
                 onClick={handleEditClick}
               >
-                {questionText}
+                {questionInfo.questionText}
               </h1>
             ) : (
               <input
                 type="text"
-                value={questionText}
-                onChange={(e) => setQuestionText(e.target.value)}
+                value={questionInfo.questionText}
+                onChange={(e) =>
+                  setQuestionInfo((prevState) => ({
+                    ...prevState,
+                    questionText: e.target.value,
+                  }))
+                }
                 onBlur={handleBlur}
                 autoFocus
-                className="text-2xl font-bold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
+                className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800 border-b-2 border-blue-500 focus:outline-none focus:ring-0 text-center w-full"
               />
             )}
           </div>
-
-          {/* Options */}
-          <div className="flex  justify-center">
-            {questionType === "multiple" ? (
-              <MultipleChoiceQuestion
-
-                selectedOptionInput={selectedOptionInput}
-                setSelectedOptionInput={setSelectedOptionInput}
-              />
-            ) : (
-              <BooleanChoiceQuestion
-                selectedOptionInput={selectedOptionInput}
-                setSelectedOptionInput={setSelectedOptionInput}
-              />
-            )}
-          </div>
-
-
-
-
-
-        </div >
-      </div>
-      <div className="flex items-baseline justify-center space-x-6 mt-6 flex-wrap">
-        {/* Question Type */}
-        <div className="flex items-baseline space-x-4">
-          <span className="text-lg font-medium text-gray-700 whitespace-nowrap">Question Type</span>
-          <div className="flex items-baseline space-x-4">
+  
+          {/* Question Type Buttons */}
+          <div className="flex flex-wrap justify-center gap-4 mb-6">
             <button
-              onClick={() => setQuestionType("boolean")}
-              className={`px-4 py-2 rounded-md font-medium bg-white border-2 hover:bg-transparent ${questionType === "boolean"
-                ? "border-[#8B2DF1] text-gray-800 shadow-md shadow-[#8B2DF1] focus:ring-0 focus:outline-none"
-                : "border-gray-300 text-gray-800 hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
-                }`}
+              className={`px-4 py-2 text-sm sm:text-base bg-white hover:text-white hover:bg-[#8B2DF1] rounded-lg ${
+                questionInfo.questionType === "text" ? "border-2 border-[#8B2DF1]" : ""
+              }`}
+              onClick={() => handleOnTypeQuestionChange("text")}
             >
-              True/False
+              Texte
             </button>
-
             <button
-              onClick={() => setQuestionType("multiple")}
-              className={`px-4 py-2 rounded-md font-medium bg-white hover:bg-transparent ${questionType === "multiple"
-                ? " text-gray-800 shadow-md shadow-[#8B2DF1] focus:ring-0 focus:outline-none"
-                : "border-gray-300 text-gray-800 hover:border-[#8B2DF1] hover:shadow-md hover:shadow-[#8B2DF1] hover:outline-none"
-                }`}
+              className={`px-4 py-2 text-sm sm:text-base bg-white hover:text-white hover:bg-[#8B2DF1] rounded-lg ${
+                questionInfo.questionType === "image" ? "border-2 border-[#8B2DF1]" : ""
+              }`}
+              onClick={() => handleOnTypeQuestionChange("image")}
             >
-              Multiple Choice
+              Image
+            </button>
+            <button
+              className={`px-4 py-2 text-sm sm:text-base bg-white hover:text-white hover:bg-[#8B2DF1] rounded-lg ${
+                questionInfo.questionType === "audio" ? "border-2 border-[#8B2DF1]" : ""
+              }`}
+              onClick={() => handleOnTypeQuestionChange("audio")}
+            >
+              Audio
             </button>
           </div>
-        </div>
-
-        <span className=" text-2xl text-gray-500">|</span>
-
-        {/* Difficulty Selection */}
-        <div className="flex items-baseline space-x-4">
-          <label htmlFor="difficulty" className="text-lg font-medium text-gray-700 whitespace-nowrap">
-            Difficulty question
-          </label>
-          <DifficultyQuizStars
-            className="flex-grow"
-            initialDifficulty={quizDifficulty}
-            onDifficultyChange={handleOnDifficultyChange}
-          />
-        </div>
-
-        <span className="text-2xl text-gray-500">|</span>
-
-        {/* Category Selection */}
-        <div className="flex items-baseline space-x-4">
-          <label htmlFor="category" className="text-lg font-medium text-gray-700 whitespace-nowrap">
-            Category
-          </label>
-          <select
-            id="category"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.name}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <span className="text-2xl text-gray-500">|</span>
-
-        {/* Save Button */}
-        <div>
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-          >
-            Save Question
-          </button>
+  
+          {/* Multiple Choice Question */}
+          <div className="flex overflow-auto justify-center max-h-64">
+            <MultipleChoiceQuestion
+              questionInfo={questionInfo}
+              setQuestionInfo={setQuestionInfo}
+            />
+          </div>
+  
+          {/* Difficulty and Category */}
+          <div className="pt-8">
+            <div className="flex flex-col sm:flex-row items-center sm:justify-center gap-4">
+              {/* Difficulty */}
+              <div className="flex items-baseline space-x-2">
+                <label htmlFor="difficulty" className="text-sm sm:text-lg font-medium text-gray-700">
+                  Difficulty
+                </label>
+                <DifficultyQuizStars
+                  className="flex-grow"
+                  initialDifficulty={questionInfo.questionDifficulty}
+                  onDifficultyChange={handleOnDifficultyChange}
+                />
+              </div>
+  
+              <span className="hidden sm:inline-block text-2xl text-gray-500">|</span>
+  
+              {/* Category */}
+              <div className="flex flex-col md:flex-row items-baseline space-x-2">
+                <label htmlFor="category" className="text-sm sm:text-lg font-medium text-gray-700">
+                  Category
+                </label>
+                <select
+                  id="category"
+                  value={questionInfo.questionCategory}
+                  onChange={(e) =>
+                    setQuestionInfo((prevState) => ({
+                      ...prevState,
+                      questionCategory: e.target.value,
+                    }))
+                  }
+                  className="p-2 sm:p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 w-full"
+                >
+                  <option value="" disabled>
+                    Select a category
+                  </option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
