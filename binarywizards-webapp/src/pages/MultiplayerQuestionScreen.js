@@ -60,8 +60,8 @@ export default function MultiplayerQuestionScreen() {
     socket.on("answerResult", (data) => {
       setIdCorrectAnswers(data.correct_option_index);
       setIsAnswered(true);
-      setMaxTimeAnswer(data.time_remaining/1000);
-      setTimeAnswer(data.time_remaining/1000);
+      setMaxTimeAnswer(data.time_remaining / 1000);
+      setTimeAnswer(data.time_remaining / 1000);
 
       setCorrectAnswer(selectedId === data.correct_option_index);
     });
@@ -79,13 +79,13 @@ export default function MultiplayerQuestionScreen() {
 
     const now = Date.now();
     const endTime = now + timeAvailable * 1000;
-    const savedEndTime = localStorage.getItem(`endTime_${gameId}`);
+    const savedEndTime = localStorage.getItem(`endTime`);
     const finalEndTime =
       savedEndTime && parseInt(savedEndTime, 10) > now
         ? parseInt(savedEndTime, 10)
         : endTime;
 
-    localStorage.setItem(`endTime_${gameId}`, finalEndTime);
+    localStorage.setItem(`endTime`, finalEndTime);
     updateRemainingTime(finalEndTime);
 
     clearInterval(chronoInterval.current);
@@ -168,14 +168,14 @@ export default function MultiplayerQuestionScreen() {
 
   useEffect(() => {
     if (timeAnswer === null || timeAnswer <= 0) return;
-  
+
     const interval = setInterval(() => {
       setTimeAnswer((prevTimeAnswer) => {
         const newTime = Math.max(prevTimeAnswer - 0.01, 0);
         return newTime;
       });
-    }, 10); 
-  
+    }, 10);
+
     return () => clearInterval(interval);
   }, [timeAnswer]);
 
@@ -192,13 +192,11 @@ export default function MultiplayerQuestionScreen() {
       </div>
 
       <div
-        className={`${correctAnswer === false ? "bg-red-500" : ""} ${
-          correctAnswer === true ? "bg-green-500" : ""
-        } ${
-          correctAnswer === null
+        className={`${correctAnswer === false ? "bg-red-500" : ""} ${correctAnswer === true ? "bg-green-500" : ""
+          } ${correctAnswer === null
             ? "bg-gradient-to-r to-[#377DC9] via-[#8A2BF2] from-[#E7DAB4]"
             : ""
-        } p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10`}
+          } p-2 rounded-lg w-full sm:w-[90%] md:w-[80%] lg:w-[60%] mb-10`}
       >
         <div className="flex flex-col items-center space-y-6 p-6 bg-[#F4F2EE] rounded-lg shadow-md w-full">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-center text-black">
@@ -209,9 +207,9 @@ export default function MultiplayerQuestionScreen() {
               question_choice={options}
               correctOptionIndex={idCorrectAnswers}
               onQuestionSelect={handleQuestionSelect}
-              selectedQuestionId={selectedQuestionId}
+              selectedOptionIndex={selectedQuestionId}
+              isCorrect={selectedQuestionId !== null && selectedQuestionId == idCorrectAnswers}
               isAnswered={isAnswered}
-              isCorrect={correctAnswer}
               type={questionType}
             />
           </div>
@@ -226,7 +224,7 @@ export default function MultiplayerQuestionScreen() {
                 style={{
                   width: `${Math.min(120 - timeAnswer / maxTimeAnswer * 100, 100)}%`,
                 }}
-                className="h-3 bg-[#8B2DF1] rounded-xl"
+                className={`h-3 rounded-xl ${correctAnswer ? 'bg-green-500' : 'bg-red-500'}`}
               />
             ) : (
               <span className="text-center">

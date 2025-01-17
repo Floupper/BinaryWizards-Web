@@ -14,10 +14,21 @@ For the remote API, no installation is required, you just need to know the IP ad
 git clone <project_remote_URL>
 ```
 
-Before launching the web app, you need to navigate to the project folder.
+You need to navigate to the project folder.
 ```
 cd binarywizards-webapp/
 ```
+
+Before launching the API, you need to create a *.env* file containing the following information:
+```
+REACT_APP_PORT=33034
+
+REACT_APP_API_BASE_URL=https://klebert-host.com:33012/
+
+key=/home/container/certificat.key
+cert=/home/container/certificat-privkey.cert
+```
+
 You can install the dependencies and launch the application with the following commands:
 ```
 npm install

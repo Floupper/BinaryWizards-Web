@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import CreateQuizService from '../services/CreateQuizService';
 import CustomAudioPlayer from './CustomAudioPlayer';
+import Spinner from './Spinner';
 
 
 export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
-  const [file, setFile] = useState(null);
+
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
 
@@ -131,7 +132,6 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
         };
       });
 
-      toast.success(`${type === "audio" ? "Audio" : "Image"} uploadé avec succès !`);
     } catch (error) {
       toast.error(`Erreur lors de l'upload du fichier ${type}.`);
       console.error(error);
@@ -263,8 +263,8 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
         <button
           onClick={handleAddOption}
           className={`px-4 py-2 text-black bg-[#CDCCCC] rounded ${questionInfo.questionOptions.length >= 8
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-600"
+            ? " cursor-not-allowed"
+            : " hover:bg-[#DFDFDF]"
             }`}
           disabled={questionInfo.questionOptions.length >= 8}
         >
@@ -300,7 +300,9 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
               </div>
             )}
             {aiGenerating && (
-              <a>Generating...</a>
+              <div className="flex items-center justify-center">
+                <Spinner size="5" className="mr-3" />
+              </div>
             )}
           </>
 
