@@ -28,8 +28,8 @@ export default function Navbar() {
 
   const isPlayActive = () => {
     return !(
-      location.pathname.startsWith("/create-quiz") || 
-      location.pathname.startsWith("/quick-quiz") || 
+      location.pathname.startsWith("/create-quiz") ||
+      location.pathname.startsWith("/quick-quiz") ||
       location.pathname.startsWith("/dashboard")
     );
   };
@@ -53,14 +53,13 @@ export default function Navbar() {
 
       {/* Navigation Links */}
       <ul
-        className={`lg:flex lg:items-center lg:gap-5 list-none transition-all duration-300 ease-in-out ${
-          isOpen
+        className={`lg:flex lg:items-center lg:gap-5 list-none transition-all duration-300 ease-in-out ${isOpen
             ? "z-10 flex flex-col absolute top-0 right-[-1rem] h-[100vh] pt-[8rem] gap-y-5 p-8 bg-white shadow-lg rounded-3xl transform lg:static lg:p-0 md:shadow-none transition-all duration-500 ease-out"
             : "hidden lg:flex"
-        }`}
+          }`}
       >
         {/* Download */}
-        <li className="flex items-center mr-5">
+        {/* <li className="flex items-center mr-5">
           <a
             href="https://expo.dev/artifacts/eas/5gEMQTEd1ZfvhicxFnmkjT.apk"
             download
@@ -72,7 +71,7 @@ export default function Navbar() {
             </EmojiProvider>
             <span className="ml-2">Download</span>
           </a>
-        </li>
+        </li> */}
         {/* Play */}
         <li className="flex items-center mr-5">
           <NavLink
@@ -91,9 +90,8 @@ export default function Navbar() {
           <li className="flex items-center mr-5">
             <NavLink
               to="/create-quiz"
-              className={`flex items-center text-black hover:scale-105 ${
-                isActiveLink("/create-quiz") ? "underline underline-offset-8" : ""
-              }`} // Surbrillance conditionnelle
+              className={`flex items-center text-black hover:scale-105 ${isActiveLink("/create-quiz") ? "underline underline-offset-8" : ""
+                }`} // Surbrillance conditionnelle
               style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
             >
               <EmojiProvider data={emojiData}>
@@ -106,9 +104,8 @@ export default function Navbar() {
           <li className="flex items-center mr-5">
             <NavLink
               to="/quick-quiz"
-              className={`flex items-center text-black hover:scale-105 ${
-                isActiveLink("/quick-quiz") ? "underline underline-offset-8" : ""
-              }`}
+              className={`flex items-center text-black hover:scale-105 ${isActiveLink("/quick-quiz") ? "underline underline-offset-8" : ""
+                }`}
               style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
             >
               <EmojiProvider data={emojiData}>
