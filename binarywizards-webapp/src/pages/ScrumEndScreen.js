@@ -64,7 +64,6 @@ export default function ScrumEndScreen() {
                 className="text-4xl font-semibold mx-4"
                 style={{
                   color: "#7A00FF",
-                  fontFamily: "Sifonn, sans-serif",
                 }}
               >
                 Quiz Completed!
@@ -77,7 +76,6 @@ export default function ScrumEndScreen() {
             className="text-2xl mb-6"
             style={{
               color: "#000000",
-              fontFamily: "Helvetica, Arial, sans-serif",
               textAlign: "center",
             }}
           >

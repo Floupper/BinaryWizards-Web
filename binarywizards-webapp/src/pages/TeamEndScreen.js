@@ -62,7 +62,6 @@ export default function TeamEndScreen() {
                 className="text-4xl font-semibold mx-4"
                 style={{
                   color: "#7A00FF",
-                  fontFamily: "Sifonn, sans-serif",
                 }}
               >
                 Quiz Completed!

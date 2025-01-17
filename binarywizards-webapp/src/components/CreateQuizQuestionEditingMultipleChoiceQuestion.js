@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import CreateQuizService from '../services/CreateQuizService';
 import CustomAudioPlayer from './CustomAudioPlayer';
+import Spinner from './Spinner';
 
 
 export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
@@ -300,7 +301,9 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
               </div>
             )}
             {aiGenerating && (
-              <a>Generating...</a>
+              <div className="flex items-center justify-center">
+                <Spinner size="5" className="mr-3" />
+              </div>
             )}
           </>
 

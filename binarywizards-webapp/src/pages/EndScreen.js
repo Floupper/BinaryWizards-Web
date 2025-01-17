@@ -51,7 +51,7 @@ export default function EndScreen() {
       <Navbar />
       <div className="flex flex-col items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-4">
         <div className="EndScreenContainer bg-white p-6 sm:p-16 text-center rounded-3xl w-full max-w-3xl">
-          {correct_answers_nb && nb_questions_total ? (
+          {correct_answers_nb != null && nb_questions_total ? (
             <>
               <EmojiProvider data={emojiData}>
                 <div className="flex items-baseline justify-center mb-8">
@@ -62,7 +62,6 @@ export default function EndScreen() {
                     className="text-4xl sm:text-5xl font-semibold mx-4"
                     style={{
                       color: "#7A00FF",
-                      fontFamily: "Sifonn, sans-serif",
                     }}
                   >
                     Quiz Completed!
@@ -76,7 +75,6 @@ export default function EndScreen() {
                 className="text-3xl sm:text-5xl mb-10"
                 style={{
                   color: "#000000",
-                  fontFamily: "Helvetica, Arial, sans-serif",
                   textAlign: "center",
                 }}
               >
