@@ -417,8 +417,10 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
   return (
     <div className="CreateQuiz p-0 m-0">
       <Navbar />
-      <div className="CreateQuiz-container flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <CreateQuizNavbar handleSubmitSave={handleSubmitSave} quiz={quiz} setQuiz={setQuiz} />
+  
+        {/* Trivia Modal */}
         <div className="trivia modal">
           <Modal
             isOpen={isTriviaModalOpen}
@@ -433,65 +435,56 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
             />
           </Modal>
         </div>
-
-
-
-
-        <div className=" flex flex-row pl-4 ">
-          <div className="flex flex-col gap-4 max-w-min">
-            <div
-              className="flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500  bg-white rounded-md p-4 shadow-lg h-[60vh] ">
-              <div
-                className="flex items-center flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-500 p-0 max-w-min">
-                <div className="flex flex-col w-[35vh]">
-                  {quizQuestions.map((question) => (
-                    <QuestionInContainer
-                      question_text={question.question_text}
-                      question_id={question.question_id}
-                      question_index={question.question_index || 0}
-                      selectQuestion={selectQuestion}
-                      handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
-                    />
-                  ))}
-                  {(newQuestion) ?
-                    <QuestionInContainerDefault
-                      handleSubmitDeleteNewQuestion={handleDeleteQuestionInContainerDefault}
-                      selectQuestion={selectQuestion}
-
-                    />
-                    : <div></div>}
-                </div></div>
-            </div>
-            <div className="flex max-h-max align-items-center flex-col gap-4">
-              <div className="flex  flex-col justify-center w-[40vh] gap-y-2 bg-white rounded-md  p-4 shadow-lg">
-                <button
-                  onClick={() => { handleSubmitCreateQuestion() }}
-                  className="px-4 py-2  text-gray-800 rounded-lg bg-black text-white hover:bg-white hover:text-black hover:border-black border"
-                >
-                  Create question
-                </button>
-                <button
-                  onClick={handleSubmitImportTrivia}
-                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-white hover:border-black border "
-                >
-                  Import questions from Trivia
-                </button>
-
+  
+        <div className="flex flex-col lg:flex-row lg:pl-4">
+          {/* Left Sidebar */}
+          <div className="flex flex-col gap-4 lg:max-w-[40%] lg:overflow-y-auto mx-4">
+            <div className="flex flex-col gap-4 bg-white rounded-md p-4 shadow-lg h-[40vh] md:h-[55vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500">
+              <div className="flex flex-col p-6">
+                {quizQuestions.map((question) => (
+                  <QuestionInContainer
+                    key={question.question_id}
+                    question_text={question.question_text}
+                    question_id={question.question_id}
+                    question_index={question.question_index || 0}
+                    selectQuestion={selectQuestion}
+                    handleSubmitDeleteQuestion={() => handleSubmitDeleteQuestion(question.question_id)}
+                  />
+                ))}
+                {newQuestion && (
+                  <QuestionInContainerDefault
+                    handleSubmitDeleteNewQuestion={handleDeleteQuestionInContainerDefault}
+                    selectQuestion={selectQuestion}
+                  />
+                )}
               </div>
             </div>
+  
+            {/* Buttons */}
+            <div className="flex flex-col justify-center items-center gap-2 bg-white rounded-md p-4 shadow-lg">
+              <button
+                onClick={handleSubmitCreateQuestion}
+                className="w-full px-4 py-2 text-white bg-black rounded-lg hover:bg-white hover:text-black hover:border-black border"
+              >
+                Create Question
+              </button>
+              <button
+                onClick={handleSubmitImportTrivia}
+                className="w-full px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-white hover:border-black border"
+              >
+                Import Questions from Trivia
+              </button>
+            </div>
           </div>
-
-          {/*  CreateQuizQuestionEditing */}
-
-          <div className="flex w-full flex-col rounded-lg px-5 ">
-
+  
+          {/* Question Editing */}
+          <div className="flex flex-col rounded-lg md:px-5 mt-4 lg:mt-0 md:w-11/12">
             {(questionInfo.isEditing || questionInfo.questionId) && (
               <>
-                <div className=" flex align-items-center justify-center my-2">
+                <div className="flex justify-center md:my-2">
                   <ProgressBar progress={progress} />
                 </div>
-                <div className="s-full">
-
+                <div className="w-full">
                   <CreateQuizzQuestionEditing
                     setReloadQuestionInfo={setReloadQuestionInfo}
                     reloadQuestionInfo={reloadQuestionInfo}
@@ -505,12 +498,8 @@ export default function CreateQuizRegisteredPage({ quizIdParameter, setQuizIdRed
                     refreshQuizQuestionEditing={refreshQuizQuestionEditing}
                     setRefreshQuizQuestions={setRefreshQuizQuestions}
                   />
-
                 </div>
-
-
               </>
-
             )}
           </div>
         </div>
