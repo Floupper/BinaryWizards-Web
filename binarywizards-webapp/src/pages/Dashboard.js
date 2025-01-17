@@ -31,7 +31,7 @@ export default function Dashboard() {
   }, [userId]);
 
   return (
-    <div className="min-h-screen max-h-screen bg-cover bg-center"
+    <div className="bg-center min-h-screen"
       style={{ backgroundImage: "url('/backgrounds/JoinQuizBackground.svg')" }}
     >
       <Navbar />
@@ -52,7 +52,7 @@ export default function Dashboard() {
             Your Played Quizzes
           </button>
         </div>
-        <div className="quiz-list max-h-[38rem] w-full overflow-y-auto">
+        <div className="w-full overflow-y-auto">
           {activeTab === 'created' && (
             <>
               {isLoadingCreated ? (

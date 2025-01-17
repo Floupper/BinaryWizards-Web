@@ -59,9 +59,9 @@ export default function Navbar() {
           }`}
       >
         {/* Download */}
-        {/* <li className="flex items-center mr-5">
+        <li className="flex items-center mr-5">
           <a
-            href="https://expo.dev/artifacts/eas/5gEMQTEd1ZfvhicxFnmkjT.apk"
+            href="https://expo.dev/artifacts/eas/swUAoGz9kXsf3cZjTwnxeS.apk"
             download
             className={`flex items-center text-black hover:scale-105`}
             style={{ fontFamily: "Helvetica", fontSize: "1.401rem" }}
@@ -71,7 +71,7 @@ export default function Navbar() {
             </EmojiProvider>
             <span className="ml-2">Download</span>
           </a>
-        </li> */}
+        </li>
         {/* Play */}
         <li className="flex items-center mr-5">
           <NavLink
