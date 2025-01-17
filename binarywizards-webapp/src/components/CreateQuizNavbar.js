@@ -45,11 +45,10 @@ export default function CreateQuizNavbar({ handleSubmitSave, quiz, setQuiz }) {
   };
 
   return (
-    <nav className="flex items-center justify-between py-4 px-4 bg-white text-black mx-2 border-2 rounded-2xl  border-2 border-[#8A2BF2] ">
-
-
-
-      <div className="flex  flex-col  sm:flex-row items-center sm:space-x-6 w-full sm:w-auto">
+    <nav className="flex flex-wrap items-center justify-between py-4 px-4 bg-white text-black mx-2 border-2 rounded-2xl border-[#8A2BF2] gap-4">
+      {/* Left Section */}
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 w-full sm:w-auto">
+        {/* Title Input */}
         <div className="flex flex-col sm:flex-row items-center sm:space-x-2 w-full sm:w-auto">
           <label htmlFor="quiz_title" className="text-lg font-medium">
             Title
@@ -64,8 +63,8 @@ export default function CreateQuizNavbar({ handleSubmitSave, quiz, setQuiz }) {
             className="border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none w-full sm:w-auto"
           />
         </div>
-
-        {/* Description */}
+  
+        {/* Description Input */}
         <div className="flex flex-col sm:flex-row items-center sm:space-x-2 w-full sm:w-auto">
           <label htmlFor="quiz_description" className="text-lg font-medium">
             Description
@@ -80,19 +79,23 @@ export default function CreateQuizNavbar({ handleSubmitSave, quiz, setQuiz }) {
           />
         </div>
       </div>
-
-      <div className="flex flex-col sm:flex-row items-center sm:space-x-4 w-full sm:w-auto">
-
-        <div className="flex flex-col sm:flex-row items-center sm:space-x-4 w-full sm:w-auto">
+  
+      {/* Right Section */}
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 w-full sm:w-auto">
+        {/* Difficulty Selector */}
+        <div className="flex flex-col sm:flex-row items-center sm:space-x-2 w-full sm:w-auto">
           <label className="text-lg font-medium">Difficulty</label>
           <DifficultyQuizStars
             initialDifficulty={quiz.difficulty}
             onDifficultyChange={handleOnDifficultyChange}
           />
         </div>
-        <a className="text-4xl">|</a>
+  
+        {/* Separator */}
+        <span className="hidden sm:block text-4xl">|</span>
+  
         {/* Public Checkbox */}
-        <div className="flex flex-col sm:flex-row items-center sm:space-x-4 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-center sm:space-x-2 w-full sm:w-auto">
           <label htmlFor="quiz_checkbox" className="text-lg font-medium">
             Publish
           </label>
@@ -105,32 +108,27 @@ export default function CreateQuizNavbar({ handleSubmitSave, quiz, setQuiz }) {
             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <a className="text-4xl">|</a>
-        <div>
-          {/* Menu Buttons */}
-          <div className="flex items-center sm:space-x-4 space-y-4 sm:space-y-0 w-full sm:w-auto ">
-            <button
-              onClick={() => navigate('/')}
-              className="text-black text-lg font-semibold px-6 py-2 bg-white border-white rounded-3xl border hover:border hover:border-black  transition-colors duration-200"
-            >
-              Exit
-            </button>
-
-            <button
-              onClick={handleSaveQuiz}
-              className="text-white text-lg font-semibold px-6 py-2 bg-[#8B2DF1] rounded-3xl hover:bg-[#6214B6] hover:text-white transition-colors duration-200"
-            >
-              Save
-            </button>
-          </div>
-
+  
+        {/* Separator */}
+        <span className="hidden sm:block text-4xl">|</span>
+  
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+          <button
+            onClick={() => navigate('/')}
+            className="text-black text-lg font-semibold px-6 py-2 bg-white border-white rounded-3xl border hover:border-black transition-colors duration-200 w-full sm:w-auto"
+          >
+            Exit
+          </button>
+  
+          <button
+            onClick={handleSaveQuiz}
+            className="text-white text-lg font-semibold px-6 py-2 bg-[#8B2DF1] rounded-3xl hover:bg-[#6214B6] transition-colors duration-200 w-full sm:w-auto"
+          >
+            Save
+          </button>
         </div>
-
       </div>
-
-
-
-
-    </nav >
+    </nav>
   );
 }

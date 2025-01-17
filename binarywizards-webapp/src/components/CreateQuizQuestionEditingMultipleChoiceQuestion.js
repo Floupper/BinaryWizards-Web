@@ -143,10 +143,9 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
   return (
     <div>
       {/* Difficulty Selection */}
-
-      <div className="grid justify-items-center grid-cols-2 gap-4">
+      <div className="grid justify-items-center grid-cols-1 md:grid-cols-2 gap-4">
         {questionInfo.questionOptions.map((option, id) => (
-          <div key={id} className="flex items-center gap-4">
+          <div key={id} className="flex flex-col md:flex-row items-center gap-4 w-full">
             <input
               type="radio"
               name="multipleChoice"
@@ -156,20 +155,20 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                 setQuestionInfo({ ...questionInfo, questionCorrectAnswer: id })
               }
             />
-
+  
             {questionInfo.questionType === "text" ? (
               <input
                 type="text"
                 value={option || ""}
                 onChange={(e) => handleChangeAnswerText(e, id)}
                 placeholder={`Option ${id + 1}`}
-                className={`p-3 border  rounded-md focus:ring-blue-500 focus:border-blue-500 ${questionInfo.questionCorrectAnswer === id
+                className={`p-3 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${questionInfo.questionCorrectAnswer === id
                   ? "border-4 border-[#417336] "
                   : "border-2 border-gray-300"
                   }`}
               />
             ) : questionInfo.questionType === "image" ? (
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col md:flex-row items-center gap-4">
                 {!option ? (
                   <>
                     <input
@@ -185,7 +184,7 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                     />
                     <label
                       htmlFor={`fileInput-${id}`}
-                      className={` px-4 py-2 bg-white text-black  rounded cursor-pointer hover:text-white hover:bg-[#8B2DF1] ${questionInfo.questionCorrectAnswer === id
+                      className={`px-4 py-2 bg-white text-black rounded cursor-pointer hover:text-white hover:bg-[#8B2DF1] ${questionInfo.questionCorrectAnswer === id
                         ? "border-4 border-[#417336] "
                         : "border-2 border-gray-300"
                         }`}
@@ -196,18 +195,17 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                 ) : (
                   <img
                     src={option}
-                    alt="Aperçu de l'image"
-                    className={`w-20 h-20 object-cover rounded border ${questionInfo.questionCorrectAnswer === id
+                    alt="Image preview"
+                    className={`md:w-10 w-20 h-20 object-cover rounded border ${questionInfo.questionCorrectAnswer === id
                       ? "border-4 border-[#417336] "
                       : "border-2 border-gray-300"
                       }`}
                     onClick={() => { handleDeleteImageAudio(id) }}
                   />
-
                 )}
               </div>
             ) : questionInfo.questionType === "audio" ? (
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col md:flex-row items-center gap-4">
                 {!option ? (
                   <>
                     <input
@@ -223,7 +221,7 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                     />
                     <label
                       htmlFor={`audioInput-${id}`}
-                      className={`px-4 py-2 bg-white text-black  rounded cursor-pointer hover:text-white hover:bg-[#8B2DF1] ${questionInfo.questionCorrectAnswer === id
+                      className={`px-4 py-2 bg-white text-black rounded cursor-pointer hover:text-white hover:bg-[#8B2DF1] ${questionInfo.questionCorrectAnswer === id
                         ? "border-4 border-[#417336] "
                         : "border-2 border-gray-300"
                         }`}
@@ -232,25 +230,25 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                     </label>
                   </>
                 ) : (
-                  <div className={` bg-gray-800 rounded-lg ${questionInfo.questionCorrectAnswer === id
-                    ? "border-4 border-[#417336] "
-                    : "border-2 border-gray-300"
-                    }`}>
+                  <div
+                    className={`bg-gray-800 rounded-lg ${questionInfo.questionCorrectAnswer === id
+                      ? "border-4 border-[#417336] "
+                      : "border-2 border-gray-300"
+                      }`}
+                  >
                     <CustomAudioPlayer src={option} deleteAudio={() => handleDeleteImageAudio(id)} />
                   </div>
-
-
                 )}
               </div>
             ) : (
               <div>
-                <p>ERREUR {option}</p>
+                <p>ERROR: {option}</p>
               </div>
             )}
-
+  
             <button
               onClick={() => handleRemoveOption(id)}
-              className="font-bold ml-2 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+              className="font-bold px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
               disabled={questionInfo.questionOptions.length <= 2}
             >
               ⨯
@@ -258,57 +256,71 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
           </div>
         ))}
       </div>
-
-      <div className="mt-4 flex gap-1">
+  
+      <div className="mt-4 flex flex-wrap gap-2 justify-center">
         <button
           onClick={handleAddOption}
           className={`px-4 py-2 text-black bg-[#CDCCCC] rounded ${questionInfo.questionOptions.length >= 8
-            ? " cursor-not-allowed"
-            : " hover:bg-[#DFDFDF]"
+            ? "cursor-not-allowed"
+            : "hover:bg-[#DFDFDF]"
             }`}
           disabled={questionInfo.questionOptions.length >= 8}
         >
           Add choice
         </button>
-        {questionInfo.questionType == "text" && (
-          <>
+        {questionInfo.questionType === "text" && (
+          <div className="flexflex-row items-center gap-x-2">
             <div className="flex items-center justify-center text-3xl h-12 w-12 bg-white rounded-xl border-black border-2">
               <button
-                className="m-0 p-0 text-3xl h-10 w-10"
+                className="text-3xl"
                 onClick={() => { setAiModalOpen(!aiModalOpen) }}
               >
                 🪄
               </button>
             </div>
-
-
-
+  
             {aiModalOpen && (
-              <div className="flex gap-2  bg-white rounded-xl border-black border-2" >
-                <button disabled={aiGenerating} onClick={() => { handleAiChoices('realistic'); }} className={`ml-1 my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
-                  ? 'opacity-50 cursor-not-allowed'
-                  : 'hover:shadow-black hover:shadow-lg'
-                  }`}>Realistic</button>
-                <button disabled={aiGenerating} onClick={() => { handleAiChoices('humouristic'); }} className={` my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
-                  ? 'opacity-50 cursor-not-allowed'
-                  : 'hover:shadow-black hover:shadow-lg'
-                  }`}>Humouristic</button>
-                <button disabled={aiGenerating} onClick={() => { handleAiChoices('mixt'); }} className={`mr-1 my-1 p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
-                  ? 'opacity-50 cursor-not-allowed'
-                  : 'hover:shadow-black hover:shadow-lg'
-                  }`}>Mixt</button>
+              <div className="flex gap-2 mt-4 md:mt-0 bg-white rounded-xl border-black border-2 p-2">
+                <button
+                  disabled={aiGenerating}
+                  onClick={() => { handleAiChoices('realistic'); }}
+                  className={`p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'hover:shadow-black hover:shadow-lg'
+                    }`}
+                >
+                  Realistic
+                </button>
+                <button
+                  disabled={aiGenerating}
+                  onClick={() => { handleAiChoices('humouristic'); }}
+                  className={`p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'hover:shadow-black hover:shadow-lg'
+                    }`}
+                >
+                  Humouristic
+                </button>
+                <button
+                  disabled={aiGenerating}
+                  onClick={() => { handleAiChoices('mixt'); }}
+                  className={`p-1 shadow-sm shadow-black rounded-lg ${aiGenerating
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'hover:shadow-black hover:shadow-lg'
+                    }`}
+                >
+                  Mixt
+                </button>
               </div>
             )}
             {aiGenerating && (
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center mt-2">
                 <Spinner size="5" className="mr-3" />
               </div>
             )}
-          </>
-
+          </div>
         )}
       </div>
-
     </div>
   );
 }
