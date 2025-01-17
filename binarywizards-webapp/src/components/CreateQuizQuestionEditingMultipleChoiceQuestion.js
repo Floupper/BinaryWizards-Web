@@ -196,7 +196,7 @@ export function MultipleChoiceQuestion({ setQuestionInfo, questionInfo }) {
                   <img
                     src={option}
                     alt="Image preview"
-                    className={`md:w-10 w-20 h-20 object-cover rounded border ${questionInfo.questionCorrectAnswer === id
+                    className={`w-20 md:w-40 h-20 object-contain rounded border ${questionInfo.questionCorrectAnswer === id
                       ? "border-4 border-[#417336] "
                       : "border-2 border-gray-300"
                       }`}
